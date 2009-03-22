@@ -6,7 +6,6 @@ module SimpleNavigation
       base.class_eval do
         extend ClassMethods
         include InstanceMethods
-        #helper_method :render_navigation, :render_primary_navigation, :render_sub_navigation
         helper SimpleNavigation::Helpers
       end
     end

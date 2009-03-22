@@ -1,3 +1,4 @@
+# TODO this is only needed for testing since we do not load the RAILS_ENV... may be require these in the spec_helper?
 require 'simple_navigation/configuration'
 require 'simple_navigation/helpers'
 require 'simple_navigation/controller_methods'
