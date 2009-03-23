@@ -22,7 +22,7 @@ module SimpleNavigation
     Configuration.instance
   end
   
-  # Returns the ItemContainer the contains the items for the primary navigation
+  # Returns the ItemContainer that contains the items for the primary navigation
   def self.primary_navigation
     config.primary_navigation
   end

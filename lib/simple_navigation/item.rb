@@ -4,7 +4,11 @@ module SimpleNavigation
   class Item
     attr_reader :key, :name, :url, :sub_navigation
     
-    # Creates a new navigation item. TODO describe params...
+    # Creates a new navigation item. 
+    # The key is a symbol which uniquely defines your navigation item in the scope of the primary_navigation or the sub_navigation. 
+    # The name will be displayed in the rendered navigation. This can also be a call to your I18n-framework.
+    # The html_options can be used to specify any attributes that will be included in the rendered navigation item (e.g. id, class etc.)
+    # The sub_nav_block will hold the block containing the item's sub_navigation defined in config/navigation.rb
     def initialize(key, name, url, html_options, sub_nav_block)
       @key = key
       @name = name
@@ -16,10 +20,12 @@ module SimpleNavigation
       end
     end
     
+    # Returns true if this navigation item should be rendered as 'selected' for the specified current_navigation.
     def selected?(current_navigation)
       key == current_navigation
     end
     
+    # Returns the configured class that should be applied to selected items if the item is selected. Returns nil otherwise
     def selected_class(current_navigation)
       selected?(current_navigation) ? SimpleNavigation.config.selected_class : nil
     end
