@@ -23,14 +23,14 @@ describe SimpleNavigation::Item do
       before(:each) do
         @item.stub!(:selected?).and_return(true)
       end
-      it {@item.selected_class(:bla).should == 'selected'}
+      it {@item.instance_eval {selected_class(:bla).should == 'selected'}}
     end
     
     context 'item is not selected' do
       before(:each) do
         @item.stub!(:selected?).and_return(false)
       end
-      it {@item.selected_class(:bla).should be_nil}
+      it {@item.instance_eval {selected_class(:bla).should == nil}}
     end
   end
   
@@ -45,14 +45,14 @@ describe SimpleNavigation::Item do
       end
       context 'with item selected' do
         before(:each) do
-          @item.stub!(:selected_class).and_return('selected')
+          @item.stub!(:selected?).and_return(true)
         end
         it {@item.html_options(:bla).should == {:class => 'my_class selected'}}
       end
       
       context 'with item not selected' do
         before(:each) do
-          @item.stub!(:selected_class).and_return(nil)
+          @item.stub!(:selected?).and_return(false)
         end
         it {@item.html_options(:bla).should.should == {:class => 'my_class'}}
       end
@@ -65,14 +65,14 @@ describe SimpleNavigation::Item do
       end
       context 'with item selected' do
         before(:each) do
-          @item.stub!(:selected_class).and_return('selected')
+          @item.stub!(:selected?).and_return(true)
         end
         it {@item.html_options(:bla).should.should == {:class => 'selected'}}
       end
       
       context 'with item not selected' do
         before(:each) do
-          @item.stub!(:selected_class).and_return(nil)
+          @item.stub!(:selected?).and_return(false)
         end
         it {@item.html_options(:bla).should.should == {}}
       end

@@ -1,2 +1,3 @@
 # Install hook code here
-# TODO
+# TODO create config/navigation.rb from template
+# TODO show README in console
