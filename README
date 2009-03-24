@@ -1,15 +1,14 @@
-SimpleNavigation
-================
+== Simple Navigation
 
-Introduction goes here.
-TODO: what it is
-TODO: what it is not
-TODO: link to sample-app
+Simple Navigation is a rails plugin for creating a site's main navigation (optionally with sub navigation).
 
-Example
-=======
+Source code:
+  git://github.com/andi/simple_navigation.git
 
-Example goes here.
+Documentation: 
+  http://github.com/andi/simple_navigation/wikis
 
+Please send feedback to:
+  andreas.schacke@gmail.com
 
 Copyright (c) 2009 Andi Schacke, released under the MIT license
