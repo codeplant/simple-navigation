@@ -1,5 +1,7 @@
 module SimpleNavigation
   module Renderer
+    
+    # Renders an ItemContainer as a <ul> element and its containing items as <li> elements 
     class List < Renderer::Base
       
       def render(item_container, include_sub_navigation=false)
