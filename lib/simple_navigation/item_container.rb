@@ -19,7 +19,7 @@ module SimpleNavigation
     #
     # The <tt>url</tt> is the address that the generated item points to. You can also use url_helpers (named routes, restful routes helper, url_for etc.) 
     #
-    # The <tt>html_options</tt> can be used to specify any attributes that will be included in the rendered navigation item (e.g. id, class etc.)
+    # The <tt>html_options</tt> can be used to specify attributes that will be included in the rendered navigation item (e.g. id, class etc.)
     #
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation defined.
     def item(key, name, url, html_options={}, &block)
