@@ -1,9 +1,10 @@
+
 == Simple Navigation
 
 Simple Navigation is a rails plugin for creating a site's main navigation (optionally with sub navigation).
 
 Source code:
-  git://github.com/andi/simple_navigation.git
+  git://github.com/andi/simple-navigation.git
 
 Documentation: 
   http://wiki.github.com/andi/simple-navigation
@@ -15,3 +16,4 @@ Discussion Group for Feedback and Questions
   http://groups.google.com/group/simple-navigation
 
 Copyright (c) 2009 Andi Schacke, released under the MIT license
+
