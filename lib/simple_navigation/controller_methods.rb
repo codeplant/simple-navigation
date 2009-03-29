@@ -1,3 +1,4 @@
+#TODO: add :except and :only options to navigation method
 module SimpleNavigation
   
   # Methods for extending the controllers 

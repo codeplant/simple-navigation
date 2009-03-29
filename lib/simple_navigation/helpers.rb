@@ -7,7 +7,7 @@ module SimpleNavigation
     # 
     # Other possible levels are 
     # 
-    # :primary which only renders the primary_navigation (also see render_primary_navigation) and :secondary which only renders the sub_navigation.
+    # :primary which only renders the primary_navigation (also see render_primary_navigation) and :secondary which only renders the sub_navigation (see render_sub_navigation).
     def render_navigation(level = :nested)
       SimpleNavigation::Configuration.eval_config(self) unless SimpleNavigation.config.loaded?
       case level
