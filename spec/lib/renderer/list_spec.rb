@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
-require 'html/document'
+require 'html/document' unless defined? HTML::Document
 
 describe SimpleNavigation::Renderer::List do
     
@@ -60,11 +60,18 @@ describe SimpleNavigation::Renderer::List do
       it "should mark the matching li-item as selected (with the css_class specified in configuration)" do
         HTML::Selector.new('li.selected').select(render(:invoices)).should have(1).entries
       end
+      it "should also mark the links inside the selected li's as selected" do
+        HTML::Selector.new('li.selected a.selected').select(render(:invoices)).should have(1).entries
+      end
+      
     end
     
     context 'without current_navigation set' do
       it "should not mark any of the items as selected" do
         HTML::Selector.new('li.selected').select(render).should be_empty
+      end
+      it "should not mark any links as selected" do
+        HTML::Selector.new('a.selected').select(render).should be_empty
       end
     end
     

@@ -4,7 +4,6 @@ require 'spec'
 require 'active_support'
 require 'action_controller'
 
-
 RAILS_ROOT = './' unless defined? RAILS_ROOT
 
 $:.unshift File.dirname(__FILE__)
@@ -14,4 +13,4 @@ require 'simple_navigation'
 
 # Spec::Runner.configure do |config|
   # no special config
-# end
+# endx

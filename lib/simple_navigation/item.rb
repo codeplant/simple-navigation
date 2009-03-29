@@ -29,9 +29,7 @@ module SimpleNavigation
       options.delete(:class) if options[:class].blank? 
       options
     end
-    
-    protected
-    
+        
     def selected_class(current_navigation) #:nodoc:
       selected?(current_navigation) ? SimpleNavigation.config.selected_class : nil
     end
