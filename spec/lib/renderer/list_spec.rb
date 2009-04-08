@@ -55,6 +55,12 @@ describe SimpleNavigation::Renderer::List do
     it "should give the li the id specified in the html_options" do
       HTML::Selector.new('li#my_id').select(render).should have(1).entries
     end
+    it "should give the li the default id (stringified key) if no id is specified in the html_options" do
+      HTML::Selector.new('ul li#invoices').select(render).should have(1).entries
+    end
+    it "should not apply the the default id where there is an id specified in the html_options" do
+      HTML::Selector.new('ul li#users').select(render).should be_empty
+    end
     
     context 'with current_navigation set' do
       it "should mark the matching li-item as selected (with the css_class specified in configuration)" do
@@ -78,6 +84,9 @@ describe SimpleNavigation::Renderer::List do
     context 'nested sub_navigation' do
       it "should nest the current_primary's subnavigation inside the selected li-element" do
         HTML::Selector.new('li.selected ul li').select(render(:invoices, true)).should have(2).entries
+      end
+      it "should be possible to identify sub items using an html selector (using ids)" do
+        HTML::Selector.new('#invoices #subnav1').select(render(:invoices, true)).should have(1).entries
       end
     end
     

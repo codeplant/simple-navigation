@@ -4,6 +4,9 @@ module SimpleNavigation
     # Renders an ItemContainer as a <ul> element and its containing items as <li> elements. 
     # It adds the 'selected' class to li element AND the link inside the li element that is currently active.
     # If the sub navigation should be included, it renders another <ul> containing the sub navigation inside the active <li> element.
+    #
+    # By default, the renderer sets the item's key as dom_id for the rendered <li> element. The id can be explicitely specified by setting
+    # the id in the html-options of the 'item' method in the config/navigation.rb file.
     class List < Renderer::Base
       
       def render(item_container, include_sub_navigation=false)

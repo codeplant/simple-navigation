@@ -24,7 +24,8 @@ module SimpleNavigation
     # Returns the html-options hash for the item, i.e. the options specified for this item in the config-file.
     # It also adds the 'selected' class to the list of classes if necessary. 
     def html_options(current_navigation)
-      options = @html_options.dup
+      default_options = {:id => key.to_s}
+      options = default_options.merge(@html_options)
       options[:class] = [@html_options[:class], self.selected_class(current_navigation)].flatten.compact.join(' ')
       options.delete(:class) if options[:class].blank? 
       options

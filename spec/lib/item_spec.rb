@@ -35,48 +35,66 @@ describe SimpleNavigation::Item do
   end
   
   describe 'html_options' do
-    before(:each) do
-      
-    end
-    context 'with classes defined in options' do
-      before(:each) do
-        @options = {:class => 'my_class'}
-        @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', @options, nil)
-      end
-      context 'with item selected' do
+    describe 'class' do
+      context 'with classes defined in options' do
         before(:each) do
-          @item.stub!(:selected?).and_return(true)
+          @options = {:class => 'my_class'}
+          @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', @options, nil)
         end
-        it {@item.html_options(:bla).should == {:class => 'my_class selected'}}
-      end
+        context 'with item selected' do
+          before(:each) do
+            @item.stub!(:selected?).and_return(true)
+          end
+          it {@item.html_options(:bla)[:class].should == 'my_class selected'}
+        end
       
-      context 'with item not selected' do
-        before(:each) do
-          @item.stub!(:selected?).and_return(false)
+        context 'with item not selected' do
+          before(:each) do
+            @item.stub!(:selected?).and_return(false)
+          end
+          it {@item.html_options(:bla)[:class].should == 'my_class'}
         end
-        it {@item.html_options(:bla).should.should == {:class => 'my_class'}}
+      end
+    
+      context 'without classes in options' do
+        before(:each) do
+          @options = {}
+          @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', @options, nil)
+        end
+        context 'with item selected' do
+          before(:each) do
+            @item.stub!(:selected?).and_return(true)
+          end
+          it {@item.html_options(:bla)[:class].should == 'selected'}
+        end
+      
+        context 'with item not selected' do
+          before(:each) do
+            @item.stub!(:selected?).and_return(false)
+          end
+          it {@item.html_options(:bla)[:class].should be_blank}
+        end
       end
     end
     
-    context 'without classes in options' do
-      before(:each) do
-        @options = {}
-        @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', @options, nil)
-      end
-      context 'with item selected' do
+    describe 'id' do
+      context 'with id defined in options' do
         before(:each) do
-          @item.stub!(:selected?).and_return(true)
+          @options = {:id => 'my_id'}
+          @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', @options, nil)
         end
-        it {@item.html_options(:bla).should.should == {:class => 'selected'}}
+        it {@item.html_options(:bla)[:id].should == 'my_id'}
       end
       
-      context 'with item not selected' do
+      context 'with no id definied in options (using default id)' do
         before(:each) do
-          @item.stub!(:selected?).and_return(false)
+          @options = {}
+          @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', @options, nil)
         end
-        it {@item.html_options(:bla).should.should == {}}
+        it {@item.html_options(:bla)[:id].should == 'my_key'}
       end
     end
+    
   end
   
 
