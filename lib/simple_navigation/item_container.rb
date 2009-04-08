@@ -21,7 +21,7 @@ module SimpleNavigation
     #
     # The <tt>html_options</tt> can be used to specify attributes that will be included in the rendered navigation item (e.g. id, class etc.)
     #
-    # The <tt>block</tt> - if specified - will hold the item's sub_navigation defined.
+    # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
     def item(key, name, url, html_options={}, &block)
       @items << Item.new(key, name, url, html_options, block)
     end

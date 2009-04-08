@@ -1,4 +1,4 @@
-# A plugin for generating a simple navigation. See README for usage instructions.
+# A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
 
   mattr_accessor :config_file

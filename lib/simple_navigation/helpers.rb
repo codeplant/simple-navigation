@@ -1,4 +1,18 @@
 module SimpleNavigation
+  
+  # View helpers to render the navigation.
+  #
+  # Use render_primary_navigation to render your primary navigation with the configured renderer.
+  # Use render_sub_navigation to render the sub navigation belonging to the active primary navigation.
+  # Use render_navigation to render the primary navigation with the corresponding sub navigation rendered inside primary navigation item which is active.
+  # 
+  # ==== Examples (using Haml)
+  #   #primary_navigation= render_primary_navigation
+  #   
+  #   #sub_navigation= render_sub_navigation
+  #
+  #   #main_navigation= render_navigation
+  #
   module Helpers
     
     # Renders the navigation according to the specified <tt>level</tt>. 

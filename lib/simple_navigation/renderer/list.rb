@@ -1,7 +1,9 @@
 module SimpleNavigation
   module Renderer
     
-    # Renders an ItemContainer as a <ul> element and its containing items as <li> elements 
+    # Renders an ItemContainer as a <ul> element and its containing items as <li> elements. 
+    # It adds the 'selected' class to li element AND the link inside the li element that is currently active.
+    # If the sub navigation should be included, it renders another <ul> containing the sub navigation inside the active <li> element.
     class List < Renderer::Base
       
       def render(item_container, include_sub_navigation=false)
