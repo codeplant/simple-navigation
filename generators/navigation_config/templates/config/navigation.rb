@@ -9,9 +9,6 @@ SimpleNavigation::Configuration.run do |navigation|
   
   # Define the primary navigation
   navigation.items do |primary|
-    # Set a dom_id for this navigation if needed. The default renderer applies it to the generated <ul> tag. 
-    # primary.dom_id = 'main_navigation'
-    
     # Add an item to the primary navigation. The following params apply:
     # key - a symbol which uniquely defines your navigation item in the scope of the primary_navigation
     # name - will be displayed in the rendered navigation. This can also be a call to your I18n-framework.
@@ -22,9 +19,6 @@ SimpleNavigation::Configuration.run do |navigation|
     
     # Add an item which has a sub navigation (same params, but with block)
     primary.item :key_2, 'name', url, html_options do |sub_nav|
-      # Again, dom_id can be set if needed
-      # sub_nav.dom_id = 'sub_nav'
-      
       # Add an item to the sub navigation (same params again)
       sub_nav.item :key_2_1, 'name', url, html_options
     end 
