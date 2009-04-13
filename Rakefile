@@ -29,6 +29,8 @@ begin
     gemspec.homepage = "http://github.com/andi/simple-navigation"
     gemspec.description = "Simple Navigation is a ruby library for creating a navigation (optionally with sub navigation) for your rails app."
     gemspec.authors = ["Andi Schacke"]
+    gemspec.rdoc_options = ["--inline-source", "--charset=UTF-8"]
+    gemspec.files += ["CHANGELOG"]
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"

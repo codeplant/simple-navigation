@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
     "README"
   ]
   s.files = [
+    "CHANGELOG",
     "Rakefile",
     "VERSION.yml",
     "generators/navigation_config/USAGE",
@@ -38,7 +39,7 @@ Gem::Specification.new do |s|
   ]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/andi/simple-navigation}
-  s.rdoc_options = ["--charset=UTF-8"]
+  s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{Simple Navigation is a ruby library for creating a navigation (optionally with sub navigation) for your rails app.}
