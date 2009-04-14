@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke"]
-  s.date = %q{2009-04-13}
+  s.date = %q{2009-04-14}
   s.description = %q{Simple Navigation is a ruby library for creating a navigation (optionally with sub navigation) for your rails app.}
   s.email = %q{andreas.schacke@gmail.com}
   s.extra_rdoc_files = [
@@ -41,6 +41,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/andi/simple-navigation}
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
   s.require_paths = ["lib"]
+  s.rubyforge_project = %q{andi}
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{Simple Navigation is a ruby library for creating a navigation (optionally with sub navigation) for your rails app.}
   s.test_files = [
