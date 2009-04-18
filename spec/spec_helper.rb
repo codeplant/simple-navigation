@@ -1,4 +1,5 @@
 ENV["RAILS_ENV"] = "test"
+RAILS_ENV = "test"
 require 'rubygems'
 require 'spec'
 require 'active_support'

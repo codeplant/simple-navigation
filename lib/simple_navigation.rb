@@ -2,10 +2,13 @@
 module SimpleNavigation
 
   mattr_accessor :config_file
+  mattr_accessor :config_file_path
   
   # Reads the specified config_file and stores it for later evaluation.
-  def self.load_config(config_file)
-    self.config_file = IO.read(config_file)
+  def self.load_config
+    raise "config_file_path is not set!" unless self.config_file_path
+    raise "Config file '#{config_file_path}' does not exists!" unless File.exists?(self.config_file_path)
+    self.config_file = IO.read(self.config_file_path)
   end
 
   # Returns the singleton instance of the SimpleNavigation::Configuration

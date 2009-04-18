@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe SimpleNavigation::Helpers do
   class ControllerMock
@@ -7,12 +7,61 @@ describe SimpleNavigation::Helpers do
   
   before(:each) do
     @controller = ControllerMock.new
-    SimpleNavigation.config.stub!(:loaded?).and_return(true)
-    @primary_navigation = stub(:primary_navigation)
+    SimpleNavigation.stub!(:load_config)
+    SimpleNavigation::Configuration.stub!(:eval_config)
+    @primary_navigation = stub(:primary_navigation, :null_object => true)
     SimpleNavigation.stub!(:primary_navigation).and_return(@primary_navigation)
   end
   
   describe 'render_navigation' do
+    describe 'regarding loading of the config-file' do
+      context "RAILS_ENV undefined" do
+        before(:each) do
+          ::RAILS_ENV = nil
+        end
+        it "should load the config file" do
+          SimpleNavigation.should_receive(:load_config)
+          @controller.render_navigation
+        end
+      end
+      context "RAILS_ENV defined" do
+        before(:each) do
+          ::RAILS_ENV = 'production'
+        end
+        context "RAILS_ENV=production" do
+          it "should not load the config file" do
+            SimpleNavigation.should_not_receive(:load_config)
+            @controller.render_navigation          
+          end
+        end
+        
+        context "RAILS_ENV=development" do
+          before(:each) do
+            ::RAILS_ENV = 'development'
+          end
+          it "should load the config file" do
+            SimpleNavigation.should_receive(:load_config)
+            @controller.render_navigation
+          end
+        end
+        
+        context "RAILS_ENV=test" do
+          before(:each) do
+            ::RAILS_ENV = 'test'
+          end
+          it "should load the config file" do
+            SimpleNavigation.should_receive(:load_config)
+            @controller.render_navigation
+          end
+        end
+      end
+    end
+    
+    it "should eval the config on every request" do
+      SimpleNavigation::Configuration.should_receive(:eval_config).with(@controller)
+      @controller.render_navigation
+    end
+    
     context 'primary' do
       before(:each) do
         @controller.instance_variable_set(:@current_primary_navigation, :current_primary)

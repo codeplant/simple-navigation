@@ -1,29 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
-
-describe SimpleNavigation do
-
-  describe 'load_config' do
-        
-    before(:each) do
-      @config_file = '"my_navigation_config"'
-      IO.stub!(:read).and_return(@config_file)
-    end
-    
-    it "should load the navigation-configfile into a string" do
-      IO.should_receive(:read).with('./config/navigation.rb')
-      SimpleNavigation.load_config('./config/navigation.rb')
-    end
-    it "should store that string in a module-var" do
-      SimpleNavigation.load_config('./config/navigation.rb')
-      SimpleNavigation.config_file.should == @config_file
-    end
-  end
-  
-  describe 'config' do
-    it {SimpleNavigation.config.should == SimpleNavigation::Configuration.instance}
-  end
-  
-end
+require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe SimpleNavigation::Configuration do
   

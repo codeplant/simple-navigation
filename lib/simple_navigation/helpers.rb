@@ -23,7 +23,8 @@ module SimpleNavigation
     # 
     # :primary which only renders the primary_navigation (also see render_primary_navigation) and :secondary which only renders the sub_navigation (see render_sub_navigation).
     def render_navigation(level = :nested)
-      SimpleNavigation::Configuration.eval_config(self) unless SimpleNavigation.config.loaded?
+      SimpleNavigation.load_config unless ::RAILS_ENV == 'production'
+      SimpleNavigation::Configuration.eval_config(self)
       case level
       when :primary:
         SimpleNavigation.primary_navigation.render(@current_primary_navigation)
