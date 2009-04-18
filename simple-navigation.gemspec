@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simple-navigation}
-  s.version = "1.1.1"
+  s.version = "1.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke"]
-  s.date = %q{2009-04-14}
+  s.date = %q{2009-04-18}
   s.description = %q{Simple Navigation is a ruby library for creating a navigation (optionally with sub navigation) for your rails app.}
   s.email = %q{andreas.schacke@gmail.com}
   s.extra_rdoc_files = [
@@ -28,13 +28,14 @@ Gem::Specification.new do |s|
     "lib/simple_navigation/renderer/base.rb",
     "lib/simple_navigation/renderer/list.rb",
     "rails/init.rb",
-    "spec/lib/configuration_spec.rb",
-    "spec/lib/controller_methods_spec.rb",
-    "spec/lib/helpers_spec.rb",
-    "spec/lib/item_container_spec.rb",
-    "spec/lib/item_spec.rb",
-    "spec/lib/renderer/base_spec.rb",
-    "spec/lib/renderer/list_spec.rb",
+    "spec/lib/simple_navigation/configuration_spec.rb",
+    "spec/lib/simple_navigation/controller_methods_spec.rb",
+    "spec/lib/simple_navigation/helpers_spec.rb",
+    "spec/lib/simple_navigation/item_container_spec.rb",
+    "spec/lib/simple_navigation/item_spec.rb",
+    "spec/lib/simple_navigation/renderer/base_spec.rb",
+    "spec/lib/simple_navigation/renderer/list_spec.rb",
+    "spec/lib/simple_navigation_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.has_rdoc = true
@@ -45,13 +46,14 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{Simple Navigation is a ruby library for creating a navigation (optionally with sub navigation) for your rails app.}
   s.test_files = [
-    "spec/lib/configuration_spec.rb",
-    "spec/lib/controller_methods_spec.rb",
-    "spec/lib/helpers_spec.rb",
-    "spec/lib/item_container_spec.rb",
-    "spec/lib/item_spec.rb",
-    "spec/lib/renderer/base_spec.rb",
-    "spec/lib/renderer/list_spec.rb",
+    "spec/lib/simple_navigation/configuration_spec.rb",
+    "spec/lib/simple_navigation/controller_methods_spec.rb",
+    "spec/lib/simple_navigation/helpers_spec.rb",
+    "spec/lib/simple_navigation/item_container_spec.rb",
+    "spec/lib/simple_navigation/item_spec.rb",
+    "spec/lib/simple_navigation/renderer/base_spec.rb",
+    "spec/lib/simple_navigation/renderer/list_spec.rb",
+    "spec/lib/simple_navigation_spec.rb",
     "spec/spec_helper.rb"
   ]
 
