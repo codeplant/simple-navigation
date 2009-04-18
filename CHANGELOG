@@ -1,3 +1,9 @@
+*1.1.2
+
+* Bugfix: config now gets evaluated on every render_navigation call. Credits to Joël Azémar.
+* Config file gets reloaded on every render_navigation call in development mode. Only load config file on server start in production mode.
+
+
 *1.1.1
 
 * Change plugin into a GemPlugin
