@@ -1,4 +1,4 @@
-*master
+*1.2.0
 * added capability to add conditions to navigation-items (primary.item key, name, url, :if => Proc.new {current_user.admin?})
 
 *1.1.2
