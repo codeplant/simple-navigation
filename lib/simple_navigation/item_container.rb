@@ -19,11 +19,18 @@ module SimpleNavigation
     #
     # The <tt>url</tt> is the address that the generated item points to. You can also use url_helpers (named routes, restful routes helper, url_for etc.) 
     #
-    # The <tt>html_options</tt> can be used to specify attributes that will be included in the rendered navigation item (e.g. id, class etc.)
+    # The <tt>options</tt> can be used to specify the following things:
+    # * <tt>html_attributes</tt> - will be included in the rendered navigation item (e.g. id, class etc.)
+    # * <tt>:if</tt> - Specifies a proc to call to determine if the item should
+    #   be rendered (e.g. <tt>:if => Proc.new { current_user.admin? }</tt>). The
+    #   proc should evaluate to a true or false value and is evaluated in the context of the view.
+    # * <tt>:unless</tt> - Specifies a proc to call to determine if the item should not
+    #   be rendered (e.g. <tt>:unless => Proc.new { current_user.admin? }</tt>). The
+    #   proc should evaluate to a true or false value and is evaluated in the context of the view.
     #
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
-    def item(key, name, url, html_options={}, &block)
-      @items << Item.new(key, name, url, html_options, block)
+    def item(key, name, url, options={}, &block)
+      (@items << Item.new(key, name, url, options, block)) if should_add_item?(options)
     end
 
     # Returns the Item with the specified key, nil otherwise.
@@ -37,6 +44,25 @@ module SimpleNavigation
     def render(current_navigation, include_sub_navigation=false, current_sub_navigation=nil)
       self.renderer.new(current_navigation, current_sub_navigation).render(self, include_sub_navigation)
     end
+
+    private
+    
+    # partially borrowed from ActionSupport::Callbacks
+    def should_add_item?(options) #:nodoc:
+      [options.delete(:if)].flatten.compact.all? { |m| evaluate_method(m) } &&
+      ![options.delete(:unless)].flatten.compact.any? { |m| evaluate_method(m) }
+    end
+    
+    # partially borrowed from ActionSupport::Callbacks
+    def evaluate_method(method) #:nodoc:
+      case method
+        when Proc, Method
+          method.call
+        else
+          raise ArgumentError, ":if or :unless must be procs or lambdas"
+      end
+    end
+
     
   end
   

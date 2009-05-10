@@ -17,36 +17,115 @@ describe SimpleNavigation::ItemContainer do
 
   describe 'item' do
     
-    context 'block given' do    
+    context 'unconditional item' do
+    
       before(:each) do
-        @sub_container = stub(:sub_container)
-        SimpleNavigation::ItemContainer.stub!(:new).and_return(@sub_container)
+        @item_container.stub!(:should_add_item?).and_return(true)
       end
+    
+      context 'block given' do    
+        before(:each) do
+          @sub_container = stub(:sub_container)
+          SimpleNavigation::ItemContainer.stub!(:new).and_return(@sub_container)
+        end
       
-      it "should should yield an new ItemContainer" do
-        @item_container.item('key', 'name', 'url', 'options') do |container|
-          container.should == @sub_container
+        it "should should yield an new ItemContainer" do
+          @item_container.item('key', 'name', 'url', 'options') do |container|
+            container.should == @sub_container
+          end
+        end
+        it "should create a new Navigation-Item with the given params and the specified block" do
+          SimpleNavigation::Item.should_receive(:new).with('key', 'name', 'url', 'options', @proc)
+          @item_container.item('key', 'name', 'url', 'options', &@proc)
+        end
+        it "should add the created item to the list of items" do
+          @item_container.items.should_receive(:<<)
+          @item_container.item('key', 'name', 'url', 'options') {}
         end
       end
-      it "should create a new Navigation-Item with the given params and the specified block" do
-        SimpleNavigation::Item.should_receive(:new).with('key', 'name', 'url', 'options', @proc)
-        @item_container.item('key', 'name', 'url', 'options', &@proc)
+    
+      context 'no block given' do
+        it "should create a new Navigation_item with the given params and nil as sub_navi" do
+          SimpleNavigation::Item.should_receive(:new).with('key', 'name', 'url', 'options', nil)
+          @item_container.item('key', 'name', 'url', 'options')
+        end
+        it "should add the created item to the list of items" do
+          @item_container.items.should_receive(:<<)
+          @item_container.item('key', 'name', 'url', 'options')
+        end
       end
-      it "should add the created item to the list of items" do
-        @item_container.items.should_receive(:<<)
-        @item_container.item('key', 'name', 'url', 'options') {}
-      end
+
     end
     
-    context 'no block given' do
-      it "should create a new Navigation_item with the given params and nil as sub_navi" do
-        SimpleNavigation::Item.should_receive(:new).with('key', 'name', 'url', 'options', nil)
-        @item_container.item('key', 'name', 'url', 'options')
+    context 'conditions given for item' do
+    
+      context '"if" given' do
+
+        before(:each) do
+          @options = {:if => Proc.new {@condition}}
+        end
+        
+        it "should remove if from options" do
+          @item_container.item('key', 'name', 'url', @options)
+          @options[:if].should be_nil
+        end
+        
+        context 'if evals to true' do
+          before(:each) do
+            @condition = true
+          end
+          it "should create a new Navigation-Item" do
+            SimpleNavigation::Item.should_receive(:new)
+            @item_container.item('key', 'name', 'url', @options)
+          end
+        end
+        
+        context 'if evals to false' do
+          before(:each) do
+            @condition = false
+          end
+          it "should not create a new Navigation-Item" do
+            SimpleNavigation::Item.should_not_receive(:new)
+            @item_container.item('key', 'name', 'url', @options)
+          end
+        end
+        
+        context '"unless" given' do
+          
+          before(:each) do
+            @options = {:unless => Proc.new {@condition}}
+          end
+          
+          
+          it "should remove unless from options" do
+            @item_container.item('key', 'name', 'url', @options)
+            @options[:unless].should be_nil
+          end
+          
+          context 'unless evals to false' do
+            before(:each) do
+              @condition = false
+            end
+            it "should create a new Navigation-Item" do
+              SimpleNavigation::Item.should_receive(:new)
+              @item_container.item('key', 'name', 'url', @options)
+            end
+          end
+
+          context 'unless evals to true' do
+            before(:each) do
+              @condition = true
+            end
+            it "should not create a new Navigation-Item" do
+              SimpleNavigation::Item.should_not_receive(:new)
+              @item_container.item('key', 'name', 'url', @options)
+            end
+          end
+        
+        end
+        
       end
-      it "should add the created item to the list of items" do
-        @item_container.items.should_receive(:<<)
-        @item_container.item('key', 'name', 'url', 'options')
-      end
+
     end
     
   end
