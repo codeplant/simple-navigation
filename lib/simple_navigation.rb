@@ -3,6 +3,7 @@ module SimpleNavigation
 
   mattr_accessor :config_file
   mattr_accessor :config_file_path
+  mattr_accessor :controller
   
   # Reads the specified config_file and stores it for later evaluation.
   def self.load_config

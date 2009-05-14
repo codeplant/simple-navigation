@@ -10,15 +10,29 @@ module SimpleNavigation
     attr_accessor :selected_class
     attr_reader :primary_navigation
 
-    # Evals the config_file inside the specified context (usually a controller or view)
-    def self.eval_config(context)
-      context.instance_eval(SimpleNavigation.config_file)
-    end
+    class << self
 
-    # Starts processing the configuration
-    def self.run(&block)
-      block.call Configuration.instance
-    end    
+      # Evals the config_file inside the specified context (usually a controller or view)
+      def eval_config(context)
+        context.instance_eval(SimpleNavigation.config_file)
+        SimpleNavigation.controller = extract_controller_from context
+      end
+
+      # Starts processing the configuration
+      def run(&block)
+        block.call Configuration.instance
+      end    
+
+      # Extracts a controller from the context.
+      def extract_controller_from(context)
+        if context.respond_to? :controller
+          context.controller
+        else
+          context
+        end
+      end
+
+    end
     
     # Sets the config's default-settings
     def initialize
@@ -36,6 +50,7 @@ module SimpleNavigation
     def loaded?
       !@primary_navigation.nil?
     end    
+    
   end  
   
 end

@@ -3,7 +3,29 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe SimpleNavigation::Item do
   
   describe 'initialize' do
-  
+    context 'method' do
+      context 'defined' do
+        before(:each) do
+          @options = {:method => :delete}
+          @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', @options, nil)          
+        end
+        it 'should set the method as instance_var' do
+          @item.method.should == :delete
+        end
+        it 'should set the html-options without the method' do
+          @item.instance_variable_get(:@html_options).key?(:method).should be_false
+        end
+      end
+      
+      context 'undefined' do
+        before(:each) do
+          @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', {}, nil)          
+        end
+        it 'should set the instance-var to nil' do
+          @item.method.should be_nil
+        end
+      end
+    end
   end
   
   describe 'selected?' do
@@ -94,7 +116,7 @@ describe SimpleNavigation::Item do
         it {@item.html_options(:bla)[:id].should == 'my_key'}
       end
     end
-    
+        
   end
   
 

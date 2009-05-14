@@ -1,3 +1,7 @@
+*master
+
+* renderers now have access to request_forgery_protection stuff (this allows delete-links as navigation-items)
+
 *1.2.1
 
 * changed way to include render_*-helper_methods into view (including them into Controller and declaring them as helper_methods instead of adding whole module as Helper). this seems to be more reliable under certain conditions. Credits to Gernot Kogler.

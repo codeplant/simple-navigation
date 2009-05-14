@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe SimpleNavigation do
+  
   describe 'load_config' do
     context 'config_file_path is set' do
       before(:each) do

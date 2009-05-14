@@ -17,6 +17,7 @@ describe SimpleNavigation::Configuration do
   describe 'self.eval_config' do
     before(:each) do
       @context = mock(:context)
+      @context.stub!(:instance_eval)
       @config_file = stub(:config_file)
       SimpleNavigation.stub!(:config_file).and_return(@config_file)
     end
@@ -24,8 +25,38 @@ describe SimpleNavigation::Configuration do
       @context.should_receive(:instance_eval).with(@config_file)
       SimpleNavigation::Configuration.eval_config(@context)
     end    
+    it "should set the controller" do
+      @controller = stub(:controller)
+      SimpleNavigation::Configuration.should_receive(:extract_controller_from).with(@context).and_return(@controller)
+      SimpleNavigation.should_receive(:controller=).with(@controller)
+      SimpleNavigation::Configuration.eval_config(@context)
+    end
   end
 
+  describe 'self.extract_controller_from' do
+    before(:each) do
+      @nav_context = stub(:nav_context)
+    end
+    
+    context 'object responds to controller' do
+      before(:each) do
+        @controller = stub(:controller)
+        @nav_context.stub!(:controller).and_return(@controller)
+      end
+      
+      it "should return the controller" do
+        SimpleNavigation::Configuration.extract_controller_from(@nav_context).should == @controller
+      end
+      
+    end
+    
+    context 'object does not respond to controller' do
+      it "should return the nav_context" do
+        SimpleNavigation::Configuration.extract_controller_from(@nav_context).should == @nav_context
+      end
+    end
+  end
+  
   describe 'initialize' do
     it "should set the List-Renderer as default upon initialize" do
       @config.renderer.should == SimpleNavigation::Renderer::List
