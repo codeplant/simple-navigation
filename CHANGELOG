@@ -1,4 +1,6 @@
-* master
+*1.2.1
+
+* changed way to include render_*-helper_methods into view (including them into Controller and declaring them as helper_methods instead of adding whole module as Helper). this seems to be more reliable under certain conditions. Credits to Gernot Kogler.
 
 *1.2.0
 
