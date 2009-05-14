@@ -1,4 +1,5 @@
-*master
+
+*1.2.2
 
 * renderers now have access to request_forgery_protection stuff (this allows delete-links as navigation-items)
 
