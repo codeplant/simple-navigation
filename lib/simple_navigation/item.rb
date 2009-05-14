@@ -5,12 +5,12 @@ module SimpleNavigation
     attr_reader :key, :name, :url, :sub_navigation, :method
     
     # see ItemContainer#item
-    def initialize(key, name, url, html_options, sub_nav_block)
+    def initialize(key, name, url, options, sub_nav_block)
       @key = key
-      @method = html_options.delete(:method)
+      @method = options.delete(:method)
       @name = name
       @url = url
-      @html_options = html_options
+      @html_options = options
       if sub_nav_block
         @sub_navigation = ItemContainer.new
         sub_nav_block.call @sub_navigation
