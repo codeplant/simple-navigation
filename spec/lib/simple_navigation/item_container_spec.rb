@@ -21,6 +21,7 @@ describe SimpleNavigation::ItemContainer do
     
       before(:each) do
         @item_container.stub!(:should_add_item?).and_return(true)
+        @options = {}
       end
     
       context 'block given' do    
@@ -30,28 +31,28 @@ describe SimpleNavigation::ItemContainer do
         end
       
         it "should should yield an new ItemContainer" do
-          @item_container.item('key', 'name', 'url', 'options') do |container|
+          @item_container.item('key', 'name', 'url', @options) do |container|
             container.should == @sub_container
           end
         end
         it "should create a new Navigation-Item with the given params and the specified block" do
-          SimpleNavigation::Item.should_receive(:new).with('key', 'name', 'url', 'options', @proc)
-          @item_container.item('key', 'name', 'url', 'options', &@proc)
+          SimpleNavigation::Item.should_receive(:new).with('key', 'name', 'url', @options, @proc)
+          @item_container.item('key', 'name', 'url', @options, &@proc)
         end
         it "should add the created item to the list of items" do
           @item_container.items.should_receive(:<<)
-          @item_container.item('key', 'name', 'url', 'options') {}
+          @item_container.item('key', 'name', 'url', @options) {}
         end
       end
     
       context 'no block given' do
         it "should create a new Navigation_item with the given params and nil as sub_navi" do
-          SimpleNavigation::Item.should_receive(:new).with('key', 'name', 'url', 'options', nil)
-          @item_container.item('key', 'name', 'url', 'options')
+          SimpleNavigation::Item.should_receive(:new).with('key', 'name', 'url', @options, nil)
+          @item_container.item('key', 'name', 'url', @options)
         end
         it "should add the created item to the list of items" do
           @item_container.items.should_receive(:<<)
-          @item_container.item('key', 'name', 'url', 'options')
+          @item_container.item('key', 'name', 'url', @options)
         end
       end
 
