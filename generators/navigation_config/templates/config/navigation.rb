@@ -7,6 +7,11 @@ SimpleNavigation::Configuration.run do |navigation|
   # Specify the class that will be applied to active navigation items. Defaults to 'selected'
   # navigation.selected_class = 'your_selected_class'
   
+  # Normally only the current sub menu is renderedwhen render_navigation is called
+  # setting this to true render all submenus which is useful for javascript
+  # driven hovering menus like the jquery superfish plugin
+  # navigation.render_all_levels = true
+  
   # Define the primary navigation
   navigation.items do |primary|
     # Add an item to the primary navigation. The following params apply:
