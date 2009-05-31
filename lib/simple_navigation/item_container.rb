@@ -4,7 +4,7 @@ module SimpleNavigation
   class ItemContainer
     
     attr_reader :items
-    attr_accessor :renderer, :dom_id
+    attr_accessor :renderer, :dom_id, :dom_class
     
     def initialize #:nodoc:
       @items = []
