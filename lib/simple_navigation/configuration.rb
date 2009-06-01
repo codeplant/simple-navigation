@@ -9,6 +9,7 @@ module SimpleNavigation
     attr_accessor :renderer
     attr_accessor :selected_class
     attr_accessor :render_all_levels
+    attr_accessor :item_keys_to_ids
     attr_reader :primary_navigation
 
     class << self
@@ -40,6 +41,7 @@ module SimpleNavigation
       @renderer = SimpleNavigation::Renderer::List
       @selected_class = 'selected'
       @render_all_levels = false
+      @item_keys_to_ids = true
     end
   
     # Yields an SimpleNavigation::ItemContainer for adding navigation items
