@@ -1,3 +1,8 @@
+*1.3.0
+
+* render_all_levels-option allows to render all subnavigation independent from the active primary navigation ('full open tree'). Userful for javascript menus. Thanks to Richard Hulse.
+* ability to turn off automatic generation of dom_ids for the list items (autogenerate_item_ids). Credits again to Richard Hulse.
+* ability to specify dom_class for primary and secondary lists. Thanks Richard!
 
 *1.2.2
 
