@@ -64,6 +64,12 @@ describe SimpleNavigation::Configuration do
     it "should set the selected_class to 'selected' as default" do
       @config.selected_class.should == 'selected'
     end
+    it "should set render_all_levels to false as default" do
+      @config.render_all_levels.should be_false
+    end
+    it "should set autogenerate_item_ids to true as default" do
+      @config.autogenerate_item_ids.should be_true
+    end
   end  
   describe 'items' do
     before(:each) do

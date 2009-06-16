@@ -14,7 +14,7 @@ module SimpleNavigation
           html_options = item.html_options(current_navigation)
           li_content = link_to(item.name, item.url, :class => item.selected_class(current_navigation), :method => item.method)
           if item.sub_navigation
-            if Configuration.instance.render_all_levels
+            if SimpleNavigation.config.render_all_levels
               li_content << (item.sub_navigation.render(current_sub_navigation))
             else
               li_content << (item.sub_navigation.render(current_sub_navigation)) if include_sub_navigation && item.selected?(current_navigation)
