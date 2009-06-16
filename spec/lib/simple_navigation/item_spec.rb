@@ -100,21 +100,47 @@ describe SimpleNavigation::Item do
     end
     
     describe 'id' do
-      context 'with id defined in options' do
+      context 'with autogenerate_item_ids == true' do
         before(:each) do
-          @options = {:id => 'my_id'}
-          @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', @options, nil)
+          @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', {}, nil)
+          @item.stub!(:autogenerate_item_ids? => true)
         end
-        it {@item.html_options(:bla)[:id].should == 'my_id'}
-      end
+        context 'with id defined in options' do
+          before(:each) do
+            @item.html_options = {:id => 'my_id'}
+          end
+          it {@item.html_options(:bla)[:id].should == 'my_id'}
+        end
       
-      context 'with no id definied in options (using default id)' do
-        before(:each) do
-          @options = {}
-          @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', @options, nil)
+        context 'with no id definied in options (using default id)' do
+          before(:each) do
+            @item.html_options = {}
+          end
+          it {@item.html_options(:bla)[:id].should == 'my_key'}
         end
-        it {@item.html_options(:bla)[:id].should == 'my_key'}
       end
+
+      context 'with autogenerate_item_ids == false' do
+        before(:each) do
+          @item = SimpleNavigation::Item.new(:my_key, 'name', 'url', {}, nil)
+          @item.stub!(:autogenerate_item_ids? => false)
+        end
+        context 'with id defined in options' do
+          before(:each) do
+            @item.html_options = {:id => 'my_id'}
+          end
+          it {@item.html_options(:bla)[:id].should == 'my_id'}
+        end
+      
+        context 'with no id definied in options (using default id)' do
+          before(:each) do
+            @item.html_options = {}
+          end
+          it {@item.html_options(:bla)[:id].should be_nil}
+        end
+     
+      end
+
     end
         
   end
