@@ -12,9 +12,9 @@ SimpleNavigation::Configuration.run do |navigation|
   # driven hovering menus like the jquery superfish plugin
   # navigation.render_all_levels = true
   
-  # Item keys are normally added to html elements.
+  # Item keys are normally added to list items.
   # this setting turns that off
-  # navigation.item_keys_to_ids = false
+  # navigation.autogenerate_item_ids = false
 
   # Define the primary navigation
   navigation.items do |primary|
@@ -40,8 +40,8 @@ SimpleNavigation::Configuration.run do |navigation|
 
     # you can also specify a css id or class to attach to this particular level
     # works for all levels of the menu
-    primary.dom_id = 'menu-id'
-    primary.dom_class = 'menu-class'
+    # primary.dom_id = 'menu-id'
+    # primary.dom_class = 'menu-class'
   
   end
   
