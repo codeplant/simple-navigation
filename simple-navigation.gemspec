@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simple-navigation}
-  s.version = "1.3.0"
+  s.version = "1.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke"]
-  s.date = %q{2009-06-16}
+  s.date = %q{2009-06-28}
   s.description = %q{Simple Navigation is a ruby library for creating a navigation (optionally with sub navigation) for your rails app.}
   s.email = %q{andreas.schacke@gmail.com}
   s.extra_rdoc_files = [
