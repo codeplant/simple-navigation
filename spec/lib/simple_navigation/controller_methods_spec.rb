@@ -24,7 +24,7 @@ describe SimpleNavigation::ControllerMethods do
     end
     it "should install the Helpers Module" do
       [:render_navigation, :render_primary_navigation, :render_sub_navigation].each do |m|
-        @controller.master_helper_module.instance_methods.should include(m.to_s)
+        @controller.master_helper_module.instance_methods.map(&:to_s).should include(m.to_s)
       end
     end
   end

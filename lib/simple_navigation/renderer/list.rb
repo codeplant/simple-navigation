@@ -22,7 +22,7 @@ module SimpleNavigation
           end  
           list << content_tag(:li, li_content, html_options)
         end
-        content_tag(:ul, list_content, {:id => item_container.dom_id, :class => item_container.dom_class})
+        content_tag(:ul, list_content.join, {:id => item_container.dom_id, :class => item_container.dom_class})
       end
       
     end
