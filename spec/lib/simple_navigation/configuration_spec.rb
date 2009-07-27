@@ -18,13 +18,21 @@ describe SimpleNavigation::Configuration do
     before(:each) do
       @context = mock(:context)
       @context.stub!(:instance_eval)
-      @config_file = stub(:config_file)
-      SimpleNavigation.stub!(:config_file).and_return(@config_file)
+      @config_files = {:default => 'default', :my_context => 'my_context'}
+      SimpleNavigation.stub!(:config_files).and_return(@config_files)
     end
-    it "should instance_eval the config_file-string inside the context" do
-      @context.should_receive(:instance_eval).with(@config_file)
-      SimpleNavigation::Configuration.eval_config(@context)
-    end    
+    context "with default navigation context" do
+      it "should instance_eval the default config_file-string inside the context" do
+        @context.should_receive(:instance_eval).with('default')
+        SimpleNavigation::Configuration.eval_config(@context)
+      end    
+    end
+    context 'with non default navigation context' do
+      it "should instance_eval the specified config_file-string inside the context" do
+        @context.should_receive(:instance_eval).with('my_context')
+        SimpleNavigation::Configuration.eval_config(@context, :my_context)
+      end
+    end
     it "should set the controller" do
       @controller = stub(:controller)
       SimpleNavigation::Configuration.should_receive(:extract_controller_from).with(@context).and_return(@controller)

@@ -22,9 +22,20 @@ module SimpleNavigation
     # Other possible levels are 
     # 
     # :primary which only renders the primary_navigation (also see render_primary_navigation) and :secondary which only renders the sub_navigation (see render_sub_navigation).
-    def render_navigation(level = :nested)
-      SimpleNavigation.load_config unless ::RAILS_ENV == 'production'
-      SimpleNavigation::Configuration.eval_config(self)
+    def render_navigation(*args) #render_navigation(level = :nested, options = {})
+      args = [Hash.new] if args.empty?
+      default_options = {:context => :default, :level => :nested}
+      level, navigation_context = case args.first 
+      when Hash
+        options = default_options.merge(args.first)
+        [options[:level], options[:context]]
+      when Symbol
+        [args[0], default_options.merge(args[1] || {})[:context]]
+      else
+        raise ArgumentError, "Invalid arguments"
+      end
+      SimpleNavigation.load_config(navigation_context)
+      SimpleNavigation::Configuration.eval_config(self, navigation_context)
       case level
       when :primary
         SimpleNavigation.primary_navigation.render(@current_primary_navigation)
@@ -39,13 +50,13 @@ module SimpleNavigation
     end
     
     # Renders the primary_navigation with the configured renderer. Calling render_navigation(:primary) has the same effect.
-    def render_primary_navigation
-      render_navigation(:primary)
+    def render_primary_navigation(options = {})
+      render_navigation(:primary, options)
     end
     
     # Renders the sub_navigation with the configured renderer. Calling render_navigation(:secondary) has the same effect.
-    def render_sub_navigation
-      render_navigation(:secondary)
+    def render_sub_navigation(options = {})
+      render_navigation(:secondary, options)
     end
     
   end

@@ -15,50 +15,23 @@ describe SimpleNavigation::Helpers do
   
   describe 'render_navigation' do
     describe 'regarding loading of the config-file' do
-      context "RAILS_ENV undefined" do
-        before(:each) do
-          ::RAILS_ENV = nil
-        end
-        it "should load the config file" do
-          SimpleNavigation.should_receive(:load_config)
+      context 'no options specified' do
+        it "should load the config-file for the default context" do
+          SimpleNavigation.should_receive(:load_config).with(:default)
           @controller.render_navigation
         end
       end
-      context "RAILS_ENV defined" do
-        before(:each) do
-          ::RAILS_ENV = 'production'
-        end
-        context "RAILS_ENV=production" do
-          it "should not load the config file" do
-            SimpleNavigation.should_not_receive(:load_config)
-            @controller.render_navigation          
-          end
-        end
-        
-        context "RAILS_ENV=development" do
-          before(:each) do
-            ::RAILS_ENV = 'development'
-          end
-          it "should load the config file" do
-            SimpleNavigation.should_receive(:load_config)
-            @controller.render_navigation
-          end
-        end
-        
-        context "RAILS_ENV=test" do
-          before(:each) do
-            ::RAILS_ENV = 'test'
-          end
-          it "should load the config file" do
-            SimpleNavigation.should_receive(:load_config)
-            @controller.render_navigation
-          end
+      
+      context 'with options specified' do
+        it "should load the config-file for the specified context" do
+          SimpleNavigation.should_receive(:load_config).with(:my_context)
+          @controller.render_navigation(:context => :my_context)
         end
       end
     end
     
     it "should eval the config on every request" do
-      SimpleNavigation::Configuration.should_receive(:eval_config).with(@controller)
+      SimpleNavigation::Configuration.should_receive(:eval_config).with(@controller, :default)
       @controller.render_navigation
     end
     
@@ -69,6 +42,10 @@ describe SimpleNavigation::Helpers do
       it "should call render on the primary_navigation" do
         @primary_navigation.should_receive(:render).with(:current_primary)
         @controller.render_navigation(:primary)
+      end
+      it "should call render on the primary_navigation (specifying level through options)" do
+        @primary_navigation.should_receive(:render).with(:current_primary)
+        @controller.render_navigation(:level => :primary)
       end
     end
     
@@ -125,20 +102,22 @@ describe SimpleNavigation::Helpers do
     end
     
     context 'unknown level' do
-      it {lambda {@controller.render_navigation(:unknown)}.should raise_error(ArgumentError)}
+      it "should raise an error" do
+        lambda {@controller.render_navigation(:unknown)}.should raise_error(ArgumentError)
+      end
     end
   end
   
   describe 'render_primary_navigation' do  
     it "should delegate to render_navigation(:primary)" do
-      @controller.should_receive(:render_navigation).with(:primary)
+      @controller.should_receive(:render_navigation).with(:primary, {})
       @controller.render_primary_navigation
     end
   end
   
   describe 'render_sub_navigation' do
     it "should delegate to render_navigation(:secondary)" do
-      @controller.should_receive(:render_navigation).with(:secondary)
+      @controller.should_receive(:render_navigation).with(:secondary, {})
       @controller.render_sub_navigation
     end
   end

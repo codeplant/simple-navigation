@@ -14,9 +14,9 @@ module SimpleNavigation
 
     class << self
 
-      # Evals the config_file inside the specified context (usually a controller or view)
-      def eval_config(context)
-        context.instance_eval(SimpleNavigation.config_file)
+      # Evals the config_file for the given navigation_context inside the specified context (usually a controller or view)
+      def eval_config(context, navigation_context = :default)
+        context.instance_eval(SimpleNavigation.config_files[navigation_context])
         SimpleNavigation.controller = extract_controller_from context
       end
 
