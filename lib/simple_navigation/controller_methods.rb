@@ -28,11 +28,11 @@ module SimpleNavigation
   #     
   #     def your_special_action
   #       ...
-  #       current_navigation :special
+  #       current_navigation :account, :special
   #     end
   #   end
   #
-  # This overrides :account as active navigation for your_special_action and sets it to :special.
+  # The code above still sets the active primary navigation to :account but also sets the sub_navigation to :special for 'your_special_action'.
   #
   # Note: The specified symbols must match the keys for your navigation items in your config/navigation.rb file.
   module ControllerMethods
