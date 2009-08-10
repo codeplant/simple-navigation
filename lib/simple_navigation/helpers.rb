@@ -22,7 +22,7 @@ module SimpleNavigation
     # Other possible levels are 
     # 
     # :primary which only renders the primary_navigation (also see render_primary_navigation) and :secondary which only renders the sub_navigation (see render_sub_navigation).
-    def render_navigation(*args) #render_navigation(level = :nested, options = {})
+    def render_navigation(*args)
       args = [Hash.new] if args.empty?
       default_options = {:context => :default, :level => :nested}
       level, navigation_context = case args.first 
