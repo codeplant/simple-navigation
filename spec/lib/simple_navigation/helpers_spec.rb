@@ -110,14 +110,14 @@ describe SimpleNavigation::Helpers do
   
   describe 'render_primary_navigation' do  
     it "should delegate to render_navigation(:primary)" do
-      @controller.should_receive(:render_navigation).with(:primary, {})
+      @controller.should_receive(:render_navigation).with(:level => :primary)
       @controller.render_primary_navigation
     end
   end
   
   describe 'render_sub_navigation' do
     it "should delegate to render_navigation(:secondary)" do
-      @controller.should_receive(:render_navigation).with(:secondary, {})
+      @controller.should_receive(:render_navigation).with(:level => :secondary)
       @controller.render_sub_navigation
     end
   end

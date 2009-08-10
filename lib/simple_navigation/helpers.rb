@@ -15,13 +15,15 @@ module SimpleNavigation
   #
   module Helpers
     
-    # Renders the navigation according to the specified <tt>level</tt>. 
-    # 
-    # The <tt>level</tt> defaults to :nested which renders the the sub_navigation for an active primary_navigation inside that active primary_navigation item. 
-    # 
-    # Other possible levels are 
-    # 
-    # :primary which only renders the primary_navigation (also see render_primary_navigation) and :secondary which only renders the sub_navigation (see render_sub_navigation).
+    # Renders the navigation according to the specified options-hash. 
+    #
+    # The following options are supported:
+    # * <tt>level</tt> - defaults to :nested which renders the the sub_navigation for an active primary_navigation inside that active primary_navigation item. 
+    #   Other possible levels are :primary which only renders the primary_navigation (also see render_primary_navigation) and :secondary which only renders the sub_navigation (see render_sub_navigation).
+    # * <tt>context</tt> - specifies the context for which you would render the navigation. Defaults to :default which loads the default navigation.rb (i.e. config/navigation.rb)
+    #   if you specify a context then the plugin tries to load the configuration file for that context, e.g. if you call <tt>render_navigation(:context => :admin)</tt> the file config/admin_navigation.rb
+    #   will be loaded and used for rendering the navigation.
+    #   
     def render_navigation(*args)
       args = [Hash.new] if args.empty?
       default_options = {:context => :default, :level => :nested}
@@ -49,14 +51,14 @@ module SimpleNavigation
       end
     end
     
-    # Renders the primary_navigation with the configured renderer. Calling render_navigation(:primary) has the same effect.
+    # Renders the primary_navigation with the configured renderer. Calling render_navigation(:level => :primary) has the same effect.
     def render_primary_navigation(options = {})
-      render_navigation(:primary, options)
+      render_navigation(options.merge(:level => :primary))
     end
     
-    # Renders the sub_navigation with the configured renderer. Calling render_navigation(:secondary) has the same effect.
+    # Renders the sub_navigation with the configured renderer. Calling render_navigation(:level => :secondary) has the same effect.
     def render_sub_navigation(options = {})
-      render_navigation(:secondary, options)
+      render_navigation(options.merge(:level => :secondary))
     end
     
   end
