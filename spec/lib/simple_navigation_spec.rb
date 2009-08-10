@@ -35,7 +35,7 @@ describe SimpleNavigation do
     context 'config_file_path is set' do
       before(:each) do
         SimpleNavigation.config_file_path = 'path_to_config'
-        SimpleNavigation.stub!(:config_file_name => 'path_to_config/navigation.rb')
+        #SimpleNavigation.stub!(:config_file_name => 'path_to_config/navigation.rb')
       end
       
       context 'config_file does exist' do
@@ -51,10 +51,12 @@ describe SimpleNavigation do
           SimpleNavigation.load_config
         end
         it "should store the read content in the module (default context)" do
+          SimpleNavigation.should_receive(:config_file_name).with(:default).twice
           SimpleNavigation.load_config
           SimpleNavigation.config_files[:default].should == 'file_content'
         end
         it "should store the content in the module (non default context)" do
+          SimpleNavigation.should_receive(:config_file_name).with(:my_context).twice
           SimpleNavigation.load_config(:my_context)
           SimpleNavigation.config_files[:my_context].should == 'file_content'
         end

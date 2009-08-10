@@ -9,11 +9,11 @@ module SimpleNavigation
   # Reads the config_file for the specified navigation_context and stores it for later evaluation.
   def self.load_config(navigation_context = :default)
     raise "config_file_path is not set!" unless self.config_file_path
-    raise "Config file '#{self.config_file_name}' does not exists!" unless File.exists?(self.config_file_name)
+    raise "Config file '#{self.config_file_name}' does not exists!" unless File.exists?(self.config_file_name(navigation_context))
     if ::RAILS_ENV == 'production'
-      self.config_files[navigation_context] ||= IO.read(self.config_file_name)
+      self.config_files[navigation_context] ||= IO.read(self.config_file_name(navigation_context))
     else
-      self.config_files[navigation_context] = IO.read(self.config_file_name)
+      self.config_files[navigation_context] = IO.read(self.config_file_name(navigation_context))
     end
   end
 
