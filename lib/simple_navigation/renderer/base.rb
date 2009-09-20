@@ -10,7 +10,7 @@ module SimpleNavigation
       include ActionView::Helpers::UrlHelper
       include ActionView::Helpers::TagHelper
       
-      attr_reader :current_navigation, :current_sub_navigation, :controller
+      attr_reader :controller, :template
 
       class << self
         
@@ -25,10 +25,9 @@ module SimpleNavigation
 
       controller_method :form_authenticity_token, :protect_against_forgery?, :request_forgery_protection_token
       
-      def initialize(current_navigation, current_sub_navigation=nil) #:nodoc:
-        @current_navigation = current_navigation
-        @current_sub_navigation = current_sub_navigation
+      def initialize #:nodoc:
         @controller = SimpleNavigation.controller
+        @template = SimpleNavigation.template
       end
             
       # Renders the specified ItemContainer to HTML.

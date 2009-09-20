@@ -10,9 +10,7 @@ require 'simple_navigation/renderer/list'
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
 
-  mattr_accessor :config_files
-  mattr_accessor :config_file_path
-  mattr_accessor :controller
+  mattr_accessor :config_files, :config_file_path, :controller, :template
   self.config_files = {}
   
   class << self
@@ -38,10 +36,18 @@ module SimpleNavigation
       config.primary_navigation
     end
   
+    def current_primary_navigation_item
+      self.primary_navigation.selected_item
+    end
+
     # Returns the path to the config_file for the given navigation_context
     def config_file_name(navigation_context = :default)
       file_name = navigation_context == :default ? '' : "#{navigation_context.to_s.underscore}_"
       File.join(config_file_path, "#{file_name}navigation.rb")
+    end
+
+    def current_navigation_for(level)
+      self.controller.instance_variable_get(:"@current_navigation_#{level}")
     end
 
   end

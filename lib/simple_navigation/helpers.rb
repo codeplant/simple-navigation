@@ -40,12 +40,12 @@ module SimpleNavigation
       SimpleNavigation::Configuration.eval_config(self, navigation_context)
       case level
       when :primary
-        SimpleNavigation.primary_navigation.render(@current_primary_navigation)
+        SimpleNavigation.primary_navigation.render
       when :secondary
-        primary = SimpleNavigation.primary_navigation[@current_primary_navigation]
-        primary.sub_navigation.render(@current_secondary_navigation) if primary && primary.sub_navigation
+        primary = SimpleNavigation.current_primary_navigation_item
+        primary.sub_navigation.render if primary && primary.sub_navigation
       when :nested
-        SimpleNavigation.primary_navigation.render(@current_primary_navigation, true, @current_secondary_navigation)
+        SimpleNavigation.primary_navigation.render(true)
       else
         raise ArgumentError, "Invalid navigation level: #{level}"
       end

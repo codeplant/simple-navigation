@@ -3,10 +3,11 @@ module SimpleNavigation
   # Holds the Items for a navigation 'level' (either the primary_navigation or a sub_navigation).
   class ItemContainer
     
-    attr_reader :items
+    attr_reader :items, :level
     attr_accessor :renderer, :dom_id, :dom_class
     
-    def initialize #:nodoc:
+    def initialize(level=0) #:nodoc:
+      @level = level
       @items = []
       @renderer = Configuration.instance.renderer
     end
@@ -30,7 +31,7 @@ module SimpleNavigation
     #
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
     def item(key, name, url, options={}, &block)
-      (@items << Item.new(key, name, url, options, block)) if should_add_item?(options)
+      (@items << Item.new(self, key, name, url, options, block)) if should_add_item?(options)
     end
 
     # Returns the Item with the specified key, nil otherwise.
@@ -41,8 +42,20 @@ module SimpleNavigation
     # Renders the items in this ItemContainer using the configured renderer.
     #
     # Set <tt>include_sub_navigation</tt> to true if you want to nest the sub_navigation into the active primary_navigation
-    def render(current_navigation, include_sub_navigation=false, current_sub_navigation=nil)
-      self.renderer.new(current_navigation, current_sub_navigation).render(self, include_sub_navigation)
+    def render(include_sub_navigation=false)
+      self.renderer.new.render(self, include_sub_navigation)
+    end
+
+    def selected?
+      items.any? {|i| i.selected?}
+    end
+
+    def selected_item
+      self[current_navigation] || items.find {|i| i.selected?}
+    end
+
+    def current_navigation
+      SimpleNavigation.current_navigation_for(level)
     end
 
     private

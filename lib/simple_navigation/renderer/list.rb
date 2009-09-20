@@ -11,13 +11,11 @@ module SimpleNavigation
       
       def render(item_container, include_sub_navigation=false)
         list_content = item_container.items.inject([]) do |list, item|
-          html_options = item.html_options(current_navigation)
-          li_content = link_to(item.name, item.url, :class => item.selected_class(current_navigation), :method => item.method)
+          html_options = item.html_options
+          li_content = link_to(item.name, item.url, :class => item.selected_class, :method => item.method)
           if item.sub_navigation
-            if SimpleNavigation.config.render_all_levels
-              li_content << (item.sub_navigation.render(current_sub_navigation))
-            else
-              li_content << (item.sub_navigation.render(current_sub_navigation)) if include_sub_navigation && item.selected?(current_navigation)
+            if SimpleNavigation.config.render_all_levels || (include_sub_navigation && item.selected?)
+              li_content << (item.sub_navigation.render)
             end
           end  
           list << content_tag(:li, li_content, html_options)

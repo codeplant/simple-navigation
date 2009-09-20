@@ -6,18 +6,16 @@ module SimpleNavigation
   class Configuration
     include Singleton
     
-    attr_accessor :renderer
-    attr_accessor :selected_class
-    attr_accessor :render_all_levels
-    attr_accessor :autogenerate_item_ids
+    attr_accessor :renderer, :selected_class, :render_all_levels, :autogenerate_item_ids
     attr_reader :primary_navigation
 
     class << self
 
       # Evals the config_file for the given navigation_context inside the specified context (usually a controller or view)
       def eval_config(context, navigation_context = :default)
-        context.instance_eval(SimpleNavigation.config_files[navigation_context])
         SimpleNavigation.controller = extract_controller_from context
+        SimpleNavigation.template = SimpleNavigation.controller.instance_variable_get(:@template)
+        context.instance_eval(SimpleNavigation.config_files[navigation_context])
       end
 
       # Starts processing the configuration
