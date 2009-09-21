@@ -58,7 +58,12 @@ module SimpleNavigation
     end
 
     def current_page?
-      root_path_match? || SimpleNavigation.template.current_page?(@url_hash)
+      match = root_path_match? || SimpleNavigation.template.current_page?(@url_hash)
+      puts "SimpleNavigation: Item :#{@key} #{@url_hash}"
+      puts "SimpleNavigation: Request-Uri: #{SimpleNavigation.controller.request.request_uri}"
+      puts "MATCH!" if match
+      puts "----------------------------------"
+      match
     end
 
     def root_path_match?
@@ -66,7 +71,6 @@ module SimpleNavigation
     end
 
     def hash_for_url(url)
-      request = SimpleNavigation.controller.request
       ActionController::Routing::Routes.recognize_path(url, {:method => (@method || :get)})
     end
 
