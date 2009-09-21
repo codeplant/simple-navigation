@@ -35,10 +35,6 @@ module SimpleNavigation
     def primary_navigation
       config.primary_navigation
     end
-  
-    def current_primary_navigation_item
-      self.primary_navigation.selected_item
-    end
 
     # Returns the path to the config_file for the given navigation_context
     def config_file_name(navigation_context = :default)
@@ -46,6 +42,8 @@ module SimpleNavigation
       File.join(config_file_path, "#{file_name}navigation.rb")
     end
 
+    # Reads the current navigation for the specified level from the controller.
+    # Returns nil if there is no current navigation set for level.
     def current_navigation_for(level)
       self.controller.instance_variable_get(:"@current_navigation_#{level}")
     end

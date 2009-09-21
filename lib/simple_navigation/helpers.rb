@@ -42,7 +42,7 @@ module SimpleNavigation
       when :primary
         SimpleNavigation.primary_navigation.render
       when :secondary
-        primary = SimpleNavigation.current_primary_navigation_item
+        primary = SimpleNavigation.primary_navigation.selected_item
         primary.sub_navigation.render if primary && primary.sub_navigation
       when :nested
         SimpleNavigation.primary_navigation.render(true)
