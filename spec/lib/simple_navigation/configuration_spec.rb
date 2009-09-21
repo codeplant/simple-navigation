@@ -39,6 +39,13 @@ describe SimpleNavigation::Configuration do
       SimpleNavigation.should_receive(:controller=).with(@controller)
       SimpleNavigation::Configuration.eval_config(@context)
     end
+    it "should set the template" do
+      @template = stub(:template)
+      @controller = stub(:controller, :instance_variable_get => @template)
+      SimpleNavigation.stub!(:controller => @controller)
+      SimpleNavigation.should_receive(:template=).with(@template)
+      SimpleNavigation::Configuration.eval_config(@context)
+    end
   end
 
   describe 'self.extract_controller_from' do
@@ -77,6 +84,9 @@ describe SimpleNavigation::Configuration do
     end
     it "should set autogenerate_item_ids to true as default" do
       @config.autogenerate_item_ids.should be_true
+    end
+    it "should set auto_highlight to true as default" do
+      @config.auto_highlight.should be_true
     end
   end  
   describe 'items' do
