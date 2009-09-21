@@ -10,7 +10,7 @@ module SimpleNavigation
       include ActionView::Helpers::UrlHelper
       include ActionView::Helpers::TagHelper
       
-      attr_reader :controller, :template
+      attr_reader :controller
 
       class << self
         
@@ -27,7 +27,6 @@ module SimpleNavigation
       
       def initialize #:nodoc:
         @controller = SimpleNavigation.controller
-        @template = SimpleNavigation.template
       end
             
       # Renders the specified ItemContainer to HTML.

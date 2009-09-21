@@ -4,7 +4,7 @@ describe SimpleNavigation::Renderer::Base do
   before(:each) do
     @controller = stub(:controller)
     SimpleNavigation.stub!(:controller).and_return(@controller)
-    @base_renderer = SimpleNavigation::Renderer::Base.new(:current_primary, :current_secondary)
+    @base_renderer = SimpleNavigation::Renderer::Base.new
   end
   it "should inclue ActionView::Helpers::UrlHelper" do
     @base_renderer.should respond_to(:link_to)
@@ -20,8 +20,6 @@ describe SimpleNavigation::Renderer::Base do
   end
   
   describe 'initialize' do
-    it {@base_renderer.current_navigation.should == :current_primary}
-    it {@base_renderer.current_sub_navigation.should == :current_secondary}
     it {@base_renderer.controller.should == @controller}
   end
   
