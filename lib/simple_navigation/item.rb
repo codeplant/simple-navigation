@@ -12,7 +12,7 @@ module SimpleNavigation
       @method = options.delete(:method)
       @name = name
       @url = url
-      @url_hash = hash_for_url(url)
+      @url_hash = url #hash_for_url(url)
       @html_options = options
       if sub_nav_block
         @sub_navigation = ItemContainer.new(@container.level + 1)
