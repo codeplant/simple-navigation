@@ -15,6 +15,62 @@ describe SimpleNavigation::ItemContainer do
     end
   end
 
+  describe 'selected?' do
+    before(:each) do
+      @item_1 = stub(:item, :selected? => false)
+      @item_2 = stub(:item, :selected? => false)
+      @item_container.instance_variable_set(:@items, [@item_1, @item_2])
+    end
+    it "should return nil if no item is selected" do
+      @item_container.should_not be_selected
+    end
+    it "should return true if one item is selected" do
+      @item_1.stub!(:selected? => true)
+      @item_container.should be_selected
+    end
+  end
+
+  describe 'selected_item' do
+    before(:each) do
+      @item_1 = stub(:item, :selected? => false)
+      @item_2 = stub(:item, :selected? => false)
+      @item_container.instance_variable_set(:@items, [@item_1, @item_2])
+    end
+    context 'navigation explicitely set' do
+      before(:each) do
+        @item_container.stub!(:[] => @item_1)
+      end
+      it "should return the explicitely selected item" do
+        @item_container.selected_item.should == @item_1
+      end
+    end
+    context 'navigation not explicitely set' do
+      before(:each) do
+        @item_container.stub!(:[] => nil)
+      end
+      context 'no item selected' do
+        it "should return nil" do
+          @item_container.selected_item.should be_nil
+        end
+      end
+      context 'one item selected' do
+        before(:each) do
+          @item_1.stub!(:selected? => true)
+        end
+        it "should return the selected item" do
+          @item_container.selected_item.should == @item_1
+        end
+      end
+    end
+  end
+
+  describe 'current_explicit_navigation' do
+    it "should call SimpleNavigation.current_navigation with the container's level" do
+      SimpleNavigation.should_receive(:current_navigation_for).with(0)
+      @item_container.current_explicit_navigation
+    end
+  end
+
   describe 'item' do
     
     context 'unconditional item' do
@@ -36,7 +92,7 @@ describe SimpleNavigation::ItemContainer do
           end
         end
         it "should create a new Navigation-Item with the given params and the specified block" do
-          SimpleNavigation::Item.should_receive(:new).with('key', 'name', 'url', @options, @proc)
+          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, @proc)
           @item_container.item('key', 'name', 'url', @options, &@proc)
         end
         it "should add the created item to the list of items" do
@@ -47,7 +103,7 @@ describe SimpleNavigation::ItemContainer do
     
       context 'no block given' do
         it "should create a new Navigation_item with the given params and nil as sub_navi" do
-          SimpleNavigation::Item.should_receive(:new).with('key', 'name', 'url', @options, nil)
+          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, nil)
           @item_container.item('key', 'name', 'url', @options)
         end
         it "should add the created item to the list of items" do
@@ -156,8 +212,8 @@ describe SimpleNavigation::ItemContainer do
       @items = stub(:items)
       @item_container.stub!(:items).and_return(@items)
     end
-    it "should instatiate a renderer with the current_primary and current_secondary" do
-      @renderer.should_receive(:new).with(:current_navigation, nil)
+    it "should instatiate a renderer" do
+      @renderer.should_receive(:new)
       @item_container.render(:current_navigation)
     end
     it "should call render on the renderer and pass self" do
@@ -166,7 +222,7 @@ describe SimpleNavigation::ItemContainer do
     end
     it "should call render on the renderer and pass the include_sub_navigation option" do
       @renderer_instance.should_receive(:render).with(anything, true)
-      @item_container.render(:current_navigation, true, :current_sub_navigation)
+      @item_container.render(true)
     end
     
   end

@@ -35,6 +35,7 @@ module SimpleNavigation
     end
 
     # Returns the Item with the specified key, nil otherwise.
+    #
     def [](navi_key)
       items.find {|i| i.key == navi_key}
     end
@@ -46,15 +47,22 @@ module SimpleNavigation
       self.renderer.new.render(self, include_sub_navigation)
     end
 
+    # Returns true if any of this container's items is selected.
+    #
     def selected?
       items.any? {|i| i.selected?}
     end
 
+    # Returns the currently selected item, nil if no item is selected.
+    #
     def selected_item
-      self[current_navigation] || items.find {|i| i.selected?}
+      self[current_explicit_navigation] || items.find {|i| i.selected?}
     end
 
-    def current_navigation
+    # Returns the current navigation that has been explicitely defined in the controller for this container's level.
+    # Returns nil if no explicit current navigation has been set.
+    #
+    def current_explicit_navigation
       SimpleNavigation.current_navigation_for(level)
     end
 
