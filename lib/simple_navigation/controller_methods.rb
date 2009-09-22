@@ -1,7 +1,9 @@
 #TODO: add :except and :only options to navigation method
 module SimpleNavigation
   
-  # Adds methods for handling the current 'active' navigation to the controllers.
+  # Adds methods for explicitely setting the current 'active' navigation to the controllers.
+  # Since version 2.0.0 the simple_navigation plugin determines the active navigation based on the current url by default,
+  # so explicitely defining the active navigation in the controllers is only needed for edge cases where automatic highlighting does not work.
   # 
   # On the controller class level, use the navigation method to set the active navigation for all actions in the controller.
   # 
@@ -51,10 +53,10 @@ module SimpleNavigation
       # The specified symbols must match the keys for your navigation items in your config/navigation.rb file.  
       def navigation(primary_navigation, sub_navigation=nil)
         self.class_eval do
-          define_method :set_navigation do
+          define_method :sn_set_navigation do
             current_navigation(primary_navigation, sub_navigation)
           end
-          before_filter :set_navigation
+          before_filter :sn_set_navigation
         end
       end
     end
@@ -66,8 +68,8 @@ module SimpleNavigation
       #
       # The specified symbols must match the keys for your navigation items in your config/navigation.rb file.
       def current_navigation(primary_navigation, sub_navigation=nil)
-        @current_navigation_0 = primary_navigation
-        @current_navigation_1 = sub_navigation
+        @sn_current_navigation_0 = primary_navigation
+        @sn_current_navigation_1 = sub_navigation
       end
     end
 
