@@ -6,13 +6,12 @@ module SimpleNavigation
     attr_writer :html_options
     
     # see ItemContainer#item
-    def initialize(container, key, name, url, options, sub_nav_block)
+    def initialize(container, key, name, url, options, sub_nav_block) #:nodoc:
       @container = container
       @key = key
       @method = options.delete(:method)
       @name = name
       @url = url
-      @url_hash = url #hash_for_url(url)
       @html_options = options
       if sub_nav_block
         @sub_navigation = ItemContainer.new(@container.level + 1)
@@ -20,7 +19,13 @@ module SimpleNavigation
       end
     end
     
-    # Returns true if this navigation item should be rendered as 'selected' for the specified current_navigation.
+    # Returns true if this navigation item should be rendered as 'selected'.
+    # An item is selected if
+    #
+    # * it has been explicitly selected in a controller or
+    # * it has a subnavigation and one of its subnavigation items is selected or
+    # * its url matches the url of the current request
+    #
     def selected?
       @selected = @selected || selected_by_config? || selected_by_subnav? || selected_by_url?
     end
@@ -31,52 +36,58 @@ module SimpleNavigation
       default_options = self.autogenerate_item_ids? ? {:id => key.to_s} : {}
       options = default_options.merge(@html_options)
       options[:class] = [@html_options[:class], self.selected_class].flatten.compact.join(' ')
-      options.delete(:class) if options[:class].blank? 
+      options.delete(:class) if options[:class].blank?
       options
     end
-        
-    def selected_class #:nodoc:
+
+    # Returns the configured selected_class if the item is selected, nil otherwise
+    #
+    def selected_class
       selected? ? SimpleNavigation.config.selected_class : nil
     end
-    
+
     protected
-    
+
+    # Returns true if item has a subnavigation and the sub_navigation is selected
     def selected_by_subnav?
       sub_navigation && sub_navigation.selected?
     end
 
+    # Return true if item has explicitly selected in controllers
     def selected_by_config?
-      key == current_navigation
+      key == current_explicit_navigation
     end
 
-    def current_navigation
-      @container.current_navigation
+    def current_explicit_navigation
+      @container.current_explicit_navigation
     end
 
+    # Returns true if the item's url matches the request's current url.
     def selected_by_url?
-      current_page?
+      if auto_highlight?
+        !!(root_path_match? || (SimpleNavigation.template && SimpleNavigation.template.current_page?(url)))
+      else
+        false
+      end
     end
 
-    def current_page?
-      match = root_path_match? || SimpleNavigation.template.current_page?(@url_hash)
-      puts "SimpleNavigation: Item :#{@key} #{@url_hash}"
-      puts "SimpleNavigation: Request-Uri: #{SimpleNavigation.controller.request.request_uri}"
-      puts "MATCH!" if match
-      puts "----------------------------------"
-      match
-    end
-
+    # Returns true if both the item's url and the request's url are root_path
     def root_path_match?
-      @url == '/' && SimpleNavigation.controller.request.path == '/'
+      url == '/' && SimpleNavigation.controller.request.path == '/'
     end
 
-    def hash_for_url(url)
-      ActionController::Routing::Routes.recognize_path(url, {:method => (@method || :get)})
+    # Converts url to url_hash. Accesses routing system, quite slow... Not used at the moment
+    def hash_for_url(url) #:nodoc:
+      ActionController::Routing::Routes.recognize_path(url, {:method => (method || :get)})
     end
 
     def autogenerate_item_ids?
       SimpleNavigation.config.autogenerate_item_ids
     end
-        
+
+    def auto_highlight?
+      SimpleNavigation.config.auto_highlight
+    end
+
   end
 end
