@@ -2,6 +2,8 @@
 
 * explicitly loading all source files when requiring 'simple_navigation'.
 
+* added auto_highlight feature. Active navigation is determined by comparing urls, no need to explicitly set it in the controllers anymore. Thanks to Jack Dempsey and Florian Hanke for the support on this.
+
 *1.4.0 
 
 * added the capability to have several navigation-contexts
