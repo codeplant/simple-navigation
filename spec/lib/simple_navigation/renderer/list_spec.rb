@@ -106,7 +106,6 @@ describe SimpleNavigation::Renderer::List do
         HTML::Selector.new('li.selected ul li').select(render(:invoices, true)).should have(2).entries
       end
       it "should be possible to identify sub items using an html selector (using ids)" do
-        @item2.stub!(:selected? => true)
         HTML::Selector.new('#invoices #subnav1').select(render(:invoices, true)).should have(1).entries
       end
       context 'render_all_levels = false' do
