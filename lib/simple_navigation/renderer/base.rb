@@ -4,8 +4,6 @@ module SimpleNavigation
     # This is the base class for all renderers.
     #
     # A renderer is responsible for rendering an ItemContainer (primary or a sub_navigation) and its containing items to HTML.
-    # It must be initialized with the current_navigation for the rendered ItemContainer and 
-    # optionally with the current_sub_navigation (if the sub_navigation will be nested).
     class Base
       include ActionView::Helpers::UrlHelper
       include ActionView::Helpers::TagHelper
