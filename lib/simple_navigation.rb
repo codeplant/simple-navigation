@@ -1,3 +1,12 @@
+# Load all source files (if this is not done explicitly some naming conflicts may occur if rails app has classes with the same name)
+require 'simple_navigation/configuration'
+require 'simple_navigation/helpers'
+require 'simple_navigation/controller_methods'
+require 'simple_navigation/item'
+require 'simple_navigation/item_container'
+require 'simple_navigation/renderer/base'
+require 'simple_navigation/renderer/list'
+
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
 
