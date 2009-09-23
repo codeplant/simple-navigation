@@ -137,4 +137,15 @@ describe SimpleNavigation do
     it {SimpleNavigation.config.should == SimpleNavigation::Configuration.instance}
   end
   
+  describe 'current_navigation_for' do
+    before(:each) do
+      @controller = stub(:controller)
+      SimpleNavigation.stub!(:controller => @controller)
+    end
+    it "should access the correct instance_var in the controller" do
+      @controller.should_receive(:instance_variable_get).with(:@sn_current_navigation_1)
+      SimpleNavigation.current_navigation_for(1)
+    end
+  end
+
 end

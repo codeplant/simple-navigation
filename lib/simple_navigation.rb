@@ -45,7 +45,7 @@ module SimpleNavigation
     # Reads the current navigation for the specified level from the controller.
     # Returns nil if there is no current navigation set for level.
     def current_navigation_for(level)
-      self.controller.instance_variable_get(:"@current_navigation_#{level}")
+      self.controller.instance_variable_get(:"@sn_current_navigation_#{level}")
     end
 
   end
