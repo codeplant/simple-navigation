@@ -7,8 +7,8 @@ module SimpleNavigation
     #
     # By default, the renderer sets the item's key as dom_id for the rendered <li> element unless the config option <tt>autogenerate_item_ids</tt> is set to false.
     # The id can also be explicitely specified by setting the id in the html-options of the 'item' method in the config/navigation.rb file.
-    class List < Renderer::Base
-      
+    class List < SimpleNavigation::Renderer::Base
+
       def render(item_container, include_sub_navigation=false)
         list_content = item_container.items.inject([]) do |list, item|
           html_options = item.html_options

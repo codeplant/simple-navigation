@@ -9,7 +9,7 @@ module SimpleNavigation
     def initialize(level=0) #:nodoc:
       @level = level
       @items = []
-      @renderer = Configuration.instance.renderer
+      @renderer = SimpleNavigation.config.renderer
     end
     
     # Creates a new navigation item. 
@@ -31,7 +31,7 @@ module SimpleNavigation
     #
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
     def item(key, name, url, options={}, &block)
-      (@items << Item.new(self, key, name, url, options, block)) if should_add_item?(options)
+      (@items << SimpleNavigation::Item.new(self, key, name, url, options, block)) if should_add_item?(options)
     end
 
     # Returns the Item with the specified key, nil otherwise.
