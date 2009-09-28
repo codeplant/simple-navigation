@@ -26,39 +26,50 @@ module SimpleNavigation
     #   
     def render_navigation(*args)
       args = [Hash.new] if args.empty?
-      default_options = {:context => :default, :level => :nested}
-      level, navigation_context = case args.first 
-      when Hash
-        options = default_options.merge(args.first)
-        [options[:level], options[:context]]
-      when Symbol
-        [args[0], default_options.merge(args[1] || {})[:context]]
-      else
-        raise ArgumentError, "Invalid arguments"
-      end
-      SimpleNavigation.load_config(navigation_context)
-      SimpleNavigation::Configuration.eval_config(self, navigation_context)
-      case level
-      when :primary
-        SimpleNavigation.primary_navigation.render
-      when :secondary
-        selected_primary = SimpleNavigation.primary_navigation.selected_item
-        selected_primary.sub_navigation.render if selected_primary && selected_primary.sub_navigation
+      options = extract_backwards_compatible_options(*args)
+      options = {:context => :default, :level => :nested}.merge(options)
+      SimpleNavigation.load_config(options[:context])
+      SimpleNavigation::Configuration.eval_config(self, options[:context])
+      case options[:level]
+      when Integer
+        active_item_container = SimpleNavigation.active_item_container_for(options[:level])
+        active_item_container.render if active_item_container
       when :nested
         SimpleNavigation.primary_navigation.render(true)
       else
-        raise ArgumentError, "Invalid navigation level: #{level}"
+        raise ArgumentError, "Invalid navigation level: #{options[:level]}"
       end
     end
     
-    # Renders the primary_navigation with the configured renderer. Calling render_navigation(:level => :primary) has the same effect.
+    # Renders the primary_navigation with the configured renderer. Calling render_navigation(:level => 0) has the same effect.
     def render_primary_navigation(options = {})
-      render_navigation(options.merge(:level => :primary))
+      render_navigation(options.merge(:level => 1))
     end
     
-    # Renders the sub_navigation with the configured renderer. Calling render_navigation(:level => :secondary) has the same effect.
+    # Renders the sub_navigation with the configured renderer. Calling render_navigation(:level => 1) has the same effect.
     def render_sub_navigation(options = {})
-      render_navigation(options.merge(:level => :secondary))
+      render_navigation(options.merge(:level => 2))
+    end
+
+    private
+
+    def extract_backwards_compatible_options(*args)
+      case args.first
+      when Hash
+        options = args.first
+        options[:level] = 1 if options[:level] == :primary
+        options[:level] = 2 if options[:level] == :secondary
+      when Symbol
+        raise ArgumentError, "Invalid arguments" unless [:primary, :secondary, :nested].include? args.first
+        options = Hash.new
+        options[:level] = args.first
+        options[:level] = 1 if options[:level] == :primary
+        options[:level] = 2 if options[:level] == :secondary
+        options.merge!(args[1] || {})
+      else
+        raise ArgumentError, "Invalid arguments"
+      end
+      options
     end
     
   end

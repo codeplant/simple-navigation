@@ -6,7 +6,7 @@ module SimpleNavigation
     attr_reader :items, :level
     attr_accessor :renderer, :dom_id, :dom_class
     
-    def initialize(level=0) #:nodoc:
+    def initialize(level=1) #:nodoc:
       @level = level
       @items = []
       @renderer = SimpleNavigation.config.renderer
@@ -66,8 +66,18 @@ module SimpleNavigation
       SimpleNavigation.current_navigation_for(level)
     end
 
+    def active_item_container_for(desired_level)
+      return self if self.level == desired_level
+      return nil unless selected_sub_navigation?
+      return selected_item.sub_navigation.active_item_container_for(desired_level)
+    end
+
     private
     
+    def selected_sub_navigation?
+      !!(selected_item && selected_item.sub_navigation)
+    end
+
     # partially borrowed from ActionSupport::Callbacks
     def should_add_item?(options) #:nodoc:
       [options.delete(:if)].flatten.compact.all? { |m| evaluate_method(m) } &&

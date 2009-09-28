@@ -148,4 +148,15 @@ describe SimpleNavigation do
     end
   end
 
+  describe 'active_item_container_for' do
+    before(:each) do
+      @primary = stub(:primary)
+      SimpleNavigation.config.stub!(:primary_navigation => @primary)
+    end
+    it "should call active_item_container_for on the primary_navigation with the specified level" do
+      @primary.should_receive(:active_item_container_for).with(1)
+      SimpleNavigation.active_item_container_for 1
+    end
+  end
+
 end

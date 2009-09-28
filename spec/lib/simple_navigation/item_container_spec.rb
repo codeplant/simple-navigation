@@ -64,9 +64,65 @@ describe SimpleNavigation::ItemContainer do
     end
   end
 
+  describe 'selected_sub_navigation?' do
+    context 'with an item selected' do
+      before(:each) do
+        @selected_item = stub(:selected_item)
+        @item_container.stub!(:selected_item => @selected_item)
+      end
+      context 'selected item has sub_navigation' do
+        before(:each) do
+          @sub_navigation = stub(:sub_navigation)
+          @selected_item.stub!(:sub_navigation => @sub_navigation)
+        end
+        it {@item_container.send(:selected_sub_navigation?).should be_true}
+      end
+      context 'selected item does not have sub_navigation' do
+        before(:each) do
+          @selected_item.stub!(:sub_navigation => nil)
+        end
+        it {@item_container.send(:selected_sub_navigation?).should be_false}
+      end
+    end
+    context 'without an item selected' do
+      before(:each) do
+        @item_container.stub!(:selected_item => nil)
+      end
+      it {@item_container.send(:selected_sub_navigation?).should be_false}
+    end
+
+  end
+
+  describe 'active_item_container_for' do
+    context "the desired level is the same as the container's" do
+      it {@item_container.active_item_container_for(1).should == @item_container}
+    end
+    context "the desired level is different than the container's" do
+      context 'with no selected subnavigation' do
+        before(:each) do
+          @item_container.stub!(:selected_sub_navigation? => false)
+        end
+        it {@item_container.active_item_container_for(2).should be_nil}
+      end
+      context 'with selected subnavigation' do
+        before(:each) do
+          @item_container.stub!(:selected_sub_navigation? => true)
+          @sub_nav = stub(:sub_nav)
+          @selected_item = stub(:selected_item)
+          @item_container.stub!(:selected_item => @selected_item)
+          @selected_item.stub!(:sub_navigation => @sub_nav)
+        end
+        it "should call recursively on the sub_navigation" do
+          @sub_nav.should_receive(:active_item_container_for).with(2)
+          @item_container.active_item_container_for(2)
+        end
+      end
+    end
+  end
+
   describe 'current_explicit_navigation' do
     it "should call SimpleNavigation.current_navigation with the container's level" do
-      SimpleNavigation.should_receive(:current_navigation_for).with(0)
+      SimpleNavigation.should_receive(:current_navigation_for).with(1)
       @item_container.current_explicit_navigation
     end
   end

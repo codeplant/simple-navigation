@@ -60,11 +60,11 @@ describe SimpleNavigation::ControllerMethods do
     describe 'current_navigation' do
       it "should set the current_primary_navigation as specified" do
         @controller.current_navigation(:first)
-        @controller.instance_variable_get(:@sn_current_navigation_0).should == :first
+        @controller.instance_variable_get(:@sn_current_navigation_1).should == :first
       end
       it "should set the current_secondary_navigation as specified" do
         @controller.current_navigation(:first, :second)
-        @controller.instance_variable_get(:@sn_current_navigation_1).should == :second
+        @controller.instance_variable_get(:@sn_current_navigation_2).should == :second
       end
       it "should set the current_secondary_navigation to nil if no secondary is specified" do
         @controller.current_navigation(:first)

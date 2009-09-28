@@ -68,8 +68,8 @@ module SimpleNavigation
       #
       # The specified symbols must match the keys for your navigation items in your config/navigation.rb file.
       def current_navigation(primary_navigation, sub_navigation=nil)
-        @sn_current_navigation_0 = primary_navigation
-        @sn_current_navigation_1 = sub_navigation
+        @sn_current_navigation_1 = primary_navigation
+        @sn_current_navigation_2 = sub_navigation
       end
     end
 

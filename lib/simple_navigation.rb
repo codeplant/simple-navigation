@@ -48,6 +48,11 @@ module SimpleNavigation
       self.controller.instance_variable_get(:"@sn_current_navigation_#{level}")
     end
 
+    def active_item_container_for(level)
+      self.primary_navigation.active_item_container_for(level)
+    end
+
+
   end
 
 end

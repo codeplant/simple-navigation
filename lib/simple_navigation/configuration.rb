@@ -53,7 +53,7 @@ module SimpleNavigation
     def loaded?
       !@primary_navigation.nil?
     end    
-    
+
   end  
   
 end
