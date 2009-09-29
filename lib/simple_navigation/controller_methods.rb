@@ -51,10 +51,10 @@ module SimpleNavigation
       # Sets the active navigation for all actions in this controller.
       #
       # The specified symbols must match the keys for your navigation items in your config/navigation.rb file.  
-      def navigation(primary_navigation, sub_navigation=nil)
+      def navigation(*args)
         self.class_eval do
           define_method :sn_set_navigation do
-            current_navigation(primary_navigation, sub_navigation)
+            current_navigation(*args)
           end
           before_filter :sn_set_navigation
         end
@@ -62,16 +62,17 @@ module SimpleNavigation
     end
   
     module InstanceMethods
-      
       # Sets the active navigation. Call this method in any action to override the controller-wide active navigation
       # specified by navigation.
       #
       # The specified symbols must match the keys for your navigation items in your config/navigation.rb file.
-      def current_navigation(primary_navigation, sub_navigation=nil)
-        @sn_current_navigation_1 = primary_navigation
-        @sn_current_navigation_2 = sub_navigation
+      def current_navigation(*args)
+        @sn_current_navigation_args = args #SimpleNavigation.explicit_navigation_args = args
       end
+
+
     end
+
 
   end
 end

@@ -4,12 +4,13 @@ module SimpleNavigation
   class ItemContainer
     
     attr_reader :items, :level
-    attr_accessor :renderer, :dom_id, :dom_class
+    attr_accessor :renderer, :dom_id, :dom_class, :auto_highlight
     
     def initialize(level=1) #:nodoc:
       @level = level
       @items = []
       @renderer = SimpleNavigation.config.renderer
+      @auto_highlight = true
     end
     
     # Creates a new navigation item. 
@@ -39,6 +40,22 @@ module SimpleNavigation
     def [](navi_key)
       items.find {|i| i.key == navi_key}
     end
+
+    # Returns the level of the item specified by navi_key.
+    # Recursively works its way down the item's sub_navigations if the desired item is not found directly in this container's items.
+    # Returns nil item cannot be found.
+    #
+    def level_for_item(navi_key)
+      my_item = self[navi_key]
+      return self.level if my_item
+      items.each do |i|
+        if i.sub_navigation
+          level = i.sub_navigation.level_for_item(navi_key)
+          return level unless level.nil?
+        end
+      end
+      return nil
+    end
   
     # Renders the items in this ItemContainer using the configured renderer.
     #
@@ -66,6 +83,9 @@ module SimpleNavigation
       SimpleNavigation.current_navigation_for(level)
     end
 
+    # Returns the active item_container for the specified level
+    # (recursively looks up items in selected sub_navigation if level is deeper than this container's level).
+    #
     def active_item_container_for(desired_level)
       return self if self.level == desired_level
       return nil unless selected_sub_navigation?

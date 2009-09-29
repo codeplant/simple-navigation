@@ -30,6 +30,7 @@ module SimpleNavigation
       options = {:context => :default, :level => :nested}.merge(options)
       SimpleNavigation.load_config(options[:context])
       SimpleNavigation::Configuration.eval_config(self, options[:context])
+      SimpleNavigation.handle_explicit_navigation
       case options[:level]
       when Integer
         active_item_container = SimpleNavigation.active_item_container_for(options[:level])
@@ -72,5 +73,7 @@ module SimpleNavigation
       options
     end
     
+
+
   end
 end

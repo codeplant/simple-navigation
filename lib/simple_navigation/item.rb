@@ -86,7 +86,7 @@ module SimpleNavigation
     end
 
     def auto_highlight?
-      SimpleNavigation.config.auto_highlight
+      SimpleNavigation.config.auto_highlight && @container.auto_highlight
     end
 
   end
