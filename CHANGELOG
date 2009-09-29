@@ -1,8 +1,13 @@
+*master
+
+* added auto_highlight feature. Active navigation is determined by comparing urls, no need to explicitly set it in the controllers anymore. Thanks to Jack Dempsey and Florian Hanke for the support on this.
+* added ability to create multi-level navigations (not just limited to primary and secondary navigation). Thanks again to Jack Dempsey for the motivation ;-) 
+* simplified the process to explicitly set the navigation in the controller (where needed)
+* made auto_highlight feature configurable both on global and item_container's level 
+
 *1.4.2
 
 * explicitly loading all source files when requiring 'simple_navigation'.
-
-* added auto_highlight feature. Active navigation is determined by comparing urls, no need to explicitly set it in the controllers anymore. Thanks to Jack Dempsey and Florian Hanke for the support on this.
 
 *1.4.0 
 
