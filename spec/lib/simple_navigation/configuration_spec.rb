@@ -105,6 +105,16 @@ describe SimpleNavigation::Configuration do
     end
   end
 
+  describe 'loaded?' do
+    it "should return true if primary_nav is set" do
+      @config.instance_variable_set(:@primary_navigation, :bla)
+      @config.should be_loaded
+    end
+    it "should return false if no primary_nav is set" do
+      @config.instance_variable_set(:@primary_navigation, nil)
+      @config.should_not be_loaded
+    end
+  end
   
 end
 

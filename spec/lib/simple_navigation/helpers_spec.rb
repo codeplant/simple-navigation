@@ -95,6 +95,12 @@ describe SimpleNavigation::Helpers do
       it "should raise an error" do
         lambda {@controller.render_navigation(:unknown)}.should raise_error(ArgumentError)
       end
+      it "should raise an error" do
+        lambda {@controller.render_navigation(:level => :unknown)}.should raise_error(ArgumentError)
+      end
+      it "should raise an error" do
+        lambda {@controller.render_navigation('level')}.should raise_error(ArgumentError)
+      end
     end
   end
   

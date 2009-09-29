@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe SimpleNavigation::Item do
-  
+
   before(:each) do
-    @container = stub(:item_container)
+    @item_container = stub(:item_container)
     @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}, nil)
   end
 
@@ -203,17 +203,17 @@ describe SimpleNavigation::Item do
   describe 'selected_by_config?' do
     context 'navigation explicitly set' do
       it "should return true if current matches key" do
-        @item.stub!(:current_explicit_navigation => :my_key)
+        @item_container.stub!(:current_explicit_navigation => :my_key)
         @item.should be_selected_by_config
       end
       it "should return false if current does not match key" do
-        @item.stub!(:current_explicit_navigation => :other_key)
+        @item_container.stub!(:current_explicit_navigation => :other_key)
         @item.should_not be_selected_by_config
       end
     end
     context 'navigation not explicitly set' do
       before(:each) do
-        @item.stub!(:current_explicit_navigation => nil)
+        @item_container.stub!(:current_explicit_navigation => nil)
       end
       it {@item.should_not be_selected_by_config}
     end
@@ -297,6 +297,47 @@ describe SimpleNavigation::Item do
       @request.stub!(:path => '/bla')
       @item.stub!(:url => '/bli')
       @item.send(:root_path_match?).should be_false
+    end
+  end
+
+  describe 'auto_highlight?' do
+    before(:each) do
+      @global = stub(:config)
+      SimpleNavigation.stub!(:config => @global)
+    end
+    context 'global auto_hightlight on' do
+      before(:each) do
+        @global.stub!(:auto_highlight => true)
+      end
+      context 'container auto_hightlight on' do
+        before(:each) do
+          @item_container.stub!(:auto_highlight => true)
+        end
+        it {@item.send(:auto_highlight?).should be_true}
+      end
+      context 'container auto_hightlight off' do
+        before(:each) do
+          @item_container.stub!(:auto_highlight => false)
+        end
+        it {@item.send(:auto_highlight?).should be_false}
+      end
+    end
+    context 'global auto_hightlight off' do
+      before(:each) do
+        @global.stub!(:auto_highlight => false)
+      end
+      context 'container auto_hightlight on' do
+        before(:each) do
+          @item_container.stub!(:auto_highlight => true)
+        end
+        it {@item.send(:auto_highlight?).should be_false}
+      end
+      context 'container auto_hightlight off' do
+        before(:each) do
+          @item_container.stub!(:auto_highlight => false)
+        end
+        it {@item.send(:auto_highlight?).should be_false}
+      end
     end
   end
 

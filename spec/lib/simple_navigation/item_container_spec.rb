@@ -203,6 +203,12 @@ describe SimpleNavigation::ItemContainer do
           end
         end
         
+        context 'if is not a proc or method' do
+          it "should raise an error" do
+            lambda {@item_container.item('key', 'name', 'url', {:if => 'text'})}.should raise_error
+          end
+        end
+
         context '"unless" given' do
           
           before(:each) do
@@ -283,4 +289,27 @@ describe SimpleNavigation::ItemContainer do
     
   end
   
+  describe 'level_for_item' do
+    before(:each) do
+      @item_container.item(:p1, 'p1', 'p1')
+      @item_container.item(:p2, 'p2', 'p2') do |p2|
+        p2.item(:s1, 's1', 's1')
+        p2.item(:s2, 's2', 's2') do |s2|
+          s2.item(:ss1, 'ss1', 'ss1')
+          s2.item(:ss2, 'ss2', 'ss2')
+        end
+        p2.item(:s3, 's3', 's3')
+      end
+      @item_container.item(:p3, 'p3', 'p3')
+    end
+    it {@item_container.level_for_item(:p1).should == 1}
+    it {@item_container.level_for_item(:p3).should == 1}
+    it {@item_container.level_for_item(:s1).should == 2}
+    it {@item_container.level_for_item(:ss1).should == 3}
+    it {@item_container.level_for_item(:x).should be_nil}
+
+
+
+  end
+
 end

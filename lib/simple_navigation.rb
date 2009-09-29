@@ -86,6 +86,7 @@ module SimpleNavigation
       level = options.inject(0) do |max, kv|
         kv.first.to_s =~ /level_(\d)/
         max = $1.to_i if $1.to_i > max
+        max
       end
       raise ArgumentError, "Invalid level specified or item key not found" if level == 0
       [level, options[:"level_#{level}"]]

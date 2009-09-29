@@ -55,11 +55,7 @@ module SimpleNavigation
 
     # Return true if item has explicitly selected in controllers
     def selected_by_config?
-      key == current_explicit_navigation
-    end
-
-    def current_explicit_navigation
-      @container.current_explicit_navigation
+      key == @container.current_explicit_navigation
     end
 
     # Returns true if the item's url matches the request's current url.
@@ -77,9 +73,9 @@ module SimpleNavigation
     end
 
     # Converts url to url_hash. Accesses routing system, quite slow... Not used at the moment
-    def hash_for_url(url) #:nodoc:
-      ActionController::Routing::Routes.recognize_path(url, {:method => (method || :get)})
-    end
+    # def hash_for_url(url) #:nodoc:
+    #   ActionController::Routing::Routes.recognize_path(url, {:method => (method || :get)})
+    # end
 
     def autogenerate_item_ids?
       SimpleNavigation.config.autogenerate_item_ids

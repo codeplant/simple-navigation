@@ -51,4 +51,10 @@ describe SimpleNavigation::Renderer::Base do
     end
   end
   
+  describe 'render' do
+    it "be subclass responsability" do
+      lambda {@base_renderer.render(:container)}.should raise_error('subclass responsibility')
+    end
+  end
+
 end
