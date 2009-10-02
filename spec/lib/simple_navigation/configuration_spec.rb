@@ -18,6 +18,7 @@ describe SimpleNavigation::Configuration do
     before(:each) do
       @context = mock(:context)
       @context.stub!(:instance_eval)
+      SimpleNavigation::Configuration.stub!(:context_for_eval => @context)
       @config_files = {:default => 'default', :my_context => 'my_context'}
       SimpleNavigation.stub!(:config_files).and_return(@config_files)
     end
@@ -45,6 +46,46 @@ describe SimpleNavigation::Configuration do
       SimpleNavigation.stub!(:controller => @controller)
       SimpleNavigation.should_receive(:template=).with(@template)
       SimpleNavigation::Configuration.eval_config(@context)
+    end
+  end
+
+  describe 'context_for_eval' do
+    context 'controller is present' do
+      before(:each) do
+        @controller = stub(:controller)
+        SimpleNavigation.stub!(:controller => @controller)
+      end
+      context 'template is present' do
+        before(:each) do
+          @template = stub(:template)
+          SimpleNavigation.stub!(:template => @template)
+        end
+        it {SimpleNavigation::Configuration.context_for_eval.should == @template}
+      end
+      context 'template is not present' do
+        before(:each) do
+          SimpleNavigation.stub!(:template => nil)
+        end
+        it {SimpleNavigation::Configuration.context_for_eval.should == @controller}
+      end
+    end
+    context 'controller is not present' do
+      before(:each) do
+        SimpleNavigation.stub!(:controller => nil)
+      end
+      context 'template is present' do
+        before(:each) do
+          @template = stub(:template)
+          SimpleNavigation.stub!(:template => @template)
+        end
+        it {SimpleNavigation::Configuration.context_for_eval.should == @template}
+      end
+      context 'template is not present' do
+        before(:each) do
+          SimpleNavigation.stub!(:template => nil)
+        end
+        it {lambda {SimpleNavigation::Configuration.context_for_eval}.should raise_error}
+      end
     end
   end
 

@@ -15,7 +15,12 @@ module SimpleNavigation
       def eval_config(context, navigation_context = :default)
         SimpleNavigation.controller = extract_controller_from context
         SimpleNavigation.template = SimpleNavigation.controller.instance_variable_get(:@template)
-        context.instance_eval(SimpleNavigation.config_files[navigation_context])
+        context_for_eval.instance_eval(SimpleNavigation.config_files[navigation_context])
+      end
+
+      def context_for_eval
+        raise 'no context set for evaluation the config file' unless SimpleNavigation.template || SimpleNavigation.controller
+        SimpleNavigation.template || SimpleNavigation.controller
       end
 
       # Starts processing the configuration
