@@ -1,7 +1,7 @@
 
 == Simple Navigation
 
-Simple Navigation is a plugin for creating a navigation (optionally with sub navigation) for your rails app.
+Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Ruby on Rails application.
 
 Source code:
   git://github.com/andi/simple-navigation.git
