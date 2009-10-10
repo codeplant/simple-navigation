@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simple-navigation}
-  s.version = "1.4.2"
+  s.version = "2.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke"]
-  s.date = %q{2009-09-23}
-  s.description = %q{Simple Navigation is a ruby library for creating a navigation (optionally with sub navigation) for your rails app.}
+  s.date = %q{2009-10-10}
+  s.description = %q{With the simple-navigation gem installed you can easily create multilevel navigations for your Ruby on Rails applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation.}
   s.email = %q{andreas.schacke@gmail.com}
   s.extra_rdoc_files = [
     "README"
@@ -53,7 +53,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{andi}
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{Simple Navigation is a ruby library for creating a navigation (optionally with sub navigation) for your rails app.}
+  s.summary = %q{Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Ruby on Rails application.}
   s.test_files = [
     "spec/lib/simple_navigation/configuration_spec.rb",
      "spec/lib/simple_navigation/controller_methods_spec.rb",
