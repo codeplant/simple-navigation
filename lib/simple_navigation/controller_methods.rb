@@ -73,10 +73,7 @@ module SimpleNavigation
       def current_navigation(*args)
         @sn_current_navigation_args = args
       end
-
-
     end
-
 
   end
 end
