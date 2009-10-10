@@ -105,3 +105,7 @@ end
 # 2) ability to turn off autohighlighting for a single item... 
 # 
 # 3) add JoinRenderer (HorizontalRenderer?) (wich does not render a list, but just the items joined with a specified char (e.g. | ))
+#
+# 4) Enhance SampleProject (more examples)
+#
+# 5) Make SampleProject public
