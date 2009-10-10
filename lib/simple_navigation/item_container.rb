@@ -1,6 +1,6 @@
 module SimpleNavigation
   
-  # Holds the Items for a navigation 'level' (either the primary_navigation or a sub_navigation).
+  # Holds the Items for a navigation 'level'.
   class ItemContainer
     
     attr_reader :items, :level
@@ -59,7 +59,7 @@ module SimpleNavigation
   
     # Renders the items in this ItemContainer using the configured renderer.
     #
-    # Set <tt>include_sub_navigation</tt> to true if you want to nest the sub_navigation into the active primary_navigation
+    # Set <tt>include_sub_navigation</tt> to true if you want to nest the sub_navigation into the active parent_navigation
     def render(include_sub_navigation=false)
       self.renderer.new.render(self, include_sub_navigation)
     end
@@ -113,7 +113,6 @@ module SimpleNavigation
           raise ArgumentError, ":if or :unless must be procs or lambdas"
       end
     end
-
     
   end
   

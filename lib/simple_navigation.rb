@@ -67,7 +67,8 @@ module SimpleNavigation
     end
 
     private
-
+  
+    # TODO: refactor this ugly thing to make it nice and short
     def parse_explicit_navigation_args
       args = SimpleNavigation.explicit_navigation_args
       args = [Hash.new] if args.empty?
@@ -92,7 +93,15 @@ module SimpleNavigation
       [level, options[:"level_#{level}"]]
     end
 
-
   end
 
 end
+
+# TODOs for the next releases:
+# 1) add ability to specify explicit highlighting in the config-file itself (directly with the item)
+#    - item.highlight_on :controller => 'users', :action => 'show' ...^
+#   --> with that we can get rid of the controller_methods...
+#
+# 2) ability to turn off autohighlighting for a single item... 
+# 
+# 3) add JoinRenderer (HorizontalRenderer?) (wich does not render a list, but just the items joined with a specified char (e.g. | ))

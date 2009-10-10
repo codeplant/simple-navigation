@@ -24,7 +24,7 @@ module SimpleNavigation
     #
     # * it has been explicitly selected in a controller or
     # * it has a subnavigation and one of its subnavigation items is selected or
-    # * its url matches the url of the current request
+    # * its url matches the url of the current request (auto highlighting)
     #
     def selected?
       @selected = @selected || selected_by_config? || selected_by_subnav? || selected_by_url?

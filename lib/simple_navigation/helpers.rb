@@ -2,26 +2,27 @@ module SimpleNavigation
   
   # View helpers to render the navigation.
   #
-  # Use render_primary_navigation to render your primary navigation with the configured renderer.
-  # Use render_sub_navigation to render the sub navigation belonging to the active primary navigation.
-  # Use render_navigation to render the primary navigation with the corresponding sub navigation rendered inside primary navigation item which is active.
+  # Use render_navigation as following to render your navigation:
+  # * call <tt>render_navigation</tt> without :level option to render your navigation as nested tree.
+  # * call <tt>render_navigation(:level => x)</tt> to render a specific navigation level (e.g. :level => 1 to render your primary navigation, :level => 2 to render the sub navigation and so forth)
   # 
   # ==== Examples (using Haml)
-  #   #primary_navigation= render_primary_navigation
+  #   #primary_navigation= render_navigation(:level => 1)
   #   
-  #   #sub_navigation= render_sub_navigation
+  #   #sub_navigation= render_navigation(:level => 2)
   #
-  #   #main_navigation= render_navigation
+  #   #nested_navigation= render_navigation
   #
+  # Please note that <tt>render_primary_navigation</tt> and <tt>render_sub_navigation</tt> still work, but have been deprecated and may be removed in a future release.
   module Helpers
     
     # Renders the navigation according to the specified options-hash. 
     #
     # The following options are supported:
-    # * <tt>level</tt> - defaults to :nested which renders the the sub_navigation for an active primary_navigation inside that active primary_navigation item. 
-    #   Other possible levels are :primary which only renders the primary_navigation (also see render_primary_navigation) and :secondary which only renders the sub_navigation (see render_sub_navigation).
-    # * <tt>context</tt> - specifies the context for which you would render the navigation. Defaults to :default which loads the default navigation.rb (i.e. config/navigation.rb)
-    #   if you specify a context then the plugin tries to load the configuration file for that context, e.g. if you call <tt>render_navigation(:context => :admin)</tt> the file config/admin_navigation.rb
+    # * <tt>:level</tt> - defaults to :nested which renders the the sub_navigation for an active primary_navigation inside that active primary_navigation item. 
+    #   Specify a specific level to only render that level of navigation (e.g. :level => 1 for primary_navigation etc...).
+    # * <tt>:context</tt> - specifies the context for which you would render the navigation. Defaults to :default which loads the default navigation.rb (i.e. config/navigation.rb).
+    #   If you specify a context then the plugin tries to load the configuration file for that context, e.g. if you call <tt>render_navigation(:context => :admin)</tt> the file config/admin_navigation.rb
     #   will be loaded and used for rendering the navigation.
     #   
     def render_navigation(*args)
@@ -42,13 +43,15 @@ module SimpleNavigation
       end
     end
     
-    # Renders the primary_navigation with the configured renderer. Calling render_navigation(:level => 0) has the same effect.
+    # Deprecated. Renders the primary_navigation with the configured renderer. Calling render_navigation(:level => 0) has the same effect.
     def render_primary_navigation(options = {})
+      ActiveSupport::Deprecation.warn("SimpleNavigation::Helpers.render_primary_navigation has been deprected. Please use render_navigation(:level => 1) instead")
       render_navigation(options.merge(:level => 1))
     end
     
-    # Renders the sub_navigation with the configured renderer. Calling render_navigation(:level => 1) has the same effect.
+    # Deprecated. Renders the sub_navigation with the configured renderer. Calling render_navigation(:level => 1) has the same effect.
     def render_sub_navigation(options = {})
+      ActiveSupport::Deprecation.warn("SimpleNavigation::Helpers.render_primary_navigation has been deprected. Please use render_navigation(:level => 2) instead")
       render_navigation(options.merge(:level => 2))
     end
 
@@ -73,7 +76,5 @@ module SimpleNavigation
       options
     end
     
-
-
   end
 end
