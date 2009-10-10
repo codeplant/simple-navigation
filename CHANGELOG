@@ -4,7 +4,7 @@
 * added ability to create multi-level navigations (not just limited to primary and secondary navigation). Thanks again to Jack Dempsey for the motivation ;-) 
 * simplified the process to explicitly set the navigation in the controller (where needed) - only deepest level has to be specified
 * made auto_highlight feature configurable both on global and item_container's level 
-* config file is now evaluated in template ifever possible (not in controller anymore)
+* config file is now evaluated in template if ever possible (not in controller anymore)
 
 *1.4.2
 
