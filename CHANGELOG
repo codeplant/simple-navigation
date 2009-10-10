@@ -1,4 +1,4 @@
-*master
+*2.0.0
 
 * added auto_highlight feature. Active navigation is determined by comparing urls, no need to explicitly set it in the controllers anymore. Thanks to Jack Dempsey and Florian Hanke for the support on this.
 * added ability to create multi-level navigations (not just limited to primary and secondary navigation). Thanks again to Jack Dempsey for the motivation ;-) 
