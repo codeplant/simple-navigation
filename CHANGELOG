@@ -1,3 +1,7 @@
+*2.0.1
+
+* fixed handling of a non-existent explicit navigation item for a navigation context
+
 *2.0.0
 
 * added auto_highlight feature. Active navigation is determined by comparing urls, no need to explicitly set it in the controllers anymore. Thanks to Jack Dempsey and Florian Hanke for the support on this.
