@@ -180,14 +180,26 @@ describe SimpleNavigation do
         end
       end
       context 'single navigation' do
-        before(:each) do
-          @primary = stub(:primary, :level_for_item => 2)
-          SimpleNavigation.stub!(:primary_navigation => @primary)
-          args :key
+        context 'specified key is a valid navigation item' do
+          before(:each) do
+            @primary = stub(:primary, :level_for_item => 2)
+            SimpleNavigation.stub!(:primary_navigation => @primary)
+            args :key
+          end
+          it "should set the correct instance var in the controller" do
+            @controller.should_receive(:instance_variable_set).with(:@sn_current_navigation_2, :key)
+            SimpleNavigation.handle_explicit_navigation
+          end
         end
-        it "should set the correct instance var in the controller" do
-          @controller.should_receive(:instance_variable_set).with(:@sn_current_navigation_2, :key)
-          SimpleNavigation.handle_explicit_navigation
+        context 'specified key is an invalid navigation item' do
+          before(:each) do
+            @primary = stub(:primary, :level_for_item => nil)
+            SimpleNavigation.stub!(:primary_navigation => @primary)
+            args :key
+          end
+          it "should not raise an ArgumentError" do
+            lambda {SimpleNavigation.handle_explicit_navigation}.should_not raise_error(ArgumentError)
+          end
         end
       end
       context 'hash with level' do
