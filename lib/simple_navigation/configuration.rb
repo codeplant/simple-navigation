@@ -61,6 +61,8 @@ module SimpleNavigation
       !@primary_navigation.nil?
     end    
     
+    
+    
   end  
   
 end

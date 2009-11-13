@@ -3,16 +3,38 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe SimpleNavigation::Item do
 
   before(:each) do
-    @item_container = stub(:item_container)
-    @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}, nil)
+    @item_container = stub(:item_container, :level => 1)
+    @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
   end
 
   describe 'initialize' do
+    context 'subnav block' do
+      context 'block given' do
+        before(:each) do
+          @subnav_container = stub(:subnav_container, :null_object => true)
+          SimpleNavigation::ItemContainer.stub!(:new => @subnav_container)
+        end
+        it "should create a new ItemContainer with a level+1" do
+          SimpleNavigation::ItemContainer.should_receive(:new).with(2)
+          SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}) {}
+        end
+        it "should call the block" do
+          @subnav_container.should_receive(:test)
+          SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}) {|subnav| subnav.test}
+        end
+      end
+      context 'no block given' do
+        it "should create a new ItemContainer" do
+          SimpleNavigation::ItemContainer.should_not_receive(:new)
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
+        end
+      end
+    end
     context 'method' do
       context 'defined' do
         before(:each) do
           @options = {:method => :delete}
-          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options, nil)
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
         end
         it 'should set the method as instance_var' do
           @item.method.should == :delete
@@ -93,7 +115,7 @@ describe SimpleNavigation::Item do
       context 'with classes defined in options' do
         before(:each) do
           @options = {:class => 'my_class'}
-          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options, nil)
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
         end
         context 'with item selected' do
           before(:each) do
@@ -113,7 +135,7 @@ describe SimpleNavigation::Item do
       context 'without classes in options' do
         before(:each) do
           @options = {}
-          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options, nil)
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
         end
         context 'with item selected' do
           before(:each) do

@@ -32,7 +32,7 @@ module SimpleNavigation
     #
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
     def item(key, name, url, options={}, &block)
-      (@items << SimpleNavigation::Item.new(self, key, name, url, options, block)) if should_add_item?(options)
+      (@items << SimpleNavigation::Item.new(self, key, name, url, options, &block)) if should_add_item?(options)
     end
 
     # Returns the Item with the specified key, nil otherwise.

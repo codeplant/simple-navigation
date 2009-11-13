@@ -7,16 +7,16 @@ describe SimpleNavigation::Renderer::List do
     
     def sub_items
       [
-        [:subnav1, 'subnav1', 'subnav1_url', {}, nil],
-        [:subnav2, 'subnav2', 'subnav2_url', {}, nil]
+        [:subnav1, 'subnav1', 'subnav1_url', {}],
+        [:subnav2, 'subnav2', 'subnav2_url', {}]
       ]
     end
     
     def primary_items
       [
-        [:users, 'users', 'first_url', {:id => 'my_id'}, nil],
-        [:invoices, 'invoices', 'second_url', {}, nil],
-        [:accounts, 'accounts', 'third_url', {:style => 'float:right'}, nil]
+        [:users, 'users', 'first_url', {:id => 'my_id'}],
+        [:invoices, 'invoices', 'second_url', {}],
+        [:accounts, 'accounts', 'third_url', {:style => 'float:right'}]
       ]
     end
 

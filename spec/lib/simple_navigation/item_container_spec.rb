@@ -148,7 +148,7 @@ describe SimpleNavigation::ItemContainer do
           end
         end
         it "should create a new Navigation-Item with the given params and the specified block" do
-          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, @proc)
+          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, &@proc)
           @item_container.item('key', 'name', 'url', @options, &@proc)
         end
         it "should add the created item to the list of items" do
@@ -159,7 +159,7 @@ describe SimpleNavigation::ItemContainer do
     
       context 'no block given' do
         it "should create a new Navigation_item with the given params and nil as sub_navi" do
-          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, nil)
+          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options)
           @item_container.item('key', 'name', 'url', @options)
         end
         it "should add the created item to the list of items" do

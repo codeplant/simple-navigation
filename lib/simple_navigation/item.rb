@@ -6,7 +6,7 @@ module SimpleNavigation
     attr_writer :html_options
     
     # see ItemContainer#item
-    def initialize(container, key, name, url, options, sub_nav_block) #:nodoc:
+    def initialize(container, key, name, url, options, &sub_nav_block) #:nodoc:
       @container = container
       @key = key
       @method = options.delete(:method)
