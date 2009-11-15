@@ -15,6 +15,48 @@ describe SimpleNavigation::ItemContainer do
     end
   end
 
+  describe 'items=' do
+    before(:each) do
+      @item = stub(:item)
+      @items = [@item]
+      @item_adapter = stub(:item_adapter, :null_object => true)
+      SimpleNavigation::ItemAdapter.stub(:new => @item_adapter)
+      @item_container.stub!(:should_add_item? => true)
+    end
+    it "should wrap each item in an ItemAdapter" do
+      SimpleNavigation::ItemAdapter.should_receive(:new)
+      @item_container.items = @items
+    end
+    context 'item should be added' do
+      before(:each) do
+        @item_container.stub!(:should_add_item? => true)
+        @simple_navigation_item = stub(:simple_navigation_item)
+        @item_adapter.stub!(:to_simple_navigation_item => @simple_navigation_item)
+      end
+      it "should convert the item to a SimpleNavigation::Item" do
+        @item_adapter.should_receive(:to_simple_navigation_item).with(@item_container)
+        @item_container.items = @items
+      end
+      it "should add the item to the items-collection" do
+        @item_container.items.should_receive(:<<).with(@simple_navigation_item)
+        @item_container.items = @items
+      end
+    end
+    context 'item should not be added' do
+      before(:each) do
+        @item_container.stub!(:should_add_item? => false)
+      end
+      it "should not convert the item to a SimpleNavigation::Item" do
+        @item_adapter.should_not_receive(:to_simple_navigation_item)
+        @item_container.items = @items
+      end
+      it "should not add the item to the items-collection" do
+        @item_container.items.should_not_receive(:<<)
+        @item_container.items = @items
+      end
+    end
+  end
+
   describe 'selected?' do
     before(:each) do
       @item_1 = stub(:item, :selected? => false)
@@ -148,7 +190,7 @@ describe SimpleNavigation::ItemContainer do
           end
         end
         it "should create a new Navigation-Item with the given params and the specified block" do
-          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, &@proc)
+          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, nil, &@proc)
           @item_container.item('key', 'name', 'url', @options, &@proc)
         end
         it "should add the created item to the list of items" do
@@ -159,7 +201,7 @@ describe SimpleNavigation::ItemContainer do
     
       context 'no block given' do
         it "should create a new Navigation_item with the given params and nil as sub_navi" do
-          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options)
+          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, nil)
           @item_container.item('key', 'name', 'url', @options)
         end
         it "should add the created item to the list of items" do
