@@ -1,3 +1,7 @@
+*master
+
+* added ability to specify navigation items through items_provider. This is useful for generating the navigation dynamically (e.g. from database)
+
 *2.0.1
 
 * fixed handling of a non-existent explicit navigation item for a navigation context
