@@ -51,17 +51,24 @@ module SimpleNavigation
     end
   
     # Yields an SimpleNavigation::ItemContainer for adding navigation items
-    def items(&block)
+    def items(items_provider=nil, &block)
+      raise 'please specify either items_provider or block, but not both' if (items_provider && block) || (items_provider.nil? && block.nil?)
       @primary_navigation = ItemContainer.new
-      block.call @primary_navigation
+      if block
+        block.call @primary_navigation
+      else #items_provider specified
+        items = case items_provider
+        when Symbol
+          self.class.context_for_eval.send(items_provider)
+        end
+        @primary_navigation.items = items
+      end
     end
     
     # Returns true if the config_file has already been evaluated.
     def loaded?
       !@primary_navigation.nil?
     end    
-    
-    
     
   end  
   

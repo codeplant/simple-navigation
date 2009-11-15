@@ -135,14 +135,48 @@ describe SimpleNavigation::Configuration do
       @container = stub(:items_container)
       SimpleNavigation::ItemContainer.stub!(:new).and_return(@container)
     end
-    it "should should yield an new ItemContainer" do
-      @config.items do |container|
-        container.should == @container
+    context 'block given' do
+      context 'items_provider specified' do
+        it {lambda {@config.items(stub(:provider)) {}}.should raise_error}
+      end
+      context 'no items_provider specified' do
+        it "should should yield an new ItemContainer" do
+          @config.items do |container|
+            container.should == @container
+          end
+        end
+        it "should assign the ItemContainer to an instance-var" do
+          @config.items {}
+          @config.primary_navigation.should == @container
+        end
+        it "should not set the items on the container" do
+          @container.should_not_receive(:items=)
+          @config.items {}
+        end
       end
     end
-    it "should assign the ItemContainer to an instance-var" do
-      @config.items {}
-      @config.primary_navigation.should == @container
+    context 'no block given' do
+      context 'items_provider specified' do
+        context 'items_provider is symbol' do
+          before(:each) do
+            @items = stub(:items)
+            @context = stub(:context, :provider_method => @items)
+            @config.class.stub!(:context_for_eval => @context)
+            @container.stub!(:items=)
+          end
+          it "should call the method specified by symbol on the context" do
+            @context.should_receive(:provider_method)
+            @config.items(:provider_method)
+          end
+          it "should set the items on the container" do
+            @container.should_receive(:items=).with(@items)
+            @config.items(:provider_method)
+          end
+        end
+      end
+      context 'items_provider not specified' do
+        it {lambda {@config.items}.should raise_error}
+      end
     end
   end
 
