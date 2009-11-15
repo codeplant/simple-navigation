@@ -8,12 +8,12 @@ describe SimpleNavigation::Item do
   end
 
   describe 'initialize' do
-    context 'subnav block' do
+    context 'subnavigation' do
+      before(:each) do
+        @subnav_container = stub(:subnav_container, :null_object => true)
+        SimpleNavigation::ItemContainer.stub!(:new => @subnav_container)
+      end
       context 'block given' do
-        before(:each) do
-          @subnav_container = stub(:subnav_container, :null_object => true)
-          SimpleNavigation::ItemContainer.stub!(:new => @subnav_container)
-        end
         it "should create a new ItemContainer with a level+1" do
           SimpleNavigation::ItemContainer.should_receive(:new).with(2)
           SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}) {}
@@ -24,9 +24,24 @@ describe SimpleNavigation::Item do
         end
       end
       context 'no block given' do
-        it "should create a new ItemContainer" do
-          SimpleNavigation::ItemContainer.should_not_receive(:new)
-          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
+        context 'items given' do
+          before(:each) do
+            @items = stub(:items)
+          end
+          it "should create a new ItemContainer with a level+1" do
+            SimpleNavigation::ItemContainer.should_receive(:new).with(2)
+            SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}, @items)
+          end
+          it "should set the items on the subnav_container" do
+            @subnav_container.should_receive(:items=).with(@items)
+            SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}, @items)
+          end
+        end
+        context 'no items given' do
+          it "should not create a new ItemContainer" do
+            SimpleNavigation::ItemContainer.should_not_receive(:new)
+            @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
+          end
         end
       end
     end
