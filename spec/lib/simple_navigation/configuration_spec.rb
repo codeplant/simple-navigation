@@ -157,21 +157,24 @@ describe SimpleNavigation::Configuration do
     end
     context 'no block given' do
       context 'items_provider specified' do
-        context 'items_provider is symbol' do
-          before(:each) do
-            @items = stub(:items)
-            @context = stub(:context, :provider_method => @items)
-            @config.class.stub!(:context_for_eval => @context)
-            @container.stub!(:items=)
-          end
-          it "should call the method specified by symbol on the context" do
-            @context.should_receive(:provider_method)
-            @config.items(:provider_method)
-          end
-          it "should set the items on the container" do
-            @container.should_receive(:items=).with(@items)
-            @config.items(:provider_method)
-          end
+        before(:each) do
+          @external_provider = stub(:external_provider)
+          @items = stub(:items)
+          @items_provider = stub(:items_provider, :items => @items)
+          SimpleNavigation::ItemsProvider.stub!(:new => @items_provider)
+          @container.stub!(:items=)
+        end
+        it "should create an new Provider object for the specified provider" do
+          SimpleNavigation::ItemsProvider.should_receive(:new).with(@external_provider)
+          @config.items(@external_provider)
+        end
+        it "should call items on the provider object" do
+          @items_provider.should_receive(:items)
+          @config.items(@external_provider)
+        end
+        it "should set the items on the container" do
+          @container.should_receive(:items=).with(@items)
+          @config.items(@external_provider)
         end
       end
       context 'items_provider not specified' do
@@ -188,6 +191,13 @@ describe SimpleNavigation::Configuration do
     it "should return false if no primary_nav is set" do
       @config.instance_variable_set(:@primary_navigation, nil)
       @config.should_not be_loaded
+    end
+  end
+  
+  describe 'context_for_eval' do
+    it "should delegate to the Configuration class" do
+      @config.class.should_receive(:context_for_eval)
+      @config.context_for_eval
     end
   end
   

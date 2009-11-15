@@ -56,12 +56,8 @@ module SimpleNavigation
       @primary_navigation = ItemContainer.new
       if block
         block.call @primary_navigation
-      else #items_provider specified
-        items = case items_provider
-        when Symbol
-          self.class.context_for_eval.send(items_provider)
-        end
-        @primary_navigation.items = items
+      else
+        @primary_navigation.items = SimpleNavigation::ItemsProvider.new(items_provider).items
       end
     end
     
@@ -69,6 +65,10 @@ module SimpleNavigation
     def loaded?
       !@primary_navigation.nil?
     end    
+    
+    def context_for_eval
+      self.class.context_for_eval
+    end
     
   end  
   
