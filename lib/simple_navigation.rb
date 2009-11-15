@@ -2,9 +2,10 @@
 require 'simple_navigation/configuration'
 require 'simple_navigation/helpers'
 require 'simple_navigation/controller_methods'
-require 'simple_navigation/item'
 require 'simple_navigation/item_adapter'
+require 'simple_navigation/item'
 require 'simple_navigation/item_container'
+require 'simple_navigation/items_provider'
 require 'simple_navigation/renderer/base'
 require 'simple_navigation/renderer/list'
 
