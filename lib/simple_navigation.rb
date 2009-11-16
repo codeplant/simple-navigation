@@ -116,3 +116,8 @@ end
 # 4) Enhance SampleProject (more examples)
 #
 # 5) Make SampleProject public
+#
+# - render_navigation(:level => :all)
+# - allow item-list as items_provider
+# - allow :function navigation item to specify function
+# - allow specification of link-options in item (currently options are passed to li-element)
