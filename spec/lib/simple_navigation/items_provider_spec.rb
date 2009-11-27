@@ -43,7 +43,16 @@ describe SimpleNavigation::ItemsProvider do
         @items_provider.items.should == @items
       end
     end
-    context 'neither symbol nor items_provider.items' do
+    context 'provider is a collection' do
+      before(:each) do
+        @items_collection = []
+        @items_provider.instance_variable_set(:@provider, @items_collection)      
+      end
+      it "should return the collection itsself" do
+        @items_provider.items.should == @items_collection
+      end
+    end
+    context 'neither symbol nor items_provider.items nor collection' do
       it {lambda {@items_provider.items}.should raise_error}
     end
   end
