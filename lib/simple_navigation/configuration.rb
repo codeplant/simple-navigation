@@ -6,7 +6,7 @@ module SimpleNavigation
   class Configuration
     include Singleton
     
-    attr_accessor :renderer, :selected_class, :render_all_levels, :autogenerate_item_ids, :auto_highlight
+    attr_accessor :renderer, :selected_class, :render_all_levels, :autogenerate_item_ids, :id_generator, :auto_highlight
     attr_reader :primary_navigation
 
     class << self
@@ -47,6 +47,7 @@ module SimpleNavigation
       @selected_class = 'selected'
       @render_all_levels = false
       @autogenerate_item_ids = true
+      @id_generator = Proc.new {|id| id.to_s }
       @auto_highlight = true
     end
   
