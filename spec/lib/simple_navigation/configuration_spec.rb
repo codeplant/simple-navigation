@@ -129,6 +129,9 @@ describe SimpleNavigation::Configuration do
     it "should set auto_highlight to true as default" do
       @config.auto_highlight.should be_true
     end
+    it "should set the id_generator" do
+      @config.id_generator.should_not be_nil
+    end
   end  
   describe 'items' do
     before(:each) do
