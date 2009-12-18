@@ -117,7 +117,6 @@ end
 #
 # 5) Make SampleProject public
 #
-# - render_navigation(:level => :all)
-# - allow item-list as items_provider
 # - allow :function navigation item to specify function
 # - allow specification of link-options in item (currently options are passed to li-element)
+# - render_navigation: do not rescue from config-file not found error if no items are passed in directly
