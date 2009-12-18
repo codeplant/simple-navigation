@@ -1,7 +1,8 @@
-*master
+*2.1.0
 
 * included Ben Marini's commit which allows individual id-generators. Thanks Ben!
 * added ability to specify navigation items through items_provider. This is useful for generating the navigation dynamically (e.g. from database)
+* items can now even be passed directly into render_navigation method.
 
 *2.0.1
 
