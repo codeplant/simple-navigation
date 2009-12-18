@@ -27,7 +27,7 @@ module SimpleNavigation
       elsif provider.respond_to?(:each)
         provider
       else
-        raise "items_provider either must be a symbol specifying the helper-method to call or an object with an items-method defined"
+        raise "items_provider either must be a symbol specifying the helper-method to call, an object with an items-method defined or an enumerable representing the items"
       end
     end
     
