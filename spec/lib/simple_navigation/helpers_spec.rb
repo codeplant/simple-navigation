@@ -35,6 +35,52 @@ describe SimpleNavigation::Helpers do
       @controller.render_navigation
     end
     
+    describe "regarding setting the 'render_all_levels' option" do
+      context 'all_open is not specified' do
+        it "should not set the option" do
+          SimpleNavigation.config.should_not_receive(:render_all_levels=)
+          @controller.render_navigation
+        end
+      end
+      context 'all_open is true' do
+        it "should set the option to true" do
+          SimpleNavigation.config.should_receive(:render_all_levels=).with(true)
+          @controller.render_navigation(:all_open => true)
+        end
+      end
+      context 'all_open is false' do
+        it "should set the option to false" do
+          SimpleNavigation.config.should_receive(:render_all_levels=).with(false)
+          @controller.render_navigation(:all_open => false)
+        end
+      end
+    end
+    
+    describe 'regarding setting of items' do
+      context 'not items specified in options' do
+        it "should not set the items directly" do
+          SimpleNavigation.config.should_not_receive(:items)
+          @controller.render_navigation
+        end
+      end
+      context 'items specified in options' do
+        before(:each) do
+          @items = stub(:items)
+        end
+        it "should set the items directly" do
+          SimpleNavigation.config.should_receive(:items).with(@items)
+          @controller.render_navigation(:items => @items)
+        end
+      end
+    end
+    
+    describe 'no primary navigation defined' do
+      before(:each) do
+        SimpleNavigation.stub!(:primary_navigation => nil)
+      end
+      it {lambda {@controller.render_navigation}.should raise_error}
+    end
+    
     context 'primary' do
       it "should call render on the primary_navigation" do
         @primary_navigation.should_receive(:render)

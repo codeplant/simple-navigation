@@ -24,14 +24,18 @@ module SimpleNavigation
     # * <tt>:context</tt> - specifies the context for which you would render the navigation. Defaults to :default which loads the default navigation.rb (i.e. config/navigation.rb).
     #   If you specify a context then the plugin tries to load the configuration file for that context, e.g. if you call <tt>render_navigation(:context => :admin)</tt> the file config/admin_navigation.rb
     #   will be loaded and used for rendering the navigation.
-    #   
+    # * <tt>:all_open</tt> - setting this options to true means that all items are always open (ie. fully expanded tree). Same as setting render_all_levels option in the config-file.
+    # * <tt>:items</tt> - you can specify the items directly (e.g. if items are dynamically generated from database). See SimpleNavigation::ItemsProvider for documentation on what to provide as items. 
     def render_navigation(*args)
       args = [Hash.new] if args.empty?
       options = extract_backwards_compatible_options(*args)
       options = {:context => :default, :level => :nested}.merge(options)
-      SimpleNavigation.load_config(options[:context])
-      SimpleNavigation::Configuration.eval_config(self, options[:context])
+      SimpleNavigation.load_config(options[:context]) rescue nil
+      SimpleNavigation::Configuration.eval_config(self, options[:context]) rescue nil
+      SimpleNavigation.config.render_all_levels = options[:all_open] unless options[:all_open].nil?
+      SimpleNavigation.config.items(options[:items]) if options[:items]
       SimpleNavigation.handle_explicit_navigation
+      raise "no primary navigation defined, either use a navigation config file or pass items directly to render_navigation" unless SimpleNavigation.primary_navigation
       case options[:level]
       when Integer
         active_item_container = SimpleNavigation.active_item_container_for(options[:level])
