@@ -15,6 +15,11 @@ SimpleNavigation::Configuration.run do |navigation|
   # Item keys are normally added to list items as id.
   # This setting turns that off
   # navigation.autogenerate_item_ids = false
+  
+  # You can override the default logic that is used to autogenerate the item ids.
+  # To do this, define a Proc which takes the key of the current item as argument.
+  # The example below would add a prefix to each key.
+  # navigation.id_generator = Proc.new {|key| "my-prefix-#{key}"}
 
   # The auto highlight feature is turned on by default.
   # This turns it off globally (for the whole plugin)
