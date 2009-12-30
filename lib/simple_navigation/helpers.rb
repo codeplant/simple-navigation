@@ -40,6 +40,9 @@ module SimpleNavigation
       when Integer
         active_item_container = SimpleNavigation.active_item_container_for(options[:level])
         active_item_container.render if active_item_container
+      when Range
+        active_item_container = SimpleNavigation.active_item_container_for(options[:level].min)
+        active_item_container.render(false, options[:level].max) if active_item_container
       when :nested
         SimpleNavigation.primary_navigation.render(true)
       else

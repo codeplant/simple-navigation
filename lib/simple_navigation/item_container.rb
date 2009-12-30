@@ -67,8 +67,8 @@ module SimpleNavigation
     # Renders the items in this ItemContainer using the configured renderer.
     #
     # Set <tt>include_sub_navigation</tt> to true if you want to nest the sub_navigation into the active parent_navigation
-    def render(include_sub_navigation=false)
-      self.renderer.new.render(self, include_sub_navigation)
+    def render(include_sub_navigation=false, max_level = nil)
+      self.renderer.new.render(self, include_sub_navigation, max_level)
     end
 
     # Returns true if any of this container's items is selected.

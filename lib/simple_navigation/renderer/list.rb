@@ -12,13 +12,14 @@ module SimpleNavigation
     # The id can also be explicitely specified by setting the id in the html-options of the 'item' method in the config/navigation.rb file.
     class List < SimpleNavigation::Renderer::Base
 
-      def render(item_container, include_sub_navigation=false)
+      def render(item_container, include_sub_navigation=false, max_level = nil)
         list_content = item_container.items.inject([]) do |list, item|
           html_options = item.html_options
           li_content = link_to(item.name, item.url, :class => item.selected_class, :method => item.method)
           if item.sub_navigation
             if SimpleNavigation.config.render_all_levels || (include_sub_navigation && item.selected?)
-              li_content << (item.sub_navigation.render(include_sub_navigation))
+              # li_content << (item.sub_navigation.render(include_sub_navigation))
+              li_content << (item.sub_navigation.render(include_sub_navigation, max_level)) unless !max_level.nil? && (item.sub_navigation.level > max_level)
             end
           end  
           list << content_tag(:li, li_content, html_options)
