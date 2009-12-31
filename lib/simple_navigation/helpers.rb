@@ -21,6 +21,9 @@ module SimpleNavigation
     # The following options are supported:
     # * <tt>:level</tt> - defaults to :nested which renders the the sub_navigation for an active primary_navigation inside that active primary_navigation item. 
     #   Specify a specific level to only render that level of navigation (e.g. :level => 1 for primary_navigation etc...).
+    #   If configuration file navigation.render_all_levels = true 
+    #   then all levels under the :level option will be rendered
+    #   so use a range for level instead, like :level => 1..2 so that no levels under 2 will be rendered.
     # * <tt>:context</tt> - specifies the context for which you would render the navigation. Defaults to :default which loads the default navigation.rb (i.e. config/navigation.rb).
     #   If you specify a context then the plugin tries to load the configuration file for that context, e.g. if you call <tt>render_navigation(:context => :admin)</tt> the file config/admin_navigation.rb
     #   will be loaded and used for rendering the navigation.
