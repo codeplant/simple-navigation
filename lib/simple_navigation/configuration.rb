@@ -6,7 +6,8 @@ module SimpleNavigation
   class Configuration
     include Singleton
     
-    attr_accessor :renderer, :selected_class, :render_all_levels, :autogenerate_item_ids, :id_generator, :auto_highlight
+    attr_accessor :renderer, :selected_class, :autogenerate_item_ids, :id_generator, :auto_highlight
+    attr_reader :render_all_levels
     attr_reader :primary_navigation
 
     class << self
@@ -49,6 +50,11 @@ module SimpleNavigation
       @autogenerate_item_ids = true
       @id_generator = Proc.new {|id| id.to_s }
       @auto_highlight = true
+    end
+  
+    def render_all_levels=(do_it)
+      ActiveSupport::Deprecation.warn("Setting render_all_levels in the config-file has been deprected. Please use render_navigation(:all_open => true) instead")
+      @render_all_levels = do_it
     end
   
     # This is the main method for specifying the navigation items. It can be used in two ways:
