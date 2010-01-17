@@ -8,7 +8,7 @@ module SimpleNavigation
       include ActionView::Helpers::UrlHelper
       include ActionView::Helpers::TagHelper
       
-      attr_reader :controller
+      attr_reader :controller, :options
 
       class << self
         
@@ -23,21 +23,55 @@ module SimpleNavigation
 
       controller_method :form_authenticity_token, :protect_against_forgery?, :request_forgery_protection_token
       
-      def initialize #:nodoc:
+      def initialize(options) #:nodoc:
+        @options = options
         @controller = SimpleNavigation.controller
+      end
+            
+      def expand_all?
+        !!options[:expand_all]
+      end
+      
+      def level
+        options[:level] || :all
+      end      
+      
+      def include_sub_navigation?(item)
+        consider_sub_navigation?(item) && expand_sub_navigation?(item)
+      end      
+      
+      def render_sub_navigation_for(item)
+        item.sub_navigation.render(self.options)
       end
             
       # Renders the specified ItemContainer to HTML.
       #
-      # If <tt>include_sub_navigation</tt> is set to true, the renderer should nest the sub_navigation for the active navigation 
-      # inside that navigation item.
-      #
-      # A renderer should also take the option SimpleNavigation.config.render_all_levels into account. If it is set to true then it should render all navigation levels
-      # independent of the <tt>include_sub_navigation</tt> option.
+      # When implementing a renderer, please consider to call include_sub_navigation? to determin
+      # whether an item's sub_navigation should be rendered or not.
       #  
-      def render(item_container, include_sub_navigation=false)
+      def render(item_container)
         raise 'subclass responsibility'
       end
+         
+      protected
+      
+      def consider_sub_navigation?(item)
+        return false if item.sub_navigation.nil?
+        case level
+        when :all
+          return true
+        when Integer
+          return false
+        when Range
+          return item.sub_navigation.level <= level.max
+        end
+        false
+      end
+      
+      def expand_sub_navigation?(item)
+        expand_all? || item.selected?
+      end
+      
             
     end
   end
