@@ -315,18 +315,15 @@ describe SimpleNavigation::ItemContainer do
       @item_container.stub!(:renderer).and_return(@renderer)
       @items = stub(:items)
       @item_container.stub!(:items).and_return(@items)
+      @options = stub(:options)
     end
     it "should instatiate a renderer" do
-      @renderer.should_receive(:new)
-      @item_container.render(:current_navigation)
+      @renderer.should_receive(:new).with(@options)
+      @item_container.render(@options)
     end
     it "should call render on the renderer and pass self" do
-      @renderer_instance.should_receive(:render).with(@item_container, anything)
-      @item_container.render(:current_navigation)
-    end
-    it "should call render on the renderer and pass the include_sub_navigation option" do
-      @renderer_instance.should_receive(:render).with(anything, true)
-      @item_container.render(true)
+      @renderer_instance.should_receive(:render).with(@item_container)
+      @item_container.render
     end
     
   end
