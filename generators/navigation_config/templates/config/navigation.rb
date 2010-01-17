@@ -6,12 +6,7 @@ SimpleNavigation::Configuration.run do |navigation|
   
   # Specify the class that will be applied to active navigation items. Defaults to 'selected'
   # navigation.selected_class = 'your_selected_class'
-  
-  # Normally only the current sub menu is renderedwhen render_navigation is called
-  # setting this to true render all submenus which is useful for javascript
-  # driven hovering menus like the jquery superfish plugin
-  # navigation.render_all_levels = true
-  
+    
   # Item keys are normally added to list items as id.
   # This setting turns that off
   # navigation.autogenerate_item_ids = false
