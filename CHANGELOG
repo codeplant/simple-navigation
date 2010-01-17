@@ -1,3 +1,9 @@
+*master
+
+* Allow Ranges for :level option. Credits to Ying Tsen Hong.
+* Changing the API of Helpers#render_navigation. Now supports Ranges for :level option and :expand_all to render all levels as expanded. Old Api is still supported, but deprecated.
+* Deprecated render_all_levels in config-file.
+
 *2.1.0
 
 * included Ben Marini's commit which allows individual id-generators. Thanks Ben!
