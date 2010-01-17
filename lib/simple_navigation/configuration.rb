@@ -51,6 +51,7 @@ module SimpleNavigation
       @auto_highlight = true
     end
   
+    # Adds a deprecation warning when this options is set in the config file
     def render_all_levels=(do_it)
       ActiveSupport::Deprecation.warn("Setting render_all_levels in the config-file has been deprected. Please use render_navigation(:expand_all => true) instead")
       @render_all_levels = do_it
