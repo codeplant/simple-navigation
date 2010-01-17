@@ -15,6 +15,8 @@ module SimpleNavigation
   #
   #   #nested_navigation= render_navigation
   #
+  #   #top_navigation= render_navigation(:level => 1..2)
+  #   #sidebar_navigation= render_navigation(:level => 3)
   module Helpers
     
     # Renders the navigation according to the specified options-hash. 
@@ -22,7 +24,7 @@ module SimpleNavigation
     # The following options are supported:
     # * <tt>:level</tt> - defaults to :all which renders the the sub_navigation for an active primary_navigation inside that active primary_navigation item. 
     #   Specify a specific level to only render that level of navigation (e.g. :level => 1 for primary_navigation etc...).
-    #   Specifiy a Range of levels to render those specific levels (e.g. :level => 1..2 to render both your first and second levels, maybe you want to render your third level somewhere else on the page)
+    #   Specifiy a Range of levels to render only those specific levels (e.g. :level => 1..2 to render both your first and second levels, maybe you want to render your third level somewhere else on the page)
     # * <tt>:expand_all</tt> - defaults to false. If set to true the all specified levels will be rendered as a fully expanded tree (always open). This is useful for javascript menus like Superfish.
     # * <tt>:context</tt> - specifies the context for which you would render the navigation. Defaults to :default which loads the default navigation.rb (i.e. config/navigation.rb).
     #   If you specify a context then the plugin tries to load the configuration file for that context, e.g. if you call <tt>render_navigation(:context => :admin)</tt> the file config/admin_navigation.rb
@@ -60,6 +62,7 @@ module SimpleNavigation
       case args.first
       when Hash
         options = args.first
+        options[:level] = options.delete(:levels) if options[:levels]
         deprecated_api! if options[:level] == :primary || options[:level] == :secondary || options[:level] == :nested
         options[:level] = 1 if options[:level] == :primary
         options[:level] = 2 if options[:level] == :secondary

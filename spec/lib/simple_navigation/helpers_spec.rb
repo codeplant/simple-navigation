@@ -173,6 +173,17 @@ describe SimpleNavigation::Helpers do
     end
   end
   
+  describe "should treat :level and :levels options the same" do
+    before(:each) do
+      @selected_item_container = stub(:selected_container, :null_object => true)
+      SimpleNavigation.stub!(:active_item_container_for => @selected_item_container)
+    end
+    it  "should pass a valid levels options as level" do
+      @selected_item_container.should_receive(:render).with(:level => 2)
+      @controller.render_navigation(:levels => 2)
+    end
+  end
+  
   describe 'option all_open should work as expand_all' do
     it "should call render on the primary navigation with the include_subnavigation option set" do
       @primary_navigation.should_receive(:render).with(:level => :all, :expand_all => true)
