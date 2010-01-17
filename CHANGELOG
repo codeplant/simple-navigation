@@ -1,3 +1,7 @@
+*2.2.1
+
+* Corrected URL to API-Doc on rubyforge in README
+
 *2.2.0
 
 * Allow Ranges for :level option. Credits to Ying Tsen Hong.
