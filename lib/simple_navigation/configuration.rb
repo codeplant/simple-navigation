@@ -46,14 +46,13 @@ module SimpleNavigation
     def initialize
       @renderer = SimpleNavigation::Renderer::List
       @selected_class = 'selected'
-      @render_all_levels = false
       @autogenerate_item_ids = true
       @id_generator = Proc.new {|id| id.to_s }
       @auto_highlight = true
     end
   
     def render_all_levels=(do_it)
-      ActiveSupport::Deprecation.warn("Setting render_all_levels in the config-file has been deprected. Please use render_navigation(:all_open => true) instead")
+      ActiveSupport::Deprecation.warn("Setting render_all_levels in the config-file has been deprected. Please use render_navigation(:expand_all => true) instead")
       @render_all_levels = do_it
     end
   
