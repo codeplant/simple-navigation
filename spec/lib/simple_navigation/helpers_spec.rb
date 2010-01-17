@@ -34,28 +34,7 @@ describe SimpleNavigation::Helpers do
       SimpleNavigation::Configuration.should_receive(:eval_config).with(@controller, :default)
       @controller.render_navigation
     end
-    
-    describe "regarding setting the 'render_all_levels' option" do
-      context 'all_open is not specified' do
-        it "should not set the option" do
-          SimpleNavigation.config.should_not_receive(:render_all_levels=)
-          @controller.render_navigation
-        end
-      end
-      context 'all_open is true' do
-        it "should set the option to true" do
-          SimpleNavigation.config.should_receive(:render_all_levels=).with(true)
-          @controller.render_navigation(:all_open => true)
-        end
-      end
-      context 'all_open is false' do
-        it "should set the option to false" do
-          SimpleNavigation.config.should_receive(:render_all_levels=).with(false)
-          @controller.render_navigation(:all_open => false)
-        end
-      end
-    end
-    
+        
     describe 'regarding setting of items' do
       context 'not items specified in options' do
         it "should not set the items directly" do
@@ -81,17 +60,43 @@ describe SimpleNavigation::Helpers do
       it {lambda {@controller.render_navigation}.should raise_error}
     end
     
+    context 'rendering of the item_container' do
+      before(:each) do
+        @active_item_container = stub(:item_container, :null_object => true)
+        SimpleNavigation.stub!(:active_item_container_for => @active_item_container)
+      end
+      it "should lookup the active_item_container based on the level" do
+        SimpleNavigation.should_receive(:active_item_container_for).with(:all)
+        @controller.render_navigation
+      end
+      context 'active_item_container is nil' do
+        before(:each) do
+          SimpleNavigation.stub!(:active_item_container_for => nil)
+        end
+        it "should not call render" do
+          @active_item_container.should_not_receive(:render)
+          @controller.render_navigation
+        end
+      end
+      context 'active_item_container is not nil' do
+        it "should call render on the container" do
+          @active_item_container.should_receive(:render)
+          @controller.render_navigation
+        end
+      end
+    end
+    
     context 'primary' do
       it "should call render on the primary_navigation" do
         @primary_navigation.should_receive(:render)
-        @controller.render_navigation(:primary)
+        ActiveSupport::Deprecation.silence {@controller.render_navigation(:primary)}
       end
       it "should call render on the primary_navigation (specifying level through options)" do
         @primary_navigation.should_receive(:render)
-        @controller.render_navigation(:level => :primary)
+        ActiveSupport::Deprecation.silence {@controller.render_navigation(:level => :primary)}
       end
       it "should call render on the primary_navigation (specifying level through options)" do
-        @primary_navigation.should_receive(:render)
+        @primary_navigation.should_receive(:render).with(:level => 1)
         @controller.render_navigation(:level => 1)
       end
     end
@@ -104,19 +109,19 @@ describe SimpleNavigation::Helpers do
         end
         it "should find the selected sub_navigation for the specified level" do
           SimpleNavigation.should_receive(:active_item_container_for).with(2)
-          @controller.render_navigation(:secondary)
+          ActiveSupport::Deprecation.silence {@controller.render_navigation(:secondary)}
         end
         it "should find the selected sub_navigation for the specified level" do
           SimpleNavigation.should_receive(:active_item_container_for).with(2)
-          @controller.render_navigation(:level => :secondary)
+          ActiveSupport::Deprecation.silence {@controller.render_navigation(:level => :secondary)}
         end
         it "should find the selected sub_navigation for the specified level" do
           SimpleNavigation.should_receive(:active_item_container_for).with(1)
           @controller.render_navigation(:level => 1)
         end
         it "should call render on the active item_container" do
-          @selected_item_container.should_receive(:render)
-          @controller.render_navigation(:secondary)
+          @selected_item_container.should_receive(:render).with(:level => 2)
+          ActiveSupport::Deprecation.silence {@controller.render_navigation(:secondary)}
         end
       end
       context 'without an active item_container set' do
@@ -124,22 +129,22 @@ describe SimpleNavigation::Helpers do
           SimpleNavigation.stub!(:active_item_container_for => nil)
         end
         it "should not raise an error" do
-          lambda{@controller.render_navigation(:secondary)}.should_not raise_error
+          lambda{ActiveSupport::Deprecation.silence {@controller.render_navigation(:secondary)}}.should_not raise_error
         end
       end
       
     end
     
     context 'nested' do
-      it "should call render on the primary navigation with the include_subnavigation option set" do
-        @primary_navigation.should_receive(:render).with(true)
-        @controller.render_navigation(:nested)
+      it "should call render on the primary navigation with the :level => :all option set" do
+        @primary_navigation.should_receive(:render).with(:level => :all)
+        ActiveSupport::Deprecation.silence {@controller.render_navigation(:nested)}
       end
     end
     
     context 'unknown level' do
       it "should raise an error" do
-        lambda {@controller.render_navigation(:unknown)}.should raise_error(ArgumentError)
+        lambda {ActiveSupport::Deprecation.silence {@controller.render_navigation(:unknown)}}.should raise_error(ArgumentError)
       end
       it "should raise an error" do
         lambda {@controller.render_navigation(:level => :unknown)}.should raise_error(ArgumentError)
@@ -151,7 +156,7 @@ describe SimpleNavigation::Helpers do
   end
   
   describe 'render_primary_navigation' do  
-    it "should delegate to render_navigation(:primary)" do
+    it "should delegate to render_navigation(:level => 1)" do
       ActiveSupport::Deprecation.silence do
         @controller.should_receive(:render_navigation).with(:level => 1)
         @controller.render_primary_navigation
@@ -160,12 +165,19 @@ describe SimpleNavigation::Helpers do
   end
   
   describe 'render_sub_navigation' do
-    it "should delegate to render_navigation(:secondary)" do
+    it "should delegate to render_navigation(:level => 2)" do
       ActiveSupport::Deprecation.silence do
         @controller.should_receive(:render_navigation).with(:level => 2)
         @controller.render_sub_navigation
       end
     end
+  end
+  
+  describe 'option all_open should work as expand_all' do
+    it "should call render on the primary navigation with the include_subnavigation option set" do
+      @primary_navigation.should_receive(:render).with(:level => :all, :expand_all => true)
+      ActiveSupport::Deprecation.silence {@controller.render_navigation(:level => :all, :all_open => true)}
+    end    
   end
   
 end
