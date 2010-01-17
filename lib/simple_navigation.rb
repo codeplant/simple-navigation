@@ -56,7 +56,16 @@ module SimpleNavigation
     end
 
     def active_item_container_for(level)
-      self.primary_navigation.active_item_container_for(level)
+      case level
+      when :all
+        self.primary_navigation
+      when Integer
+        self.primary_navigation.active_item_container_for(level)
+      when Range
+        self.primary_navigation.active_item_container_for(level.min)
+      else
+        raise ArgumentError, "Invalid navigation level: #{level}"
+      end
     end
     
     # If any navigation has been explicitely set in the controller this method evaluates the specified args set in the controller and sets

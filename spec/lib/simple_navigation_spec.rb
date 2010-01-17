@@ -153,9 +153,27 @@ describe SimpleNavigation do
       @primary = stub(:primary)
       SimpleNavigation.config.stub!(:primary_navigation => @primary)
     end
-    it "should call active_item_container_for on the primary_navigation with the specified level" do
-      @primary.should_receive(:active_item_container_for).with(1)
-      SimpleNavigation.active_item_container_for 1
+    context 'level is :all' do
+      it "should return the primary_navigation" do
+        SimpleNavigation.active_item_container_for(:all).should == @primary
+      end
+    end
+    context 'level is a Range' do
+      it "should take the min of the range to lookup the active container" do
+        @primary.should_receive(:active_item_container_for).with(2)
+        SimpleNavigation.active_item_container_for(2..3)
+      end
+    end
+    context 'level is an Integer' do
+      it "should consider the Integer to lookup the active container" do
+        @primary.should_receive(:active_item_container_for).with(1)
+        SimpleNavigation.active_item_container_for(1)
+      end
+    end
+    context 'level is something else' do
+      it "should raise an ArgumentError" do
+        lambda {SimpleNavigation.active_item_container_for('something else')}.should raise_error(ArgumentError)
+      end
     end
   end
 
