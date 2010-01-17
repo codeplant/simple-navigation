@@ -55,6 +55,12 @@ module SimpleNavigation
       self.controller.instance_variable_get(:"@sn_current_navigation_#{level}")
     end
 
+    # Returns the active item container for the specified level. Valid levels are
+    # * :all - in this case the primary_navigation is returned.
+    # * a specific level - the active item_container for the specified level will be returned
+    # * a range of levels - the active item_container for the range's minimum will be returned
+    # 
+    # Returns nil if there is no active item_container for the specified level.
     def active_item_container_for(level)
       case level
       when :all
