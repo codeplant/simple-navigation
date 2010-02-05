@@ -40,7 +40,7 @@ begin
     gemspec.description = "With the simple-navigation gem installed you can easily create multilevel navigations for your Ruby on Rails applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation."
     gemspec.authors = ["Andi Schacke"]
     gemspec.rdoc_options = ["--inline-source", "--charset=UTF-8"]
-    gemspec.files += ["CHANGELOG"]
+    gemspec.files = FileList["[A-Z]*", "{lib,spec,rails,generators}/**/*"] - FileList["**/*.log"]
     gemspec.rubyforge_project = 'andi'
   end
   Jeweler::RubyforgeTasks.new do |rubyforge|
