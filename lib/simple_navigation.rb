@@ -18,15 +18,31 @@ module SimpleNavigation
   
   class << self
   
+    def config_file?(navigation_context=nil)
+      File.exists?(config_file_name(navigation_context))
+    end
+  
     # Reads the config_file for the specified navigation_context and stores it for later evaluation.
     def load_config(navigation_context = :default)
       raise "config_file_path is not set!" unless self.config_file_path
-      raise "Config file '#{config_file_name(navigation_context)}' does not exists!" unless File.exists?(config_file_name(navigation_context))
+      raise "Config file '#{config_file_name(navigation_context)}' does not exists!" unless config_file?(navigation_context)
       if ::RAILS_ENV == 'production'
         self.config_files[navigation_context] ||= IO.read(config_file_name(navigation_context))
       else
         self.config_files[navigation_context] = IO.read(config_file_name(navigation_context))
       end
+    end
+
+    def set_template_from(context)
+      SimpleNavigation.controller = extract_controller_from context
+      SimpleNavigation.template = SimpleNavigation.controller.instance_variable_get(:@template)
+    end
+
+    # Returns the context in which the config file should be evaluated.
+    # This is preferably the template, otherwise te controller
+    def context_for_eval
+      raise 'no context set for evaluation the config file' unless SimpleNavigation.template || SimpleNavigation.controller
+      SimpleNavigation.template || SimpleNavigation.controller
     end
 
     # Returns the singleton instance of the SimpleNavigation::Configuration
@@ -88,7 +104,17 @@ module SimpleNavigation
       end
     end
 
+    # Extracts a controller from the context.
+    def extract_controller_from(context)
+      if context.respond_to? :controller
+        context.controller
+      else
+        context
+      end
+    end
+
     private
+  
   
     # TODO: refactor this ugly thing to make it nice and short
     def parse_explicit_navigation_args

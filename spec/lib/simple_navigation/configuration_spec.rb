@@ -18,7 +18,7 @@ describe SimpleNavigation::Configuration do
     before(:each) do
       @context = mock(:context)
       @context.stub!(:instance_eval)
-      SimpleNavigation::Configuration.stub!(:context_for_eval => @context)
+      SimpleNavigation.stub!(:context_for_eval => @context)
       @config_files = {:default => 'default', :my_context => 'my_context'}
       SimpleNavigation.stub!(:config_files).and_return(@config_files)
     end
@@ -34,82 +34,9 @@ describe SimpleNavigation::Configuration do
         SimpleNavigation::Configuration.eval_config(@context, :my_context)
       end
     end
-    it "should set the controller" do
-      @controller = stub(:controller)
-      SimpleNavigation::Configuration.should_receive(:extract_controller_from).with(@context).and_return(@controller)
-      SimpleNavigation.should_receive(:controller=).with(@controller)
-      SimpleNavigation::Configuration.eval_config(@context)
-    end
-    it "should set the template" do
-      @template = stub(:template)
-      @controller = stub(:controller, :instance_variable_get => @template)
-      SimpleNavigation.stub!(:controller => @controller)
-      SimpleNavigation.should_receive(:template=).with(@template)
-      SimpleNavigation::Configuration.eval_config(@context)
-    end
-  end
-
-  describe 'context_for_eval' do
-    context 'controller is present' do
-      before(:each) do
-        @controller = stub(:controller)
-        SimpleNavigation.stub!(:controller => @controller)
-      end
-      context 'template is present' do
-        before(:each) do
-          @template = stub(:template)
-          SimpleNavigation.stub!(:template => @template)
-        end
-        it {SimpleNavigation::Configuration.context_for_eval.should == @template}
-      end
-      context 'template is not present' do
-        before(:each) do
-          SimpleNavigation.stub!(:template => nil)
-        end
-        it {SimpleNavigation::Configuration.context_for_eval.should == @controller}
-      end
-    end
-    context 'controller is not present' do
-      before(:each) do
-        SimpleNavigation.stub!(:controller => nil)
-      end
-      context 'template is present' do
-        before(:each) do
-          @template = stub(:template)
-          SimpleNavigation.stub!(:template => @template)
-        end
-        it {SimpleNavigation::Configuration.context_for_eval.should == @template}
-      end
-      context 'template is not present' do
-        before(:each) do
-          SimpleNavigation.stub!(:template => nil)
-        end
-        it {lambda {SimpleNavigation::Configuration.context_for_eval}.should raise_error}
-      end
-    end
-  end
-
-  describe 'self.extract_controller_from' do
-    before(:each) do
-      @nav_context = stub(:nav_context)
-    end
-    
-    context 'object responds to controller' do
-      before(:each) do
-        @controller = stub(:controller)
-        @nav_context.stub!(:controller).and_return(@controller)
-      end
-      
-      it "should return the controller" do
-        SimpleNavigation::Configuration.extract_controller_from(@nav_context).should == @controller
-      end
-      
-    end
-    
-    context 'object does not respond to controller' do
-      it "should return the nav_context" do
-        SimpleNavigation::Configuration.extract_controller_from(@nav_context).should == @nav_context
-      end
+    it "should set the template from the specified context" do
+      SimpleNavigation.should_receive(:set_template_from).with(@context)
+      SimpleNavigation::Configuration.eval_config(@context, :my_context)
     end
   end
   

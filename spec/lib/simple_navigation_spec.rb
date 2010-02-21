@@ -11,6 +11,28 @@ describe SimpleNavigation do
     end
   end
   
+  describe 'config_file?' do
+    before(:each) do
+      SimpleNavigation.stub!(:config_file_name => 'file_name')
+    end
+    it "should check for the file existance with the file_name" do
+      File.should_receive(:exists?).with('file_name')
+      SimpleNavigation.config_file?(:ctx)
+    end
+    context 'config file exists' do
+      before(:each) do
+        File.stub!(:exists? => true)
+      end
+      it {SimpleNavigation.config_file?(:ctx).should be_true}
+    end
+    context 'config file does not exist' do
+      before(:each) do
+        File.stub!(:exists? => false)
+      end
+      it {SimpleNavigation.config_file?(:ctx).should be_false}
+    end
+  end
+  
   describe 'config_file_name' do
     before(:each) do
       SimpleNavigation.config_file_path = 'path_to_config'
@@ -31,6 +53,91 @@ describe SimpleNavigation do
     end
   end
   
+  describe 'set_template_from' do
+    before(:each) do
+      @context = stub :context
+      SimpleNavigation.stub!(:extract_controller_from => @controller)
+    end
+    it "should set the controller" do
+      @controller = stub(:controller)
+      SimpleNavigation.should_receive(:extract_controller_from).with(@context).and_return(@controller)
+      SimpleNavigation.should_receive(:controller=).with(@controller)
+      SimpleNavigation.set_template_from @context
+    end
+    it "should set the template" do
+      @template = stub(:template)
+      @controller = stub(:controller, :instance_variable_get => @template)
+      SimpleNavigation.stub!(:controller => @controller)
+      SimpleNavigation.should_receive(:template=).with(@template)
+      SimpleNavigation.set_template_from @context
+    end
+  end
+
+  describe 'self.extract_controller_from' do
+    before(:each) do
+      @nav_context = stub(:nav_context)
+    end
+    
+    context 'object responds to controller' do
+      before(:each) do
+        @controller = stub(:controller)
+        @nav_context.stub!(:controller).and_return(@controller)
+      end
+      
+      it "should return the controller" do
+        SimpleNavigation.send(:extract_controller_from, @nav_context).should == @controller
+      end
+      
+    end
+    
+    context 'object does not respond to controller' do
+      it "should return the nav_context" do
+        SimpleNavigation.send(:extract_controller_from, @nav_context).should == @nav_context
+      end
+    end
+  end
+  
+  describe 'context_for_eval' do
+    context 'controller is present' do
+      before(:each) do
+        @controller = stub(:controller)
+        SimpleNavigation.stub!(:controller => @controller)
+      end
+      context 'template is present' do
+        before(:each) do
+          @template = stub(:template)
+          SimpleNavigation.stub!(:template => @template)
+        end
+        it {SimpleNavigation.context_for_eval.should == @template}
+      end
+      context 'template is not present' do
+        before(:each) do
+          SimpleNavigation.stub!(:template => nil)
+        end
+        it {SimpleNavigation.context_for_eval.should == @controller}
+      end
+    end
+    context 'controller is not present' do
+      before(:each) do
+        SimpleNavigation.stub!(:controller => nil)
+      end
+      context 'template is present' do
+        before(:each) do
+          @template = stub(:template)
+          SimpleNavigation.stub!(:template => @template)
+        end
+        it {SimpleNavigation.context_for_eval.should == @template}
+      end
+      context 'template is not present' do
+        before(:each) do
+          SimpleNavigation.stub!(:template => nil)
+        end
+        it {lambda {SimpleNavigation.context_for_eval}.should raise_error}
+      end
+    end
+  end
+
+
   describe 'load_config' do
     context 'config_file_path is set' do
       before(:each) do
@@ -40,7 +147,7 @@ describe SimpleNavigation do
       
       context 'config_file does exist' do
         before(:each) do
-          File.stub!(:exists?).and_return(true)
+          SimpleNavigation.stub!(:config_file? => true)
           IO.stub!(:read).and_return('file_content')
         end
         it "should not raise an error" do
@@ -51,12 +158,12 @@ describe SimpleNavigation do
           SimpleNavigation.load_config
         end
         it "should store the read content in the module (default context)" do
-          SimpleNavigation.should_receive(:config_file_name).with(:default).twice
+          SimpleNavigation.should_receive(:config_file_name).with(:default)
           SimpleNavigation.load_config
           SimpleNavigation.config_files[:default].should == 'file_content'
         end
         it "should store the content in the module (non default context)" do
-          SimpleNavigation.should_receive(:config_file_name).with(:my_context).twice
+          SimpleNavigation.should_receive(:config_file_name).with(:my_context)
           SimpleNavigation.load_config(:my_context)
           SimpleNavigation.config_files[:my_context].should == 'file_content'
         end
@@ -64,7 +171,7 @@ describe SimpleNavigation do
       
       context 'config_file does not exist' do
         before(:each) do
-          File.stub!(:exists?).and_return(false)
+          SimpleNavigation.stub!(:config_file? => false)
         end
         it {lambda{SimpleNavigation.load_config}.should raise_error}
       end

@@ -14,31 +14,14 @@ module SimpleNavigation
 
       # Evals the config_file for the given navigation_context inside the specified context (usually a controller or view)
       def eval_config(context, navigation_context = :default)
-        SimpleNavigation.controller = extract_controller_from context
-        SimpleNavigation.template = SimpleNavigation.controller.instance_variable_get(:@template)
-        context_for_eval.instance_eval(SimpleNavigation.config_files[navigation_context])
+        SimpleNavigation.set_template_from context
+        SimpleNavigation.context_for_eval.instance_eval(SimpleNavigation.config_files[navigation_context])
       end
       
       # Starts processing the configuration
       def run(&block)
         block.call Configuration.instance
       end    
-
-      # Returns the context in which the config file should be evaluated.
-      # This is preferably the template, otherwise te controller
-      def context_for_eval
-        raise 'no context set for evaluation the config file' unless SimpleNavigation.template || SimpleNavigation.controller
-        SimpleNavigation.template || SimpleNavigation.controller
-      end
-
-      # Extracts a controller from the context.
-      def extract_controller_from(context)
-        if context.respond_to? :controller
-          context.controller
-        else
-          context
-        end
-      end
       
     end #class << self
     
