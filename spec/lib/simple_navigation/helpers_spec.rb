@@ -11,28 +11,49 @@ describe SimpleNavigation::Helpers do
     SimpleNavigation::Configuration.stub!(:eval_config)
     @primary_navigation = stub(:primary_navigation, :null_object => true)
     SimpleNavigation.stub!(:primary_navigation).and_return(@primary_navigation)
+    SimpleNavigation.stub!(:config_file? => true)
   end
   
   describe 'render_navigation' do
-    describe 'regarding loading of the config-file' do
-      context 'no options specified' do
-        it "should load the config-file for the default context" do
-          SimpleNavigation.should_receive(:load_config).with(:default)
-          @controller.render_navigation
+    
+    context 'with config_file present' do
+      before(:each) do
+        SimpleNavigation.stub!(:config_file? => true)
+      end
+      describe 'regarding loading of the config-file' do
+        context 'no options specified' do
+          it "should load the config-file for the default context" do
+            SimpleNavigation.should_receive(:load_config).with(:default)
+            @controller.render_navigation
+          end
+        end
+    
+        context 'with options specified' do
+          it "should load the config-file for the specified context" do
+            SimpleNavigation.should_receive(:load_config).with(:my_context)
+            @controller.render_navigation(:context => :my_context)
+          end
         end
       end
-      
-      context 'with options specified' do
-        it "should load the config-file for the specified context" do
-          SimpleNavigation.should_receive(:load_config).with(:my_context)
-          @controller.render_navigation(:context => :my_context)
-        end
+  
+      it "should eval the config on every request" do
+        SimpleNavigation::Configuration.should_receive(:eval_config).with(@controller, :default)
+        @controller.render_navigation
       end
     end
-    
-    it "should eval the config on every request" do
-      SimpleNavigation::Configuration.should_receive(:eval_config).with(@controller, :default)
-      @controller.render_navigation
+    context 'with config_file not present' do
+      before(:each) do
+        SimpleNavigation.stub!(:config_file? => false)
+      end
+      it "should not load the config file" do
+        SimpleNavigation.should_not_receive(:load_config)
+        @controller.render_navigation
+      end
+  
+      it "should not eval the config on every request" do
+        SimpleNavigation::Configuration.should_not_receive(:eval_config)
+        @controller.render_navigation
+      end
     end
         
     describe 'regarding setting of items' do
