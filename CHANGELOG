@@ -1,3 +1,8 @@
+*2.2.3
+
+* changed error handling in config-file. Do not ignore errors in config-file anymore. 
+* only load config-file if it is present. Needed when directly providing items in render_navigation.
+
 *2.2.2
 
 * added lib/simple-navigation.rb to allow 'require simple-navigation' or 'config.gem "simple-navigation"'
