@@ -10,9 +10,18 @@ describe SimpleNavigation::ControllerMethods do
 
   before(:each) do
     stub_loading_config
-    class ApplicationController < ActionController::Base
+    class TestController
+      class << self
+        def helper_method(*args)
+          @helper_methods = args
+        end
+        def before_filter(*args)
+          @before_filters = args
+        end
+      end
     end
-    @controller = ApplicationController.new
+    TestController.send(:include, SimpleNavigation::ControllerMethods)
+    @controller = TestController.new
   end
   
   describe 'when being included' do
@@ -22,10 +31,8 @@ describe SimpleNavigation::ControllerMethods do
     it "should include the InstanceMethods" do
       @controller.should respond_to(:current_navigation)
     end
-    it "should install the Helpers Module" do
-      [:render_navigation, :render_primary_navigation, :render_sub_navigation].each do |m|
-        @controller.master_helper_module.instance_methods.map(&:to_s).should include(m.to_s)
-      end
+    it "should install the helper methods" do
+      @controller.class.instance_variable_get(:@helper_methods).should == [:render_navigation, :render_primary_navigation, :render_sub_navigation]
     end
   end
   
