@@ -73,7 +73,7 @@ describe SimpleNavigation do
     end
   end
 
-  describe 'self.init' do
+  describe 'self.init_rails' do
     before(:each) do
       SimpleNavigation.stub!(:default_config_file_path => 'default_path')
       ActionController::Base.stub!(:include)
@@ -83,7 +83,7 @@ describe SimpleNavigation do
         SimpleNavigation.config_file_path = 'my_path'
       end
       it "should not override the config_file_path" do
-        SimpleNavigation.init
+        SimpleNavigation.init_rails
         SimpleNavigation.config_file_path.should == 'my_path'
       end
     end
@@ -92,13 +92,13 @@ describe SimpleNavigation do
         SimpleNavigation.config_file_path = nil
       end
       it "should set the config_file_path to the default" do
-        SimpleNavigation.init
+        SimpleNavigation.init_rails
         SimpleNavigation.config_file_path.should == 'default_path'
       end
     end
     it "should extend the ActionController::Base" do
       ActionController::Base.should_receive(:include).with(SimpleNavigation::ControllerMethods)
-      SimpleNavigation.init
+      SimpleNavigation.init_rails
     end
   end
 
@@ -225,7 +225,7 @@ describe SimpleNavigation do
       end
       context "RAILS_ENV undefined" do
         before(:each) do
-          ::RAILS_ENV = nil
+          SimpleNavigation.rails_env = nil
         end
         it "should load the config file twice" do
           IO.should_receive(:read).twice
@@ -235,7 +235,7 @@ describe SimpleNavigation do
       end
       context "RAILS_ENV defined" do
         before(:each) do
-          ::RAILS_ENV = 'production'
+          SimpleNavigation.rails_env = 'production'
         end
         context "RAILS_ENV=production" do
           it "should load the config file only once" do
@@ -247,7 +247,7 @@ describe SimpleNavigation do
         
         context "RAILS_ENV=development" do
           before(:each) do
-            ::RAILS_ENV = 'development'
+            SimpleNavigation.rails_env = 'development'
           end
           it "should load the config file twice" do
             IO.should_receive(:read).twice
@@ -258,7 +258,7 @@ describe SimpleNavigation do
         
         context "RAILS_ENV=test" do
           before(:each) do
-            ::RAILS_ENV = 'test'
+            SimpleNavigation.rails_env = 'test'
           end
           it "should load the config file twice" do
             IO.should_receive(:read).twice

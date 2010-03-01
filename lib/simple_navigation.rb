@@ -13,19 +13,19 @@ require 'simple_navigation/initializer/rails_3' if Rails::VERSION::MAJOR == 3
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
 
-  mattr_accessor :config_files, :config_file_path, :controller, :template, :explicit_current_navigation
+  mattr_accessor :config_files, :config_file_path, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root
 
   self.config_files = {}
   
   class << self
 
-    def init
+    def init_rails
       SimpleNavigation.config_file_path = SimpleNavigation.default_config_file_path unless SimpleNavigation.config_file_path
       ActionController::Base.send(:include, SimpleNavigation::ControllerMethods)
     end
   
     def default_config_file_path
-      File.join(RAILS_ROOT, 'config')
+      File.join(SimpleNavigation.rails_root, 'config')
     end
   
     def config_file?(navigation_context=nil)
@@ -36,7 +36,7 @@ module SimpleNavigation
     def load_config(navigation_context = :default)
       raise "config_file_path is not set!" unless self.config_file_path
       raise "Config file '#{config_file_name(navigation_context)}' does not exists!" unless config_file?(navigation_context)
-      if ::RAILS_ENV == 'production'
+      if SimpleNavigation.rails_env == 'production'
         self.config_files[navigation_context] ||= IO.read(config_file_name(navigation_context))
       else
         self.config_files[navigation_context] = IO.read(config_file_name(navigation_context))
