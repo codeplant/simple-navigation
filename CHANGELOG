@@ -1,3 +1,8 @@
+*2.4.0
+
+* added Rails3 compatibility
+* added Jeweler::Gemcutter Tasks to Rakefile
+
 *2.2.3
 
 * changed error handling in config-file. Do not ignore errors in config-file anymore. 
