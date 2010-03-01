@@ -38,7 +38,6 @@ begin
     gemspec.email = "andreas.schacke@gmail.com"
     gemspec.homepage = "http://github.com/andi/simple-navigation"
     gemspec.description = "With the simple-navigation gem installed you can easily create multilevel navigations for your Ruby on Rails applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation."
-    gemspec.add_dependency('rails', '>= 2.1.0')
     gemspec.add_development_dependency('rspec', '>= 1.2.8')
     gemspec.authors = ["Andi Schacke"]
     gemspec.rdoc_options = ["--inline-source", "--charset=UTF-8"]
