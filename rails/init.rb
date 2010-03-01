@@ -1,5 +1,5 @@
 if Rails::VERSION::MAJOR == 3
-  require 'simple_navigation/initializer/rails_3'
+  SimpleNavigation::Initializer::Rails3.run
 else
-  require 'simple_navigation/initializer/rails_2'
+  SimpleNavigation::Initializer::Rails2.run
 end

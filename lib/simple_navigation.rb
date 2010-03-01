@@ -8,7 +8,8 @@ require 'simple_navigation/item_container'
 require 'simple_navigation/items_provider'
 require 'simple_navigation/renderer/base'
 require 'simple_navigation/renderer/list'
-require 'simple_navigation/initializer/rails_3' if Rails::VERSION::MAJOR == 3
+require 'simple_navigation/initializer'
+require 'simple_navigation/railtie' if Rails::VERSION::MAJOR == 3
 
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
