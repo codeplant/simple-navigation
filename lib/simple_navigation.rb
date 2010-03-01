@@ -8,6 +8,7 @@ require 'simple_navigation/item_container'
 require 'simple_navigation/items_provider'
 require 'simple_navigation/renderer/base'
 require 'simple_navigation/renderer/list'
+require 'simple_navigation/initializer/rails_3' if Rails::VERSION::MAJOR == 3
 
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
@@ -17,6 +18,12 @@ module SimpleNavigation
   self.config_files = {}
   
   class << self
+
+    def init
+      default_config_file_path = File.join(RAILS_ROOT, 'config')
+      SimpleNavigation.config_file_path = default_config_file_path unless SimpleNavigation.config_file_path
+      ActionController::Base.send(:include, SimpleNavigation::ControllerMethods)
+    end
   
     def config_file?(navigation_context=nil)
       File.exists?(config_file_name(navigation_context))
@@ -146,6 +153,7 @@ module SimpleNavigation
 end
 
 # TODOs for the next releases:
+# 0) make sn_set_navigation private in controllers
 # 1) add ability to specify explicit highlighting in the config-file itself (directly with the item)
 #    - item.highlight_on :controller => 'users', :action => 'show' ...^
 #   --> with that we can get rid of the controller_methods...
