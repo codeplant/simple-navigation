@@ -73,6 +73,39 @@ describe SimpleNavigation do
     end
   end
 
+  describe 'self.init' do
+    before(:each) do
+      SimpleNavigation.stub!(:default_config_file_path => 'default_path')
+      ActionController::Base.stub!(:include)
+    end
+    context 'SimpleNavigation.config_file_path is already set' do
+      before(:each) do
+        SimpleNavigation.config_file_path = 'my_path'
+      end
+      it "should not override the config_file_path" do
+        SimpleNavigation.init
+        SimpleNavigation.config_file_path.should == 'my_path'
+      end
+    end
+    context 'SimpleNavigation.config_file_path is not set' do
+      before(:each) do
+        SimpleNavigation.config_file_path = nil
+      end
+      it "should set the config_file_path to the default" do
+        SimpleNavigation.init
+        SimpleNavigation.config_file_path.should == 'default_path'
+      end
+    end
+    it "should extend the ActionController::Base" do
+      ActionController::Base.should_receive(:include).with(SimpleNavigation::ControllerMethods)
+      SimpleNavigation.init
+    end
+  end
+
+  describe 'self.default_config_file_path' do
+    it {SimpleNavigation.default_config_file_path.should == './config'}
+  end
+
   describe 'self.extract_controller_from' do
     before(:each) do
       @nav_context = stub(:nav_context)
