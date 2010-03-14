@@ -1,6 +1,7 @@
 *master
 
 * updated copyright
+* reduced visibility of 'sn_set_navigation' to protected
 
 *2.4.1
 
