@@ -1,3 +1,7 @@
+*master
+
+* updated copyright
+
 *2.4.1
 
 * removing depencency to rails. It installs the newest rails, even if a matching version is present. why is that?
