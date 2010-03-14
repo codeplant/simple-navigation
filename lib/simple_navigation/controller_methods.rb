@@ -60,6 +60,7 @@ module SimpleNavigation
           define_method :sn_set_navigation do
             current_navigation(*args)
           end
+          protected :sn_set_navigation
           before_filter :sn_set_navigation
         end
       end
