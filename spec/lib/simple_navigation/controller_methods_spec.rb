@@ -55,11 +55,11 @@ describe SimpleNavigation::ControllerMethods do
       end
       it "the created method should not be public" do
         call_navigation(:key)
-        @controller.public_methods.should_not include('sn_set_navigation')
+        @controller.public_methods.map(&:to_sym).should_not include(:sn_set_navigation)
       end
       it "the created method should be protected" do
         call_navigation(:key)
-        @controller.protected_methods.should include('sn_set_navigation')
+        @controller.protected_methods.map(&:to_sym).should include(:sn_set_navigation)
       end
       it 'the created method should call current_navigation with the specified keys' do
         call_navigation(:primary, :secondary)
