@@ -1,5 +1,6 @@
 *master
 
+* Renderer::List --> make content of ul-tag html_safe for rails 3.0.0.beta2 (due to rails3 XSS protection). Credits to Johan Svensson and Disha Albaqui.
 * updated copyright
 * reduced visibility of 'sn_set_navigation' to protected
 

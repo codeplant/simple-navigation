@@ -18,8 +18,9 @@ module SimpleNavigation
             li_content << render_sub_navigation_for(item)
           end  
           list << content_tag(:li, li_content, html_options)
-        end
-        content_tag(:ul, list_content.join, {:id => item_container.dom_id, :class => item_container.dom_class})
+        end.join
+        list_content = list_content.html_safe if list_content.respond_to?(:html_safe)
+        content_tag(:ul, list_content, {:id => item_container.dom_id, :class => item_container.dom_class})
       end
     end
     
