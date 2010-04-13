@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke"]
-  s.date = %q{2010-04-11}
+  s.date = %q{2010-04-13}
   s.description = %q{With the simple-navigation gem installed you can easily create multilevel navigations for your Ruby on Rails applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation.}
   s.email = %q{andreas.schacke@gmail.com}
   s.extra_rdoc_files = [
@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
      "lib/simple_navigation/items_provider.rb",
      "lib/simple_navigation/railtie.rb",
      "lib/simple_navigation/renderer/base.rb",
+     "lib/simple_navigation/renderer/links.rb",
      "lib/simple_navigation/renderer/list.rb",
      "rails/init.rb",
      "spec/lib/simple_navigation/configuration_spec.rb",
@@ -45,6 +46,7 @@ Gem::Specification.new do |s|
      "spec/lib/simple_navigation/item_spec.rb",
      "spec/lib/simple_navigation/items_provider_spec.rb",
      "spec/lib/simple_navigation/renderer/base_spec.rb",
+     "spec/lib/simple_navigation/renderer/links_spec.rb",
      "spec/lib/simple_navigation/renderer/list_spec.rb",
      "spec/lib/simple_navigation_spec.rb",
      "spec/spec_helper.rb"
@@ -64,6 +66,7 @@ Gem::Specification.new do |s|
      "spec/lib/simple_navigation/item_spec.rb",
      "spec/lib/simple_navigation/items_provider_spec.rb",
      "spec/lib/simple_navigation/renderer/base_spec.rb",
+     "spec/lib/simple_navigation/renderer/links_spec.rb",
      "spec/lib/simple_navigation/renderer/list_spec.rb",
      "spec/lib/simple_navigation_spec.rb",
      "spec/spec_helper.rb"
