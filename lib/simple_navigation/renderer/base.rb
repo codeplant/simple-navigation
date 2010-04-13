@@ -43,7 +43,13 @@ module SimpleNavigation
       def render_sub_navigation_for(item)
         item.sub_navigation.render(self.options)
       end
-            
+      
+      # Marks the specified input as html_safe (for Rails3). Does nothing if html_safe is not defined on input. 
+      #
+      def html_safe(input)
+        input.respond_to?(:html_safe) ? input.html_safe : input
+      end
+                  
       # Renders the specified ItemContainer to HTML.
       #
       # When implementing a renderer, please consider to call include_sub_navigation? to determin

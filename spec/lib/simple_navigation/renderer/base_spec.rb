@@ -59,6 +59,22 @@ describe SimpleNavigation::Renderer::Base do
     end
   end
   
+  describe 'html_safe' do
+    before(:each) do
+      @input = stub :input
+    end
+    context 'input does respond to html_safe' do
+      before(:each) do
+        @safe = stub :safe
+        @input.stub!(:html_safe => @safe)
+      end
+      it {@base_renderer.html_safe(@input).should == @safe}
+    end
+    context 'input does not respond to html_safe' do
+      it {@base_renderer.html_safe(@input).should == @input}
+    end
+  end
+  
   describe 'expand_all?' do
     context 'option is set' do
       context 'expand_all is true' do
