@@ -15,7 +15,7 @@ require 'simple_navigation/railtie' if Rails::VERSION::MAJOR == 3
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
 
-  mattr_accessor :config_files, :config_file_path, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root
+  mattr_accessor :config_files, :config_file_path, :default_renderer, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root
 
   self.config_files = {}
   

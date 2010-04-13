@@ -27,7 +27,7 @@ module SimpleNavigation
     
     # Sets the config's default-settings
     def initialize
-      @renderer = SimpleNavigation::Renderer::List
+      @renderer = SimpleNavigation.default_renderer || SimpleNavigation::Renderer::List
       @selected_class = 'selected'
       @autogenerate_item_ids = true
       @id_generator = Proc.new {|id| id.to_s }
