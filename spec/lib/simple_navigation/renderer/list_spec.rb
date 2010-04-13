@@ -128,37 +128,42 @@ describe SimpleNavigation::Renderer::List do
     end
     
     context 'regarding method calls' do
-      before(:each) do
-        @primary_navigation = primary_container
-        @list_content = stub(:list_content)
-        @list_items = stub(:list_items, :join => @list_content)
-        @items.stub!(:inject => @list_items)
-        @renderer = SimpleNavigation::Renderer::List.new(options)
-      end
       
-      it "should join the list_items" do
-        @list_items.should_receive(:join)
-      end
-      
-      context 'html_safe is defined on the joined list_content' do
+      context 'regarding the list_content' do
         before(:each) do
-          @safe_list_content = stub(:safe_list_content)
-          @list_content.stub!(:html_safe => @safe_list_content)
+          @primary_navigation = primary_container
+          @list_content = stub(:list_content)
+          @list_items = stub(:list_items, :join => @list_content)
+          @items.stub!(:inject => @list_items)
+          @renderer = SimpleNavigation::Renderer::List.new(options)
+        end
+      
+        it "should join the list_items" do
+          @list_items.should_receive(:join)
+        end
+      
+        it "should html_saferize the list_content" do
+          @renderer.should_receive(:html_safe).with(@list_content)
+        end
+      
+        after(:each) do
+          @renderer.render(@primary_navigation)
+        end
+      end
+      
+      context 'regarding the items' do
+        before(:each) do
+          @primary_navigation = primary_container
+          @renderer = SimpleNavigation::Renderer::List.new(options)
         end
         
-        it "should create the ul-element with the html_safe content" do
-          @renderer.should_receive(:content_tag).with(:ul, @safe_list_content, anything)
+        it "should call html_safe on every item's name" do
+          @items.each do |item|
+            @renderer.should_receive(:html_safe).with(item.name)
+          end
+          @renderer.should_receive(:html_safe).with(anything)
+          @renderer.render(@primary_navigation)
         end
-      end
-      
-      context 'html_safe is not defined on the joined list_content' do
-        it "should create the ul-element with the normal list content" do
-          @renderer.should_receive(:content_tag).with(:ul, @list_content, anything)
-        end
-      end
-    
-      after(:each) do
-        @renderer.render(@primary_navigation)
       end
       
     end
