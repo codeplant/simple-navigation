@@ -1,7 +1,7 @@
-*master
+*2.5.0
 
-* also make item.name html_safe (in order you have html_code in the item's name). Thanks again, Johan Svensson.
 * added new renderer Renderer::Links to simply render the navigation as links inside a div.
+* also make item.name html_safe (in order you have html_code in the item's name). Thanks again, Johan Svensson.
 
 *2.4.2
 
