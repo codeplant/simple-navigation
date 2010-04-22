@@ -1,3 +1,7 @@
+*master
+
+* set template correctly for Rails3 (brings auto highlighting to life again). Credits to Josep Jaume Rey.
+
 *2.5.0
 
 * added new renderer Renderer::Links to simply render the navigation as links inside a div.

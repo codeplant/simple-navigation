@@ -58,18 +58,52 @@ describe SimpleNavigation do
       @context = stub :context
       SimpleNavigation.stub!(:extract_controller_from => @controller)
     end
-    it "should set the controller" do
-      @controller = stub(:controller)
-      SimpleNavigation.should_receive(:extract_controller_from).with(@context).and_return(@controller)
-      SimpleNavigation.should_receive(:controller=).with(@controller)
-      SimpleNavigation.set_template_from @context
+    context 'regarding setting the controller' do
+      it "should set the controller" do
+        @controller = Object.new
+        SimpleNavigation.should_receive(:extract_controller_from).with(@context).and_return(@controller)
+        SimpleNavigation.should_receive(:controller=).with(@controller)
+        SimpleNavigation.set_template_from @context
+      end
     end
-    it "should set the template" do
-      @template = stub(:template)
-      @controller = stub(:controller, :instance_variable_get => @template)
-      SimpleNavigation.stub!(:controller => @controller)
-      SimpleNavigation.should_receive(:template=).with(@template)
-      SimpleNavigation.set_template_from @context
+    context 'regarding setting the template' do
+      before(:each) do
+        @template = stub :template
+        @controller = Object.new
+        SimpleNavigation.stub!(:controller => @controller)
+      end
+      context 'template is stored in controller as instance_var (Rails2)' do
+        context 'template is set' do
+          before(:each) do
+            @controller.stub!(:instance_variable_get => @template)
+          end
+          it {SimpleNavigation.should_receive(:template=).with(@template)}
+         end
+        context 'template is not set' do
+          before(:each) do
+            @controller.stub!(:instance_variable_get => nil)
+          end
+          it {SimpleNavigation.should_receive(:template=).with(nil)}
+        end
+      end
+      context 'template is stored in controller as view_context (Rails3)' do
+        context 'template is set' do
+          before(:each) do            
+            @controller.stub!(:view_context => @template)
+          end
+          it {SimpleNavigation.should_receive(:template=).with(@template)}
+        end
+        context 'template is not set' do
+          before(:each) do            
+            @controller.stub!(:view_context => nil)
+          end
+          it {SimpleNavigation.should_receive(:template=).with(nil)}
+        end
+      end
+      after(:each) do
+        SimpleNavigation.set_template_from @context
+      end
+      
     end
   end
 
