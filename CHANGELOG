@@ -1,3 +1,7 @@
+*master
+
+* added Rails3 generator for navigation_config.rb. Thanks to Josep Jaume Rey.
+
 *2.5.1
 
 * set template correctly for Rails3 (brings auto highlighting to life again). Credits to Josep Jaume Rey.
