@@ -1,4 +1,4 @@
-*master
+*2.5.2
 
 * added Rails3 generator for navigation_config.rb. Thanks to Josep Jaume Rey.
 
