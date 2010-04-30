@@ -1,4 +1,4 @@
-*master
+*2.5.3
 
 * removed depreciated railtie_name from simple_navigation/railtie. Credits to Markus Schirp.
 
