@@ -1,3 +1,7 @@
+*2.5.4
+
+* bugfix: SimpleNavigation.config_file? without params does not check for _navigation.rb file anymore. Credits to Markus Schirp.
+
 *2.5.3
 
 * removed depreciated railtie_name from simple_navigation/railtie. Credits to Markus Schirp.
