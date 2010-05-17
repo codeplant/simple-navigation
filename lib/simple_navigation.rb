@@ -30,7 +30,7 @@ module SimpleNavigation
       File.join(SimpleNavigation.rails_root, 'config')
     end
   
-    def config_file?(navigation_context=nil)
+    def config_file?(navigation_context=:default)
       File.exists?(config_file_name(navigation_context))
     end
   

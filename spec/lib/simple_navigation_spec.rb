@@ -12,12 +12,13 @@ describe SimpleNavigation do
   end
   
   describe 'config_file?' do
-    before(:each) do
-      SimpleNavigation.stub!(:config_file_name => 'file_name')
-    end
     it "should check for the file existance with the file_name" do
-      File.should_receive(:exists?).with('file_name')
+      File.should_receive(:exists?).with('path_to_config/ctx_navigation.rb')
       SimpleNavigation.config_file?(:ctx)
+    end
+    it "should check for the file existance on default context" do
+      File.should_receive(:exists?).with('path_to_config/navigation.rb')
+      SimpleNavigation.config_file?
     end
     context 'config file exists' do
       before(:each) do
