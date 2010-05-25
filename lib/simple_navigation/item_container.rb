@@ -68,7 +68,11 @@ module SimpleNavigation
     #
     # The options are the same as in the view's render_navigation call (they get passed on)
     def render(options={})
-      self.renderer.new(options).render(self)
+      if options[:renderer]
+        options[:renderer].new(options)
+      else
+        self.renderer.new(options)
+      end.render(self)
     end
 
     # Returns true if any of this container's items is selected.

@@ -315,7 +315,7 @@ describe SimpleNavigation::ItemContainer do
       @item_container.stub!(:renderer).and_return(@renderer)
       @items = stub(:items)
       @item_container.stub!(:items).and_return(@items)
-      @options = stub(:options)
+      @options = {}
     end
     it "should instatiate a renderer" do
       @renderer.should_receive(:new).with(@options)
@@ -325,7 +325,13 @@ describe SimpleNavigation::ItemContainer do
       @renderer_instance.should_receive(:render).with(@item_container)
       @item_container.render
     end
-    
+    it "should call render on the passed renderer and pass self" do
+      @renderer = stub(:passed_renderer)
+      @renderer_instance = stub(:renderer_instance, :null_object => true)
+      @renderer.stub!(:new).and_return(@renderer_instance)
+      @renderer_instance.should_receive(:render).with(@item_container)
+      @item_container.render(:renderer => @renderer)
+    end    
   end
   
   describe 'level_for_item' do
