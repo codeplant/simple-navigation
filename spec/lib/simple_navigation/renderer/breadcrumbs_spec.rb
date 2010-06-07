@@ -31,8 +31,19 @@ describe SimpleNavigation::Renderer::Breadcrumbs do
       end
     
       context 'with current_navigation set' do
+        before :all do
+          @selection = HTML::Selector.new('div a').select(render(:invoices))
+        end
         it "should render the selected a tags" do
-          HTML::Selector.new('div a').select(render(:invoices)).should have(1).entries
+          @selection.should have(1).entries
+        end
+
+        it "should not render class or id" do
+          @selection.each do |tag|
+            raise unless tag.name == "a"
+            tag["id"].should be_nil
+            tag["class"].should be_nil
+          end
         end
       end
     
