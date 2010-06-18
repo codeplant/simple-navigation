@@ -204,6 +204,23 @@ describe SimpleNavigation do
       end
     end
   end
+  
+  describe 'regarding renderers' do
+    it "should have registered the builtin renderers by default" do
+      SimpleNavigation.registered_renderers.should_not be_empty
+    end
+    
+    describe 'register_renderer' do
+      before(:each) do
+        @renderer = stub(:renderer)
+      end
+      it "should add the specified renderer to the list of renderers" do
+        SimpleNavigation.register_renderer(:my_renderer => @renderer)
+        SimpleNavigation.registered_renderers[:my_renderer].should == @renderer
+      end
+    end
+    
+  end
 
 
   describe 'load_config' do

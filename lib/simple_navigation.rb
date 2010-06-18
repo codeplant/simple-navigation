@@ -15,9 +15,15 @@ require 'simple_navigation/railtie' if Rails::VERSION::MAJOR == 3
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
 
-  mattr_accessor :config_files, :config_file_path, :default_renderer, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root
+  mattr_accessor :config_files, :config_file_path, :default_renderer, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root, :registered_renderers
 
   self.config_files = {}
+  self.registered_renderers = {
+    :list   => SimpleNavigation::Renderer::List,
+    :links  => SimpleNavigation::Renderer::Links
+    #:breadcrumbs => SimpleNavigation::Renderers::Breadcrumbs
+  }
+  
   
   class << self
 
@@ -123,6 +129,10 @@ module SimpleNavigation
       else
         context
       end
+    end
+    
+    def register_renderer(renderer_hash)
+      self.registered_renderers.merge!(renderer_hash)
     end
 
     private
