@@ -1,3 +1,8 @@
+*master
+
+* added ability to register a renderer / specify your renderer as symbol in render_navigation
+* renderer can be specified in render_navigation. Credits to Andi Badi from Galaxy Cats.
+
 *2.5.4
 
 * bugfix: SimpleNavigation.config_file? without params does not check for _navigation.rb file anymore. Credits to Markus Schirp.
