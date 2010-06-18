@@ -7,8 +7,7 @@ module SimpleNavigation
     include Singleton
     
     attr_accessor :renderer, :selected_class, :autogenerate_item_ids, :id_generator, :auto_highlight
-    attr_reader :render_all_levels
-    attr_reader :primary_navigation
+    attr_reader :render_all_levels, :primary_navigation
 
     class << self
 
@@ -75,7 +74,7 @@ module SimpleNavigation
     def context_for_eval
       self.class.context_for_eval
     end
-    
+        
   end  
   
 end
