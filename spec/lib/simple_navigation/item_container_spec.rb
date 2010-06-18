@@ -282,13 +282,10 @@ describe SimpleNavigation::ItemContainer do
               @item_container.item('key', 'name', 'url', @options)
             end
           end
-        
+          
         end
-        
       end
-
     end
-    
   end
   
   describe '[]' do
@@ -309,29 +306,51 @@ describe SimpleNavigation::ItemContainer do
   
   describe 'render' do
     before(:each) do
-      @renderer = stub(:renderer)
-      @renderer_instance = stub(:renderer_instance, :null_object => true)
-      @renderer.stub!(:new).and_return(@renderer_instance)
-      @item_container.stub!(:renderer).and_return(@renderer)
-      @items = stub(:items)
-      @item_container.stub!(:items).and_return(@items)
-      @options = {}
+      @renderer_instance = stub(:renderer, :null_object => true)
+      @renderer_class = stub(:renderer_class, :new => @renderer_instance)
     end
-    it "should instatiate a renderer" do
-      @renderer.should_receive(:new).with(@options)
-      @item_container.render(@options)
+    context 'renderer specified as option' do
+      context 'renderer-class specified' do
+        it "should instantiate the passed renderer_class with the options" do
+          @renderer_class.should_receive(:new).with(:renderer => @renderer_class)
+        end
+        it "should call render on the renderer and pass self" do
+          @renderer_instance.should_receive(:render).with(@item_container)
+        end          
+        after(:each) do
+          @item_container.render(:renderer => @renderer_class)
+        end
+      end
+      context 'renderer-symbol specified' do
+        before(:each) do
+          SimpleNavigation.registered_renderers = {:my_renderer => @renderer_class}
+        end
+        it "should instantiate the passed renderer_class with the options" do
+          @renderer_class.should_receive(:new).with(:renderer => :my_renderer)
+        end
+        it "should call render on the renderer and pass self" do
+          @renderer_instance.should_receive(:render).with(@item_container)
+        end     
+        after(:each) do
+          @item_container.render(:renderer => :my_renderer)
+        end     
+      end
     end
-    it "should call render on the renderer and pass self" do
-      @renderer_instance.should_receive(:render).with(@item_container)
-      @item_container.render
+    context 'no renderer specified' do
+      before(:each) do
+        @item_container.stub!(:renderer => @renderer_class)
+        @options = {}
+      end
+      it "should instantiate the container's renderer with the options" do
+        @renderer_class.should_receive(:new).with(@options)
+      end
+      it "should call render on the renderer and pass self" do
+        @renderer_instance.should_receive(:render).with(@item_container)
+      end
+      after(:each) do
+        @item_container.render(@options)
+      end
     end
-    it "should call render on the passed renderer and pass self" do
-      @renderer = stub(:passed_renderer)
-      @renderer_instance = stub(:renderer_instance, :null_object => true)
-      @renderer.stub!(:new).and_return(@renderer_instance)
-      @renderer_instance.should_receive(:render).with(@item_container)
-      @item_container.render(:renderer => @renderer)
-    end    
   end
   
   describe 'level_for_item' do
@@ -352,8 +371,6 @@ describe SimpleNavigation::ItemContainer do
     it {@item_container.level_for_item(:s1).should == 2}
     it {@item_container.level_for_item(:ss1).should == 3}
     it {@item_container.level_for_item(:x).should be_nil}
-
-
 
   end
 
