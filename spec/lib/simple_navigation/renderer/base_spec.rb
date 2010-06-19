@@ -97,6 +97,29 @@ describe SimpleNavigation::Renderer::Base do
       it {@base_renderer.expand_all?.should be_false}
     end
   end
+  
+  describe 'skip_if_empty?' do
+    context 'option is set' do
+      context 'skip_if_empty is true' do
+        before(:each) do
+          @base_renderer.stub!(:options => {:skip_if_empty => true})
+        end
+        it {@base_renderer.skip_if_empty?.should be_true}
+      end
+      context 'skip_if_empty is false' do
+        before(:each) do
+          @base_renderer.stub!(:options => {:skip_if_empty => false})
+        end
+        it {@base_renderer.skip_if_empty?.should be_false}
+      end
+    end
+    context 'option is not set' do
+      before(:each) do
+        @base_renderer.stub!(:options => {})
+      end
+      it {@base_renderer.skip_if_empty?.should be_false}
+    end
+  end
 
   describe 'level' do
     context 'options[level] is set' do

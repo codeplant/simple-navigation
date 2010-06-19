@@ -34,6 +34,10 @@ module SimpleNavigation
       
       def level
         options[:level] || :all
+      end
+      
+      def skip_if_empty?
+        !!options[:skip_if_empty]
       end      
       
       def include_sub_navigation?(item)
