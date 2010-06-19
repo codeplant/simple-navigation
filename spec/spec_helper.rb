@@ -58,8 +58,9 @@ def select_item(key)
     primary_item(:invoices) do |item|
       item.instance_variable_get(:@sub_navigation).items.find { |i| i.key == key}.stub!(:selected? => true)
     end
+    
   end
-  primary_item(key) {|item| item.stub!(:selected? => true)}
+  primary_item(key) {|item| item.stub!(:selected? => true) unless item.frozen?}
 end
 
 def subnav_container
