@@ -20,9 +20,9 @@ module SimpleNavigation
 
   self.config_files = {}
   self.registered_renderers = {
-    :list   => SimpleNavigation::Renderer::List,
-    :links  => SimpleNavigation::Renderer::Links
-    #:breadcrumbs => SimpleNavigation::Renderers::Breadcrumbs
+    :list         => SimpleNavigation::Renderer::List,
+    :links        => SimpleNavigation::Renderer::Links,
+    :breadcrumbs  => SimpleNavigation::Renderer::Breadcrumbs
   }
   
   
