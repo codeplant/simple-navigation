@@ -51,6 +51,7 @@ module SimpleNavigation
     #   end
     #
     # ==== To consider when directly providing items
+    # items_provider should be:
     # * a methodname (as symbol) that returns your items. The method needs to be available in the view (i.e. a helper method)
     # * an object that responds to :items
     # * an enumerable containing your items

@@ -108,6 +108,7 @@ module SimpleNavigation
       return selected_item.sub_navigation.active_item_container_for(desired_level)
     end
 
+    # Returns true if there are no items defined for this container.
     def empty?
       items.empty?
     end

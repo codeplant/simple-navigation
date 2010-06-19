@@ -28,6 +28,7 @@ module SimpleNavigation
   
   class << self
 
+    # Sets the config file path and installs the ControllerMethods in ActionController::Base.
     def init_rails
       SimpleNavigation.config_file_path = SimpleNavigation.default_config_file_path unless SimpleNavigation.config_file_path
       ActionController::Base.send(:include, SimpleNavigation::ControllerMethods)
@@ -37,6 +38,7 @@ module SimpleNavigation
       File.join(SimpleNavigation.rails_root, 'config')
     end
   
+    # Returns true if the config_file for specified context does exist.
     def config_file?(navigation_context = :default)
       File.exists?(config_file_name(navigation_context))
     end
@@ -132,6 +134,17 @@ module SimpleNavigation
       end
     end
     
+    # Registers a renderer.
+    #
+    # === Example
+    # To register your own renderer: 
+    #
+    #   SimpleNavigation.register_renderer :my_renderer => My::RendererClass
+    # 
+    # Then in the view you can call:
+    #
+    #   render_navigation(:renderer => :my_renderer)
+    #
     def register_renderer(renderer_hash)
       self.registered_renderers.merge!(renderer_hash)
     end
