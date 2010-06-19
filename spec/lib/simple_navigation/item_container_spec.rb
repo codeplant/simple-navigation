@@ -373,5 +373,16 @@ describe SimpleNavigation::ItemContainer do
     it {@item_container.level_for_item(:x).should be_nil}
 
   end
+  
+  describe 'empty?' do
+    it "should be empty if there are no items" do
+      @item_container.instance_variable_set(:@items, [])
+      @item_container.should be_empty
+    end
+    it "should not be empty if there are some items" do
+      @item_container.instance_variable_set(:@items, [stub(:item)])
+      @item_container.should_not be_empty
+    end
+  end
 
 end

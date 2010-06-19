@@ -108,6 +108,10 @@ module SimpleNavigation
       return selected_item.sub_navigation.active_item_container_for(desired_level)
     end
 
+    def empty?
+      items.empty?
+    end
+
     private
     
     def selected_sub_navigation?
