@@ -9,6 +9,7 @@ require 'simple_navigation/items_provider'
 require 'simple_navigation/renderer/base'
 require 'simple_navigation/renderer/list'
 require 'simple_navigation/renderer/links'
+require 'simple_navigation/renderer/breadcrumbs'
 require 'simple_navigation/initializer'
 require 'simple_navigation/railtie' if Rails::VERSION::MAJOR == 3
 

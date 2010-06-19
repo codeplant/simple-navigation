@@ -53,6 +53,12 @@ def primary_item(key)
 end
 
 def select_item(key)
+  if(key == :subnav1) 
+    select_item(:invoices)
+    primary_item(:invoices) do |item|
+      item.instance_variable_get(:@sub_navigation).items.find { |i| i.key == key}.stub!(:selected? => true)
+    end
+  end
   primary_item(key) {|item| item.stub!(:selected? => true)}
 end
 
