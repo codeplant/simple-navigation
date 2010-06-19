@@ -168,7 +168,6 @@ module SimpleNavigation
 end
 
 # TODOs for the next releases:
-# 0) make sn_set_navigation private in controllers
 # 1) add ability to specify explicit highlighting in the config-file itself (directly with the item)
 #    - item.highlight_on :controller => 'users', :action => 'show' ...^
 #   --> with that we can get rid of the controller_methods...
