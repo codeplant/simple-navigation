@@ -83,6 +83,46 @@ describe SimpleNavigation::Renderer::List do
         end
           
       end
+      
+      context 'skip_if_empty' do
+        
+        def render_container(options={})
+          @renderer = SimpleNavigation::Renderer::List.new(options)
+          HTML::Document.new(@renderer.render(@container)).root
+        end
+        
+        context 'container is empty' do
+          before(:each) do
+            @container = SimpleNavigation::ItemContainer.new(0)
+          end
+          context 'skip_if_empty is true' do
+            it "should not render a ul tag for the empty container" do
+              HTML::Selector.new('ul').select(render_container(:skip_if_empty => true)).should be_empty
+            end
+          end
+          context 'skip_if_empty is false' do
+            it "should render a ul tag for the empty container" do
+              HTML::Selector.new('ul').select(render_container(:skip_if_empty => false)).should have(1).entry
+            end
+          end
+        end
+        
+        context 'container is not empty' do
+          before(:each) do
+            @container = primary_container
+          end
+          context 'skip_if_empty is true' do
+            it "should render a ul tag for the container" do
+              HTML::Selector.new('ul').select(render_container(:skip_if_empty => true)).should have(1).entry
+            end
+          end
+          context 'skip_if_empty is false' do
+            it "should render a ul tag for the container" do
+              HTML::Selector.new('ul').select(render_container(:skip_if_empty => false)).should have(1).entry
+            end
+          end
+        end
+      end
     end
     
     context 'regarding method calls' do

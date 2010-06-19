@@ -19,7 +19,11 @@ module SimpleNavigation
           end  
           list << content_tag(:li, li_content, html_options)
         end.join
-        content_tag(:ul, html_safe(list_content), {:id => item_container.dom_id, :class => item_container.dom_class})
+        if skip_if_empty? && item_container.empty?
+          ''
+        else  
+          content_tag(:ul, html_safe(list_content), {:id => item_container.dom_id, :class => item_container.dom_class}) 
+        end
       end
     end
     
