@@ -1,3 +1,9 @@
+*master
+
+* added new option :highlights_on to item definition in config-file. Specify a regexp which is matched against the current_uri to determine if an item is active or not. Replaces explicit highlighting in controllers.
+* deprecated eplicit highlighting in the controllers.
+
+
 *2.6.0
 
 * added rendering option 'skip_if_empty' to Renderer::List to avoid rendering of empty ul-tags
