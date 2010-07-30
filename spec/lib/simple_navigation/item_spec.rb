@@ -45,7 +45,7 @@ describe SimpleNavigation::Item do
         end
       end
     end
-    context 'method' do
+    context ':method option' do
       context 'defined' do
         before(:each) do
           @options = {:method => :delete}
@@ -62,6 +62,28 @@ describe SimpleNavigation::Item do
       context 'undefined' do
         it 'should set the instance-var to nil' do
           @item.method.should be_nil
+        end
+      end
+    end
+    
+    context ':highlights_on option' do
+      context 'defined' do
+        before(:each) do
+          @highlights_on = stub(:option)
+          @options = {:highlights_on => @highlights_on}
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
+        end
+        it 'should set the method as instance_var' do
+          @item.highlights_on.should == @highlights_on
+        end
+        it 'should set the html-options without the method' do
+          @item.instance_variable_get(:@html_options).key?(:highlights_on).should be_false
+        end
+      end
+      
+      context 'undefined' do
+        it 'should set the instance-var to nil' do
+          @item.highlights_on.should be_nil
         end
       end
     end
