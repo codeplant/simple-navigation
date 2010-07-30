@@ -29,7 +29,7 @@ module SimpleNavigation
     # * <tt>:unless</tt> - Specifies a proc to call to determine if the item should not
     #   be rendered (e.g. <tt>:unless => Proc.new { current_user.admin? }</tt>). The
     #   proc should evaluate to a true or false value and is evaluated in the context of the view.
-    # * <tt>:method</tt> - Specified the http-method for the generated link - default is :get.
+    # * <tt>:method</tt> - Specifies the http-method for the generated link - default is :get.
     # * <tt>:highlights_on</tt> - if autohighlighting is turned off and/or you want to explicitly specify 
     #   when the item should be highlighted, you can set a regexp which is matched againstthe current URI.
     #
