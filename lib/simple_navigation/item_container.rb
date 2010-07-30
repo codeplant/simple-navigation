@@ -22,13 +22,16 @@ module SimpleNavigation
     # The <tt>url</tt> is the address that the generated item points to. You can also use url_helpers (named routes, restful routes helper, url_for etc.) 
     #
     # The <tt>options</tt> can be used to specify the following things:
-    # * <tt>html_attributes</tt> - will be included in the rendered navigation item (e.g. id, class etc.)
+    # * <tt>any html_attributes</tt> - will be included in the rendered navigation item (e.g. id, class etc.)
     # * <tt>:if</tt> - Specifies a proc to call to determine if the item should
     #   be rendered (e.g. <tt>:if => Proc.new { current_user.admin? }</tt>). The
     #   proc should evaluate to a true or false value and is evaluated in the context of the view.
     # * <tt>:unless</tt> - Specifies a proc to call to determine if the item should not
     #   be rendered (e.g. <tt>:unless => Proc.new { current_user.admin? }</tt>). The
     #   proc should evaluate to a true or false value and is evaluated in the context of the view.
+    # * <tt>:method</tt> - Specified the http-method for the generated link - default is :get.
+    # * <tt>:highlights_on</tt> - if autohighlighting is turned off and/or you want to explicitly specify 
+    #   when the item should be highlighted, you can set a regexp which is matched againstthe current URI.
     #
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
     def item(key, name, url, options={}, &block)
