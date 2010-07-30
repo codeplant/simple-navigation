@@ -203,7 +203,7 @@ describe SimpleNavigation::Item do
           it {@item.html_options[:id].should == 'my_id'}
         end
       
-        context 'with no id definied in options (using default id)' do
+        context 'with no id defined in options (using default id)' do
           before(:each) do
             @item.html_options = {}
           end
@@ -279,6 +279,45 @@ describe SimpleNavigation::Item do
   end
 
   describe 'selected_by_url?' do
+    context ':highlights_on option is set' do
+      before(:each) do
+        @item.stub!(:highlights_on => /^\/current/)
+        @template = stub(:template, :request => stub(:request, :request_uri => '/current_url'))
+        SimpleNavigation.stub!(:template => @template)
+      end
+      it "should not check for autohighlighting" do
+        @item.should_not_receive(:auto_highlight?)
+        @item.send(:selected_by_url?)
+      end
+      context ':highlights_on is a regexp' do
+        context 'regexp matches current_url' do
+          it {@item.send(:selected_by_url?).should be_true}
+        end
+        context 'regexp does not match current_url' do
+          before(:each) do
+            @item.stub!(:highlights_on => /^\/no_match/)
+          end
+          it {@item.send(:selected_by_url?).should be_false}
+        end
+      end
+      context ':highlights_on is not a regexp' do
+        before(:each) do
+          @item.stub!(:highlights_on => "not a regexp")
+        end
+        it "should raise an error" do
+          lambda {@item.send(:selected_by_url?).should raise_error(ArgumentError)}
+        end
+      end
+    end
+    context ':highlights_on option is not set' do
+      before(:each) do
+        @item.stub!(:highlights_on => nil)
+      end
+      it "should check for autohighlighting" do
+        @item.should_receive(:auto_highlight?)
+        @item.send(:selected_by_url?)
+      end
+    end
     context 'auto_highlight is turned on' do
       before(:each) do
         @item.stub!(:auto_highlight? => true)
