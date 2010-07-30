@@ -41,8 +41,10 @@ describe SimpleNavigation::ControllerMethods do
     describe 'navigation' do
       
       def call_navigation(key1, key2=nil)
-        @controller.class_eval do
-          navigation key1, key2
+        ActiveSupport::Deprecation.silence do
+          @controller.class_eval do
+            navigation key1, key2
+          end
         end
       end
       
@@ -74,11 +76,11 @@ describe SimpleNavigation::ControllerMethods do
     
     describe 'current_navigation' do
       it "should set the sn_current_navigation_args as specified" do
-        @controller.current_navigation(:first)
+        ActiveSupport::Deprecation.silence {@controller.current_navigation(:first)}
         @controller.instance_variable_get(:@sn_current_navigation_args).should == [:first]
       end
       it "should set the sn_current_navigation_args as specified" do
-        @controller.current_navigation(:first, :second)
+        ActiveSupport::Deprecation.silence {@controller.current_navigation(:first, :second)}
         @controller.instance_variable_get(:@sn_current_navigation_args).should == [:first, :second]
       end
     end

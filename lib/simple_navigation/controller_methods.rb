@@ -56,6 +56,7 @@ module SimpleNavigation
       #
       # The specified symbol must match the keys for your navigation items in your config/navigation.rb file.  
       def navigation(*args)
+        ActiveSupport::Deprecation.warn("Setting the active navigation in the controllers has been deprecated. Please use the new :highlights_on option in the config file for explicit highlighting")
         self.class_eval do
           define_method :sn_set_navigation do
             current_navigation(*args)
@@ -72,6 +73,7 @@ module SimpleNavigation
       #
       # The specified symbol must match the keys for your navigation items in your config/navigation.rb file.
       def current_navigation(*args)
+        ActiveSupport::Deprecation.warn("Setting the active navigation in the controllers has been deprecated. Please use the new :highlights_on option in the config file for explicit highlighting")
         @sn_current_navigation_args = args
       end
     end
