@@ -1,4 +1,4 @@
-*master
+*2.7.0
 
 * added new option :highlights_on to item definition in config-file. Specify a regexp which is matched against the current_uri to determine if an item is active or not. Replaces explicit highlighting in controllers.
 * deprecated eplicit highlighting in the controllers.
