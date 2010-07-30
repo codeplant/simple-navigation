@@ -3,7 +3,7 @@
 * added rendering option 'skip_if_empty' to Renderer::List to avoid rendering of empty ul-tags
 * added breadcrumbs renderer incl. specs. A big thanks to Markus Schirp.
 * added ability to register a renderer / specify your renderer as symbol in render_navigation
-* renderer can be specified in render_navigation. Credits to Andi Badi from Galaxy Cats.
+* renderer can be specified in render_navigation. Credits to Andi Bade from Galaxy Cats.
 
 *2.5.4
 
