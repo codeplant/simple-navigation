@@ -282,7 +282,7 @@ describe SimpleNavigation::Item do
     context ':highlights_on option is set' do
       before(:each) do
         @item.stub!(:highlights_on => /^\/current/)
-        @template = stub(:template, :request => stub(:request, :request_uri => '/current_url'))
+        @template = stub(:template, :request => stub(:request, :fullpath => '/current_url'))
         SimpleNavigation.stub!(:template => @template)
       end
       it "should not check for autohighlighting" do
