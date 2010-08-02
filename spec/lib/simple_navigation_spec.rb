@@ -325,6 +325,44 @@ describe SimpleNavigation do
     end
   end
   
+  describe 'request' do
+    context 'template is set' do
+      before(:each) do
+        @request = stub(:request)
+        SimpleNavigation.stub!(:template => stub(:template, :request => @request))
+      end
+      it {SimpleNavigation.request.should == @request}
+    end
+    context 'template is not set' do
+      it {SimpleNavigation.request.should be_nil}
+    end
+  end
+  
+  describe 'request_uri' do
+    context 'request is set' do
+      context 'fullpath is defined on request' do
+        before(:each) do
+          @request = stub(:request, :fullpath => '/fullpath')
+          SimpleNavigation.stub!(:request => @request)
+        end
+        it {SimpleNavigation.request_uri.should == '/fullpath'}
+      end
+      context 'fullpath is not defined on request' do
+        before(:each) do
+          @request = stub(:request, :request_uri => '/request_uri')
+          SimpleNavigation.stub!(:request => @request)
+        end
+        it {SimpleNavigation.request_uri.should == '/request_uri'}
+      end
+    end
+    context 'request is not set' do
+      before(:each) do
+        SimpleNavigation.stub!(:request => nil)
+      end
+      it {SimpleNavigation.request_uri.should == ''}
+    end
+  end
+  
   describe 'config' do
     it {SimpleNavigation.config.should == SimpleNavigation::Configuration.instance}
   end

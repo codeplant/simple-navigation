@@ -149,6 +149,20 @@ module SimpleNavigation
       self.registered_renderers.merge!(renderer_hash)
     end
 
+    # Returns the current request.
+    #
+    def request
+      SimpleNavigation.template.request if SimpleNavigation.template
+    end
+
+    # Returns the current request's URI.
+    #
+    def request_uri
+      return '' unless SimpleNavigation.request
+      return SimpleNavigation.request.fullpath if SimpleNavigation.request.respond_to?(:fullpath)
+      SimpleNavigation.request.request_uri
+    end
+
     private
   
   
