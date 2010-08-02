@@ -66,7 +66,7 @@ module SimpleNavigation
     def selected_by_url?
       if highlights_on
         raise ArgumentError, ':highlights_on must be a regexp' unless highlights_on.instance_of?(Regexp)
-        SimpleNavigation.template.request.fullpath =~ highlights_on
+        SimpleNavigation.request_uri =~ highlights_on
       elsif auto_highlight?
         !!(root_path_match? || (SimpleNavigation.template && SimpleNavigation.template.current_page?(url)))
       else
