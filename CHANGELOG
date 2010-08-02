@@ -1,8 +1,12 @@
+*master
+
+* added SimpleNavigation.request and SimpleNavigation.request_uri as abstraction for getting request_uri (rails2/rails3)
+* use request.fullpath instead of request.request_uri for Rails3. Credits to Ben Langfeld.
+
 *2.7.0
 
 * added new option :highlights_on to item definition in config-file. Specify a regexp which is matched against the current_uri to determine if an item is active or not. Replaces explicit highlighting in controllers.
 * deprecated explicit highlighting in the controllers.
-
 
 *2.6.0
 
