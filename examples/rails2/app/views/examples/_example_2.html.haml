@@ -1,0 +1,9 @@
+.example
+  = example :title => 'Example 2: Simple Main Navigation (Tabbed)', :haml => '87433', :sass => '87438', :css => '87443' do
+    #example_2.example_content
+      #top_navigation= render_navigation(:level => 1)
+      .clear_float
+      .content
+        .breadcrumbs
+          .title breadcrumbs:
+          = render_navigation(:renderer => :breadcrumbs, :join_with => ' &raquo; ')
