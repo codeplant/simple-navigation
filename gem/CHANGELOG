@@ -1,0 +1,135 @@
+*2.7.2
+
+* added ability to have more than one config_file_path (useful if simple-navigation is used as a part of another gem/plugin). Credits to Luke Imhoff.
+
+*2.7.1
+
+* added SimpleNavigation.request and SimpleNavigation.request_uri as abstraction for getting request_uri (rails2/rails3)
+* use request.fullpath instead of request.request_uri for Rails3. Credits to Ben Langfeld.
+
+*2.7.0
+
+* added new option :highlights_on to item definition in config-file. Specify a regexp which is matched against the current_uri to determine if an item is active or not. Replaces explicit highlighting in controllers.
+* deprecated explicit highlighting in the controllers.
+
+*2.6.0
+
+* added rendering option 'skip_if_empty' to Renderer::List to avoid rendering of empty ul-tags
+* added breadcrumbs renderer incl. specs. A big thanks to Markus Schirp.
+* added ability to register a renderer / specify your renderer as symbol in render_navigation
+* renderer can be specified in render_navigation. Credits to Andi Bade from Galaxy Cats.
+
+*2.5.4
+
+* bugfix: SimpleNavigation.config_file? without params does not check for _navigation.rb file anymore. Credits to Markus Schirp.
+
+*2.5.3
+
+* removed deprecated railtie_name from simple_navigation/railtie. Credits to Markus Schirp.
+
+*2.5.2
+
+* added Rails3 generator for navigation_config.rb. Thanks to Josep Jaume Rey.
+
+*2.5.1
+
+* set template correctly for Rails3 (brings auto highlighting to life again). Credits to Josep Jaume Rey.
+
+*2.5.0
+
+* added new renderer Renderer::Links to simply render the navigation as links inside a div.
+* also make item.name html_safe (in order you have html_code in the item's name). Thanks again, Johan Svensson.
+
+*2.4.2
+
+* Rails 3.0.0.beta2 compatibility
+* Renderer::List --> make content of ul-tag html_safe for rails 3.0.0.beta2 (due to rails3 XSS protection). Credits to Johan Svensson and Disha Albaqui.
+* updated copyright
+* reduced visibility of 'sn_set_navigation' to protected
+
+*2.4.1
+
+* removing depencency to rails. It installs the newest rails, even if a matching version is present. why is that?
+
+*2.4.0
+
+* added Rails3 compatibility
+* added Jeweler::Gemcutter Tasks to Rakefile
+
+*2.2.3
+
+* changed error handling in config-file. Do not ignore errors in config-file anymore.
+* only load config-file if it is present. Needed when directly providing items in render_navigation.
+
+*2.2.2
+
+* added lib/simple-navigation.rb to allow 'require simple-navigation' or 'config.gem "simple-navigation"'
+
+*2.2.1
+
+* Corrected URL to API-Doc on rubyforge in README
+
+*2.2.0
+
+* Allow Ranges for :level option. Credits to Ying Tsen Hong.
+* Changing the API of Helpers#render_navigation. Now supports Ranges for :level option and :expand_all to render all levels as expanded. Old Api is still supported, but deprecated.
+* Deprecated render_all_levels in config-file.
+
+*2.1.0
+
+* included Ben Marini's commit which allows individual id-generators. Thanks Ben!
+* added ability to specify navigation items through items_provider. This is useful for generating the navigation dynamically (e.g. from database)
+* items can now even be passed directly into render_navigation method.
+
+*2.0.1
+
+* fixed handling of a non-existent explicit navigation item for a navigation context
+
+*2.0.0
+
+* added auto_highlight feature. Active navigation is determined by comparing urls, no need to explicitly set it in the controllers anymore. Thanks to Jack Dempsey and Florian Hanke for the support on this.
+* added ability to create multi-level navigations (not just limited to primary and secondary navigation). Thanks again to Jack Dempsey for the motivation ;-)
+* simplified the process to explicitly set the navigation in the controller (where needed) - only deepest level has to be specified
+* made auto_highlight feature configurable both on global and item_container's level
+* config file is now evaluated in template if ever possible (not in controller anymore)
+
+*1.4.2
+
+* explicitly loading all source files when requiring 'simple_navigation'.
+
+*1.4.0
+
+* added the capability to have several navigation-contexts
+* doc-fix
+
+*1.3.1
+
+* now compliant with ruby 1.9.1 (thanks to Gernot Kogler for the feedback)
+
+*1.3.0
+
+* render_all_levels-option allows to render all subnavigation independent from the active primary navigation ('full open tree'). Userful for javascript menus. Thanks to Richard Hulse.
+* ability to turn off automatic generation of dom_ids for the list items (autogenerate_item_ids). Credits again to Richard Hulse.
+* ability to specify dom_class for primary and secondary lists. Thanks Richard!
+
+*1.2.2
+
+* renderers now have access to request_forgery_protection stuff (this allows delete-links as navigation-items)
+
+*1.2.1
+
+* changed way to include render_*-helper_methods into view (including them into Controller and declaring them as helper_methods instead of adding whole module as Helper). this seems to be more reliable under certain conditions. Credits to Gernot Kogler.
+
+*1.2.0
+
+* added capability to add conditions to navigation-items (primary.item key, name, url, :if => Proc.new {current_user.admin?})
+
+*1.1.2
+
+* Bugfix: config now gets evaluated on every render_navigation call. Credits to Joël Azémar.
+* Config file gets reloaded on every render_navigation call in development mode. Only load config file on server start in production mode.
+
+
+*1.1.1
+
+* Change plugin into a GemPlugin
