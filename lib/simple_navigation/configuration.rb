@@ -11,9 +11,8 @@ module SimpleNavigation
 
     class << self
 
-      # Evals the config_file for the given navigation_context inside the specified context (usually a controller or view)
-      def eval_config(context, navigation_context = :default)
-        SimpleNavigation.set_template_from context
+      # Evals the config_file for the given navigation_context
+      def eval_config(navigation_context = :default)
         SimpleNavigation.context_for_eval.instance_eval(SimpleNavigation.config_files[navigation_context])
       end
       
@@ -71,10 +70,6 @@ module SimpleNavigation
     def loaded?
       !@primary_navigation.nil?
     end    
-    
-    def context_for_eval
-      self.class.context_for_eval
-    end
         
   end  
   

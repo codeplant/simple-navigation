@@ -37,7 +37,7 @@ describe SimpleNavigation::Helpers do
       end
   
       it "should eval the config on every request" do
-        SimpleNavigation::Configuration.should_receive(:eval_config).with(@controller, :default)
+        SimpleNavigation::Configuration.should_receive(:eval_config).with(:default)
         @controller.render_navigation
       end
     end

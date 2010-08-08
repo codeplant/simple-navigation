@@ -8,7 +8,7 @@ describe SimpleNavigation::Renderer::Breadcrumbs do
     def render(current_nav=nil, options={:level => :all})
       primary_navigation = primary_container
       select_item(current_nav) if current_nav
-      @renderer = SimpleNavigation::Renderer::Breadcrumbs.new(options)
+      setup_renderer_for SimpleNavigation::Renderer::Breadcrumbs, :rails, options
       HTML::Document.new(@renderer.render(primary_navigation)).root
     end
       
@@ -53,48 +53,6 @@ describe SimpleNavigation::Renderer::Breadcrumbs do
           HTML::Selector.new('div a').select(render(:subnav1)).should have(2).entries
         end
       end
-    end
-    
-    context 'regarding method calls' do
-      
-      context 'regarding the list_content' do
-        before(:each) do
-          @primary_navigation = primary_container
-          @list_content = stub(:list_content)
-          @list_items = stub(:list_items, :join => @list_content)
-          @items.stub!(:inject => @list_items)
-          @renderer = SimpleNavigation::Renderer::Breadcrumbs.new(options)
-        end
-      
-        it "should join the list_items" do
-          @list_items.should_receive(:join)
-        end
-      
-        it "should html_saferize the list_content" do
-          @renderer.should_receive(:html_safe).with(@list_content)
-        end
-
-        after(:each) do
-          @renderer.render(@primary_navigation)
-        end
-      end
-      
-      context 'regarding the items' do
-        before(:each) do
-          @primary_navigation = primary_container
-          select_item(:invoices)
-          @renderer = SimpleNavigation::Renderer::Breadcrumbs.new(options)
-        end
-        
-        it "should call html_safe on every rendered item's name" do
-          @items.each do |item|
-            @renderer.should_receive(:html_safe).with(item.name) if item.selected?
-          end
-          @renderer.should_receive(:html_safe).with(anything).twice()
-          @renderer.render(@primary_navigation)
-        end
-      end
-      
     end
   end
 end

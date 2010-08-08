@@ -21,7 +21,7 @@ module SimpleNavigation
     # Returns the navigation items
     def items
       if provider.instance_of?(Symbol)
-        SimpleNavigation.config.context_for_eval.send(provider)
+        SimpleNavigation.context_for_eval.send(provider)
       elsif provider.respond_to?(:items)
         provider.items
       elsif provider.respond_to?(:each)

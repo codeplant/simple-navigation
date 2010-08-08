@@ -70,3 +70,12 @@ def subnav_container
   container.instance_variable_set(:@items, items)
   container
 end
+
+def setup_renderer_for(renderer_class, framework, options)
+  adapter = case framework
+  when :rails
+    SimpleNavigation::Adapters::Rails.new(stub(:context, :view_context => ActionView::Base.new))
+  end
+  SimpleNavigation.stub!(:adapter => adapter)
+  @renderer = renderer_class.new(options)
+end

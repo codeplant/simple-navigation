@@ -36,13 +36,13 @@ module SimpleNavigation
       options = extract_backwards_compatible_options(*args)
       options = {:context => :default, :level => :all}.merge(options)
       ctx = options.delete(:context)
-      SimpleNavigation.set_template_from self
+      SimpleNavigation.init_adapter_from self
       if SimpleNavigation.config_file?(ctx)
         SimpleNavigation.load_config(ctx) 
-        SimpleNavigation::Configuration.eval_config(self, ctx) 
+        SimpleNavigation::Configuration.eval_config(ctx)
       end
       SimpleNavigation.config.items(options[:items]) if options[:items]
-      SimpleNavigation.handle_explicit_navigation
+      #SimpleNavigation.handle_explicit_navigation
       raise "no primary navigation defined, either use a navigation config file or pass items directly to render_navigation" unless SimpleNavigation.primary_navigation
       active_item_container = SimpleNavigation.active_item_container_for(options[:level])
       active_item_container.render(options) unless active_item_container.nil?

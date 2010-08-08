@@ -21,7 +21,7 @@ describe SimpleNavigation::ItemsProvider do
       before(:each) do
         @items_provider.instance_variable_set(:@provider, :provider_method)
         @context = stub(:context, :provider_method => @items)
-        SimpleNavigation::Configuration.stub!(:context_for_eval => @context)
+        SimpleNavigation.stub!(:context_for_eval => @context)
       end
       it "should call the method specified by symbol on the context" do
         @context.should_receive(:provider_method)

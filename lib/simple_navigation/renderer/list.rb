@@ -13,7 +13,7 @@ module SimpleNavigation
       def render(item_container)
         list_content = item_container.items.inject([]) do |list, item|
           html_options = item.html_options
-          li_content = link_to(html_safe(item.name), item.url, :class => item.selected_class, :method => item.method)
+          li_content = link_to(item.name, item.url, :class => item.selected_class, :method => item.method)
           if include_sub_navigation?(item)
             li_content << render_sub_navigation_for(item)
           end  
@@ -22,7 +22,7 @@ module SimpleNavigation
         if skip_if_empty? && item_container.empty?
           ''
         else  
-          content_tag(:ul, html_safe(list_content), {:id => item_container.dom_id, :class => item_container.dom_class}) 
+          content_tag(:ul, list_content, {:id => item_container.dom_id, :class => item_container.dom_class})
         end
       end
     end
