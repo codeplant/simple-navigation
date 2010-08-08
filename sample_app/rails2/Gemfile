@@ -3,5 +3,5 @@ source :gemcutter
 #gem 'rails',             '2.3.2'
 #gem 'rails',             '2.3.5'
 gem 'rails',             '2.3.8'
-gem 'haml',              '3.0.13'
+gem 'haml',              '3.0.14'
 gem 'simple-navigation', '2.7.0'
