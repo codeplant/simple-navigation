@@ -1,0 +1,30 @@
+#example_1.example_content {
+  border: 10px solid #d6d1b9;
+  padding: 0px; }
+  #example_1.example_content #navigation {
+    float: left;
+    width: 120px;
+    background-color: #d6d1b9; }
+    #example_1.example_content #navigation ul {
+      padding-left: 5px; }
+      #example_1.example_content #navigation ul ul {
+        padding-left: 20px; }
+    #example_1.example_content #navigation a {
+      text-decoration: none;
+      color: #7f7669; }
+      #example_1.example_content #navigation a:hover, #example_1.example_content #navigation a:active {
+        text-decoration: underline; }
+    #example_1.example_content #navigation li {
+      border: medium none;
+      list-style-image: none;
+      list-style-type: none;
+      padding: 2px; }
+      #example_1.example_content #navigation li a.selected {
+        color: #4c4338;
+        text-decoration: underline; }
+      #example_1.example_content #navigation li li {
+        font-size: 10pt; }
+  #example_1.example_content .content {
+    padding: 10px;
+    float: left;
+    width: 400px; }

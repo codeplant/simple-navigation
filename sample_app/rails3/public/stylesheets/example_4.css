@@ -1,0 +1,30 @@
+#example_4.example_content {
+  border: 10px solid #d6d1b9;
+  padding: 0px; }
+  #example_4.example_content #js_navigation {
+    float: left;
+    width: 120px;
+    background-color: #d6d1b9; }
+    #example_4.example_content #js_navigation ul {
+      padding-left: 5px; }
+      #example_4.example_content #js_navigation ul ul {
+        padding-left: 20px; }
+    #example_4.example_content #js_navigation a {
+      text-decoration: none;
+      color: #7f7669; }
+      #example_4.example_content #js_navigation a:hover, #example_4.example_content #js_navigation a:active {
+        text-decoration: underline; }
+    #example_4.example_content #js_navigation li {
+      border: medium none;
+      list-style-image: none;
+      list-style-type: none;
+      padding: 2px; }
+      #example_4.example_content #js_navigation li a.selected {
+        color: #4c4338;
+        text-decoration: underline; }
+      #example_4.example_content #js_navigation li li {
+        font-size: 10pt; }
+  #example_4.example_content .content {
+    padding: 10px;
+    float: left;
+    width: 400px; }

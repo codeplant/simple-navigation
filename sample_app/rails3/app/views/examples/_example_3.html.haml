@@ -1,0 +1,12 @@
+.example
+  = example :title => 'Example 3: Tabbed Main Navigation with Sidebar Sub Navigation', :haml => '87434', :sass => '87439', :css => '87445' do
+    #example_3.example_content
+      #top_navigation= render_navigation(:level => 1)
+      .clear_float
+      .content_wrapper
+        #sub_navigation= render_navigation(:level => 2)
+        .content
+          .breadcrumbs
+            .title breadcrumbs:
+            = render_navigation(:renderer => :breadcrumbs, :join_with => ' &raquo; ')
+        .clear_float    

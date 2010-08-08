@@ -1,0 +1,55 @@
+!header_background = #F4FCF2
+!header_color = #F4EFB7
+!tabs_background = #66533F
+!tabs_color = #FFFFFF
+!tabs_hover_background = #8C7A6E
+!tabs_active_background = #AFC0A4
+
+#example_2.example_content
+
+  border: 10px solid
+  :border-color = !header_background
+  padding: 0px
+  
+  .content
+    padding: 10px
+    :background-color = !tabs_active_background
+    min-height: 100px
+  
+  #top_navigation
+    float: left
+    width: 100%
+    :background-color = !header_background
+    
+    ul
+      height: 25px
+      margin: 0 30px 0 0
+      padding: 0
+    
+      li
+        display: inline
+        list-style-type: none
+        margin: 0
+        padding: 0
+      
+        a
+          float: left
+          font-size: 10pt
+          font-weight: normal
+          margin: 0
+          padding: 4px 8px 6px
+          :background-color = !tabs_background
+          :border-color = !header_background
+          border-style: solid
+          border-width: 1px
+          :color = !tabs_color
+          text-decoration: none
+          &:hover
+            :background-color = !tabs_hover_background
+      
+        a.selected
+          :background-color = !tabs_active_background
+          border: 1px solid
+          :border-color = !tabs_active_background
+          :color = #2F3C4C
+          font-weight: bold

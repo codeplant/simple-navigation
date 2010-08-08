@@ -1,0 +1,14 @@
+.example
+  = example :title => 'Example 4: Javascript Menu with Superfish', :haml => '279476', :sass => '279472', :css => '279470' do
+    #example_4.example_content
+      #js_navigation= render_navigation(:expand_all => true)
+      .content
+        .breadcrumbs
+          .title breadcrumbs:
+          = render_navigation(:renderer => :breadcrumbs, :join_with => ' &raquo; ')
+      .clear_float
+
+:javascript
+  $(document).ready(function(){ 
+    $("#js_navigation ul").superfish(); 
+  });

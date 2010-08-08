@@ -1,0 +1,42 @@
+!normal_link_color = #7F7669
+!active_link_color = #4C4338
+
+#example_4.example_content
+  border: 10px solid #D6D1B9
+  padding: 0px
+
+  #js_navigation
+    float: left
+    width: 120px
+    background-color: #D6D1B9
+
+    ul
+      padding-left: 5px
+
+      ul
+        padding-left: 20px
+
+    a
+      text-decoration: none
+      :color = !normal_link_color
+      &:hover, &:active
+        text-decoration: underline
+
+    li 
+      border: medium none
+      list-style-image: none
+      list-style-type: none
+      padding: 2px
+
+
+      a.selected 
+        :color = !active_link_color
+        text-decoration: underline
+
+      li
+        font-size: 10pt
+    
+  .content
+    padding: 10px
+    float: left
+    width: 400px

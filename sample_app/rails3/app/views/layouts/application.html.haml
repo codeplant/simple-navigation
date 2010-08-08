@@ -1,0 +1,23 @@
+!!! Strict
+%html
+  %head
+    %meta{'http-equiv' => 'Content-Type', :content => 'text/html; charset=UTF-8'}/
+    %title Simple Navigation Examples
+    = stylesheet_link_tag 'navigation', 'example_1', 'example_2', 'example_3', 'example_4'
+    = javascript_include_tag 'jquery', 'application', 'jquery.superfish'
+  %body
+    
+    = render :partial => 'structure/header'
+    
+    #main_content
+    
+      = render :partial => 'structure/info_box'
+      
+      = render :partial => 'examples/example_1'
+      
+      = render :partial => 'examples/example_2'
+      
+      = render :partial => 'examples/example_3'
+        
+      = render :partial => 'examples/example_4'
+                        

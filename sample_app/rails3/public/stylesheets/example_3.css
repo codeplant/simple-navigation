@@ -1,0 +1,81 @@
+#example_3.example_content {
+  border: 10px solid;
+  border-color: #f4fcf2;
+  padding: 0px; }
+  #example_3.example_content .content_wrapper {
+    background-color: #2f3c4c; }
+  #example_3.example_content .content {
+    float: left;
+    padding: 10px;
+    background-color: #fffad9;
+    min-height: 100px;
+    margin: 10px 10px 10px 0px;
+    width: 540px; }
+  #example_3.example_content #top_navigation {
+    float: left;
+    width: 100%;
+    background-color: #f4fcf2; }
+    #example_3.example_content #top_navigation ul {
+      height: 25px;
+      margin: 0 30px 0 0;
+      padding: 0; }
+      #example_3.example_content #top_navigation ul li {
+        display: inline;
+        list-style-type: none;
+        margin: 0;
+        padding: 0; }
+        #example_3.example_content #top_navigation ul li a {
+          float: left;
+          font-size: 10pt;
+          font-weight: normal;
+          margin: 0;
+          padding: 4px 8px 6px;
+          background-color: #66533f;
+          border-color: #f4fcf2;
+          border-style: solid;
+          border-width: 1px;
+          color: white;
+          text-decoration: none; }
+          #example_3.example_content #top_navigation ul li a:hover {
+            background-color: #8c7a6e; }
+        #example_3.example_content #top_navigation ul li a.selected {
+          background-color: #2f3c4c;
+          border: 1px solid;
+          border-color: #2f3c4c;
+          color: #f4efb7;
+          font-weight: bold; }
+  #example_3.example_content #sub_navigation {
+    float: left;
+    background-color: #2f3c4c;
+    min-height: 100px;
+    width: 100px;
+    padding-left: 10px; }
+    #example_3.example_content #sub_navigation li {
+      list-style-type: none;
+      margin: 0;
+      padding: 0; }
+      #example_3.example_content #sub_navigation li a {
+        float: right;
+        font-size: 10pt;
+        font-weight: normal;
+        margin: 0;
+        padding: 2px 8px 4px;
+        margin: 2px 0px 2px;
+        background-color: #afc0a4;
+        border-color: #f4fcf2;
+        border-style: solid;
+        border-width: 0px;
+        color: #66533f;
+        text-decoration: none;
+        -moz-border-radius-topleft: 5px;
+        -webkit-border-top-left-radius: 5px;
+        -moz-border-radius-bottomleft: 5px;
+        -webkit-border-bottom-left-radius: 5px;
+        width: 80px;
+        text-align: right; }
+        #example_3.example_content #sub_navigation li a:hover {
+          background-color: #cce0cc; }
+      #example_3.example_content #sub_navigation li a.selected {
+        background-color: #fffad9;
+        color: #66533f;
+        font-weight: bold; }

@@ -1,0 +1,17 @@
+!!! Strict
+%html
+  %head
+    %meta{'http-equiv' => 'Content-Type', :content => 'text/html; charset=UTF-8'}/
+    %title Simple Navigation Examples
+    = stylesheet_link_tag 'navigation'
+    = javascript_include_tag 'jquery', 'application'
+  %body
+    
+    = render :partial => 'structure/header'
+    
+    #main_content
+    
+      = link_to 'Back to examples', root_path
+      %div{:style => 'margin-bottom: 10px'}
+      = yield
+      

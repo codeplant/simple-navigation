@@ -1,0 +1,10 @@
+.footer
+  .src_code
+    Source Code:
+    = link_to 'Haml', gist_path(:gist => options[:haml])
+  .styling
+    Style:
+    = link_to 'Sass', gist_path(:gist => options[:sass])
+    |
+    = link_to 'Css', gist_path(:gist => options[:css])
+  .clear_float

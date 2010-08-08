@@ -1,0 +1,6 @@
+h1. Simple Navigation Sample Application for Rails 3
+
+# Point your console to this directory
+# Use @bundle install@ to setup the required gems
+# Enter @rails server@ to start the server
+# Goto @http://localhost:3000@ to try out the demo-application
