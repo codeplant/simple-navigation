@@ -1,0 +1,6 @@
+== Simple Navigation Sample Application for Rails 2
+
+1. Point your console to this directory
+1. Use 'bundle install' to setup the required gems
+1. Enter 'script/server' to start the server
+1. Goto 'http://localhost:3000' to try out the demo-application
