@@ -5,6 +5,8 @@ describe SimpleNavigation::Item do
   before(:each) do
     @item_container = stub(:item_container, :level => 1)
     @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
+    @adapter = stub(:adapter)
+    SimpleNavigation.stub!(:adapter => @adapter)
   end
 
   describe 'initialize' do
@@ -331,31 +333,19 @@ describe SimpleNavigation::Item do
         before(:each) do
           @item.stub!(:root_path_match? => false)
         end
-        context 'template is set' do
+        context 'current request url matches url' do
           before(:each) do
-            @template = stub(:template)
-            SimpleNavigation.stub!(:template => @template)
+            @adapter.stub!(:current_page? => true)
           end
-          context 'current request url matches url' do
-            before(:each) do
-              @template.stub!(:current_page? => true)
-            end
-            it "should test with the item's url" do
-              @template.should_receive(:current_page?).with('url')
-              @item.send(:selected_by_url?)
-            end
-            it {@item.send(:selected_by_url?).should be_true}
+          it "should test with the item's url" do
+            @adapter.should_receive(:current_page?).with('url')
+            @item.send(:selected_by_url?)
           end
-          context 'no match' do
-            before(:each) do
-              @template.stub!(:current_page? => false)
-            end
-            it {@item.send(:selected_by_url?).should be_false}
-          end
+          it {@item.send(:selected_by_url?).should be_true}
         end
-        context 'template is not set' do
+        context 'no match' do
           before(:each) do
-            SimpleNavigation.stub!(:template => nil)
+            @adapter.stub!(:current_page? => false)
           end
           it {@item.send(:selected_by_url?).should be_false}
         end
@@ -370,28 +360,23 @@ describe SimpleNavigation::Item do
   end
 
   describe 'root_path_match?' do
-    before(:each) do
-      @request = stub(:request)
-      @controller = stub(:controller, :request => @request)
-      SimpleNavigation.stub!(:controller => @controller)
-    end
     it "should match if both url == /" do
-      @request.stub!(:path => '/')
+      @adapter.stub!(:request_path => '/')
       @item.stub!(:url => '/')
       @item.send(:root_path_match?).should be_true
     end
     it "should not match if item url is not /" do
-      @request.stub!(:path => '/')
+      @adapter.stub(:request_path => '/')
       @item.stub!(:url => '/bla')
       @item.send(:root_path_match?).should be_false
     end
     it "should not match if request url is not /" do
-      @request.stub!(:path => '/bla')
+      @adapter.stub(:request_path => '/bla')
       @item.stub!(:url => '/')
       @item.send(:root_path_match?).should be_false
     end
     it "should not match if urls do not match" do
-      @request.stub!(:path => '/bla')
+      @adapter.stub(:request_path => 'bla')
       @item.stub!(:url => '/bli')
       @item.send(:root_path_match?).should be_false
     end

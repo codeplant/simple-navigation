@@ -25,18 +25,14 @@ describe SimpleNavigation::Configuration do
     context "with default navigation context" do
       it "should instance_eval the default config_file-string inside the context" do
         @context.should_receive(:instance_eval).with('default')
-        SimpleNavigation::Configuration.eval_config(@context)
+        SimpleNavigation::Configuration.eval_config
       end    
     end
     context 'with non default navigation context' do
       it "should instance_eval the specified config_file-string inside the context" do
         @context.should_receive(:instance_eval).with('my_context')
-        SimpleNavigation::Configuration.eval_config(@context, :my_context)
+        SimpleNavigation::Configuration.eval_config(:my_context)
       end
-    end
-    it "should set the template from the specified context" do
-      SimpleNavigation.should_receive(:set_template_from).with(@context)
-      SimpleNavigation::Configuration.eval_config(@context, :my_context)
     end
   end
   
@@ -127,13 +123,6 @@ describe SimpleNavigation::Configuration do
     it "should return false if no primary_nav is set" do
       @config.instance_variable_set(:@primary_navigation, nil)
       @config.should_not be_loaded
-    end
-  end
-  
-  describe 'context_for_eval' do
-    it "should delegate to the Configuration class" do
-      @config.class.should_receive(:context_for_eval)
-      @config.context_for_eval
     end
   end
   

@@ -13,11 +13,14 @@ require 'simple_navigation/renderer/breadcrumbs'
 require 'simple_navigation/initializer'
 require 'simple_navigation/railtie' if Rails::VERSION::MAJOR == 3
 
+require 'simple_navigation/adapters/rails'
+
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
 
-  mattr_accessor :config_files, :config_file_path, :default_renderer, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root, :registered_renderers
+  mattr_accessor :adapter_class, :adapter, :config_files, :config_file_path, :default_renderer, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root, :registered_renderers
 
+  self.adapter_class = SimpleNavigation::Adapters::Rails
   self.config_files = {}
   self.registered_renderers = {
     :list         => SimpleNavigation::Renderer::List,
@@ -27,6 +30,11 @@ module SimpleNavigation
   
   
   class << self
+    delegate :request, :request_uri, :request_path, :context_for_eval, :current_page?, :to => :adapter
+
+    def init_adapter_from(context)
+      self.adapter = self.adapter_class.new(context)
+    end
 
     # Sets the config file path and installs the ControllerMethods in ActionController::Base.
     def init_rails
@@ -52,18 +60,6 @@ module SimpleNavigation
       else
         self.config_files[navigation_context] = IO.read(config_file_name(navigation_context))
       end
-    end
-
-    def set_template_from(context)
-      SimpleNavigation.controller = extract_controller_from context
-      SimpleNavigation.template = SimpleNavigation.controller.instance_variable_get(:@template) || (SimpleNavigation.controller.respond_to?(:view_context) ? SimpleNavigation.controller.view_context : nil)
-    end
-
-    # Returns the context in which the config file should be evaluated.
-    # This is preferably the template, otherwise te controller
-    def context_for_eval
-      raise 'no context set for evaluation the config file' unless SimpleNavigation.template || SimpleNavigation.controller
-      SimpleNavigation.template || SimpleNavigation.controller
     end
 
     # Returns the singleton instance of the SimpleNavigation::Configuration
@@ -124,15 +120,6 @@ module SimpleNavigation
         end
       end
     end
-
-    # Extracts a controller from the context.
-    def extract_controller_from(context)
-      if context.respond_to? :controller
-        context.controller
-      else
-        context
-      end
-    end
     
     # Registers a renderer.
     #
@@ -149,22 +136,7 @@ module SimpleNavigation
       self.registered_renderers.merge!(renderer_hash)
     end
 
-    # Returns the current request.
-    #
-    def request
-      SimpleNavigation.template.request if SimpleNavigation.template
-    end
-
-    # Returns the current request's URI.
-    #
-    def request_uri
-      return '' unless SimpleNavigation.request
-      return SimpleNavigation.request.fullpath if SimpleNavigation.request.respond_to?(:fullpath)
-      SimpleNavigation.request.request_uri
-    end
-
-    private
-  
+    private  
   
     # TODO: refactor this ugly thing to make it nice and short
     def parse_explicit_navigation_args

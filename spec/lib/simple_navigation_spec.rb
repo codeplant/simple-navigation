@@ -1,6 +1,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe SimpleNavigation do
+
+  before(:each) do
+    SimpleNavigation.config_file_path = 'path_to_config'
+  end
   
   describe 'config_files' do
     before(:each) do
@@ -35,9 +39,6 @@ describe SimpleNavigation do
   end
   
   describe 'config_file_name' do
-    before(:each) do
-      SimpleNavigation.config_file_path = 'path_to_config'
-    end
     context 'for :default navigation_context' do
       it "should return the path to default config file" do
         SimpleNavigation.config_file_name.should == 'path_to_config/navigation.rb'
@@ -54,60 +55,6 @@ describe SimpleNavigation do
     end
   end
   
-  describe 'set_template_from' do
-    before(:each) do
-      @context = stub :context
-      SimpleNavigation.stub!(:extract_controller_from => @controller)
-    end
-    context 'regarding setting the controller' do
-      it "should set the controller" do
-        @controller = Object.new
-        SimpleNavigation.should_receive(:extract_controller_from).with(@context).and_return(@controller)
-        SimpleNavigation.should_receive(:controller=).with(@controller)
-        SimpleNavigation.set_template_from @context
-      end
-    end
-    context 'regarding setting the template' do
-      before(:each) do
-        @template = stub :template
-        @controller = Object.new
-        SimpleNavigation.stub!(:controller => @controller)
-      end
-      context 'template is stored in controller as instance_var (Rails2)' do
-        context 'template is set' do
-          before(:each) do
-            @controller.stub!(:instance_variable_get => @template)
-          end
-          it {SimpleNavigation.should_receive(:template=).with(@template)}
-         end
-        context 'template is not set' do
-          before(:each) do
-            @controller.stub!(:instance_variable_get => nil)
-          end
-          it {SimpleNavigation.should_receive(:template=).with(nil)}
-        end
-      end
-      context 'template is stored in controller as view_context (Rails3)' do
-        context 'template is set' do
-          before(:each) do            
-            @controller.stub!(:view_context => @template)
-          end
-          it {SimpleNavigation.should_receive(:template=).with(@template)}
-        end
-        context 'template is not set' do
-          before(:each) do            
-            @controller.stub!(:view_context => nil)
-          end
-          it {SimpleNavigation.should_receive(:template=).with(nil)}
-        end
-      end
-      after(:each) do
-        SimpleNavigation.set_template_from @context
-      end
-      
-    end
-  end
-
   describe 'self.init_rails' do
     before(:each) do
       SimpleNavigation.stub!(:default_config_file_path => 'default_path')
@@ -140,70 +87,6 @@ describe SimpleNavigation do
   describe 'self.default_config_file_path' do
     it {SimpleNavigation.default_config_file_path.should == './config'}
   end
-
-  describe 'self.extract_controller_from' do
-    before(:each) do
-      @nav_context = stub(:nav_context)
-    end
-    
-    context 'object responds to controller' do
-      before(:each) do
-        @controller = stub(:controller)
-        @nav_context.stub!(:controller).and_return(@controller)
-      end
-      
-      it "should return the controller" do
-        SimpleNavigation.send(:extract_controller_from, @nav_context).should == @controller
-      end
-      
-    end
-    
-    context 'object does not respond to controller' do
-      it "should return the nav_context" do
-        SimpleNavigation.send(:extract_controller_from, @nav_context).should == @nav_context
-      end
-    end
-  end
-  
-  describe 'context_for_eval' do
-    context 'controller is present' do
-      before(:each) do
-        @controller = stub(:controller)
-        SimpleNavigation.stub!(:controller => @controller)
-      end
-      context 'template is present' do
-        before(:each) do
-          @template = stub(:template)
-          SimpleNavigation.stub!(:template => @template)
-        end
-        it {SimpleNavigation.context_for_eval.should == @template}
-      end
-      context 'template is not present' do
-        before(:each) do
-          SimpleNavigation.stub!(:template => nil)
-        end
-        it {SimpleNavigation.context_for_eval.should == @controller}
-      end
-    end
-    context 'controller is not present' do
-      before(:each) do
-        SimpleNavigation.stub!(:controller => nil)
-      end
-      context 'template is present' do
-        before(:each) do
-          @template = stub(:template)
-          SimpleNavigation.stub!(:template => @template)
-        end
-        it {SimpleNavigation.context_for_eval.should == @template}
-      end
-      context 'template is not present' do
-        before(:each) do
-          SimpleNavigation.stub!(:template => nil)
-        end
-        it {lambda {SimpleNavigation.context_for_eval}.should raise_error}
-      end
-    end
-  end
   
   describe 'regarding renderers' do
     it "should have registered the builtin renderers by default" do
@@ -222,12 +105,10 @@ describe SimpleNavigation do
     
   end
 
-
   describe 'load_config' do
     context 'config_file_path is set' do
       before(:each) do
         SimpleNavigation.config_file_path = 'path_to_config'
-        #SimpleNavigation.stub!(:config_file_name => 'path_to_config/navigation.rb')
       end
       
       context 'config_file does exist' do
@@ -322,44 +203,6 @@ describe SimpleNavigation do
       after(:each) do
         SimpleNavigation.config_files = {}
       end
-    end
-  end
-  
-  describe 'request' do
-    context 'template is set' do
-      before(:each) do
-        @request = stub(:request)
-        SimpleNavigation.stub!(:template => stub(:template, :request => @request))
-      end
-      it {SimpleNavigation.request.should == @request}
-    end
-    context 'template is not set' do
-      it {SimpleNavigation.request.should be_nil}
-    end
-  end
-  
-  describe 'request_uri' do
-    context 'request is set' do
-      context 'fullpath is defined on request' do
-        before(:each) do
-          @request = stub(:request, :fullpath => '/fullpath')
-          SimpleNavigation.stub!(:request => @request)
-        end
-        it {SimpleNavigation.request_uri.should == '/fullpath'}
-      end
-      context 'fullpath is not defined on request' do
-        before(:each) do
-          @request = stub(:request, :request_uri => '/request_uri')
-          SimpleNavigation.stub!(:request => @request)
-        end
-        it {SimpleNavigation.request_uri.should == '/request_uri'}
-      end
-    end
-    context 'request is not set' do
-      before(:each) do
-        SimpleNavigation.stub!(:request => nil)
-      end
-      it {SimpleNavigation.request_uri.should == ''}
     end
   end
   

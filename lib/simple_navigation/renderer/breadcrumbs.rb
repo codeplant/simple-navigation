@@ -12,7 +12,7 @@ module SimpleNavigation
       
       def render(item_container)
         a_tags = a_tags(item_container)
-        content_tag(:div, html_safe(a_tags(item_container).join(join_with)), {:id => item_container.dom_id, :class => item_container.dom_class})
+        content_tag(:div, a_tags(item_container).join(join_with), {:id => item_container.dom_id, :class => item_container.dom_class})
       end
 
       protected
@@ -20,7 +20,7 @@ module SimpleNavigation
       def a_tags(item_container)
         item_container.items.inject([]) do |list, item|
           if item.selected?
-            list << link_to(html_safe(item.name), item.url, {:method => item.method}.merge(item.html_options.except(:class,:id))) if item.selected?
+            list << link_to(item.name, item.url, {:method => item.method}.merge(item.html_options.except(:class,:id))) if item.selected?
             if include_sub_navigation?(item)
               list.concat a_tags(item.sub_navigation) 
             end

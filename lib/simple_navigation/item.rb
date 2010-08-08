@@ -68,7 +68,7 @@ module SimpleNavigation
         raise ArgumentError, ':highlights_on must be a regexp' unless highlights_on.instance_of?(Regexp)
         SimpleNavigation.request_uri =~ highlights_on
       elsif auto_highlight?
-        !!(root_path_match? || (SimpleNavigation.template && SimpleNavigation.template.current_page?(url)))
+        !!(root_path_match? || SimpleNavigation.current_page?(url))
       else
         false
       end
@@ -76,7 +76,7 @@ module SimpleNavigation
 
     # Returns true if both the item's url and the request's url are root_path
     def root_path_match?
-      url == '/' && SimpleNavigation.controller.request.path == '/'
+      url == '/' && SimpleNavigation.request_path == '/'
     end
 
     # Returns true if the item's id should be added to the rendered output.
