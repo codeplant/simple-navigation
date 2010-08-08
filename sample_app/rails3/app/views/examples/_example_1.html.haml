@@ -1,0 +1,9 @@
+.example
+  = example :title => 'Example 1: Simple Nested Sidebar Navigation', :haml => '87147', :sass => '87435', :css => '87440' do
+    #example_1.example_content.no_anchor
+      #navigation= render_navigation
+      .content
+        .breadcrumbs
+          .title breadcrumbs:
+          = render_navigation(:renderer => :breadcrumbs, :join_with => ' &raquo; ')
+      .clear_float
