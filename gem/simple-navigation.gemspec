@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke"]
-  s.date = %q{2010-07-30}
+  s.date = %q{2010-08-06}
   s.description = %q{With the simple-navigation gem installed you can easily create multilevel navigations for your Ruby on Rails applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation.}
   s.email = %q{andreas.schacke@gmail.com}
   s.extra_rdoc_files = [
@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
      "lib/generators/navigation_config/navigation_config_generator.rb",
      "lib/simple-navigation.rb",
      "lib/simple_navigation.rb",
+     "lib/simple_navigation/adapters/rails.rb",
      "lib/simple_navigation/configuration.rb",
      "lib/simple_navigation/controller_methods.rb",
      "lib/simple_navigation/helpers.rb",
