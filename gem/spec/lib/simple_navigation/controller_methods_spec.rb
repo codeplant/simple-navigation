@@ -31,9 +31,6 @@ describe SimpleNavigation::ControllerMethods do
     it "should include the InstanceMethods" do
       @controller.should respond_to(:current_navigation)
     end
-    it "should install the helper methods" do
-      @controller.class.instance_variable_get(:@helper_methods).should == [:render_navigation, :render_primary_navigation, :render_sub_navigation]
-    end
   end
 
   describe 'class_methods' do

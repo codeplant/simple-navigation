@@ -9,15 +9,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke"]
-  s.date = %q{2010-08-20}
+  s.date = %q{2010-08-12}
   s.description = %q{With the simple-navigation gem installed you can easily create multilevel navigations for your Ruby on Rails applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation.}
   s.email = %q{andreas.schacke@gmail.com}
-  s.extra_rdoc_files = [
-    "README"
-  ]
   s.files = [
     "CHANGELOG",
-     "README",
      "Rakefile",
      "VERSION.yml",
      "generators/navigation_config/USAGE",
@@ -27,20 +23,20 @@ Gem::Specification.new do |s|
      "lib/simple-navigation.rb",
      "lib/simple_navigation.rb",
      "lib/simple_navigation/adapters/rails.rb",
-     "lib/simple_navigation/configuration.rb",
-     "lib/simple_navigation/controller_methods.rb",
-     "lib/simple_navigation/helpers.rb",
-     "lib/simple_navigation/initializer.rb",
-     "lib/simple_navigation/item.rb",
-     "lib/simple_navigation/item_adapter.rb",
-     "lib/simple_navigation/item_container.rb",
-     "lib/simple_navigation/items_provider.rb",
+     "lib/simple_navigation/core/configuration.rb",
+     "lib/simple_navigation/core/item.rb",
+     "lib/simple_navigation/core/item_adapter.rb",
+     "lib/simple_navigation/core/item_container.rb",
+     "lib/simple_navigation/core/items_provider.rb",
+     "lib/simple_navigation/deprecated.rb",
      "lib/simple_navigation/railtie.rb",
-     "lib/simple_navigation/renderer/base.rb",
-     "lib/simple_navigation/renderer/breadcrumbs.rb",
-     "lib/simple_navigation/renderer/links.rb",
-     "lib/simple_navigation/renderer/list.rb",
+     "lib/simple_navigation/view/helpers.rb",
+     "lib/simple_navigation/view/renderer/base.rb",
+     "lib/simple_navigation/view/renderer/breadcrumbs.rb",
+     "lib/simple_navigation/view/renderer/links.rb",
+     "lib/simple_navigation/view/renderer/list.rb",
      "rails/init.rb",
+     "spec/lib/simple_navigation/adapters/rails_spec.rb",
      "spec/lib/simple_navigation/configuration_spec.rb",
      "spec/lib/simple_navigation/controller_methods_spec.rb",
      "spec/lib/simple_navigation/helpers_spec.rb",
@@ -61,21 +57,6 @@ Gem::Specification.new do |s|
   s.rubyforge_project = %q{andi}
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Ruby on Rails application.}
-  s.test_files = [
-    "spec/lib/simple_navigation/configuration_spec.rb",
-     "spec/lib/simple_navigation/controller_methods_spec.rb",
-     "spec/lib/simple_navigation/helpers_spec.rb",
-     "spec/lib/simple_navigation/item_adapter_spec.rb",
-     "spec/lib/simple_navigation/item_container_spec.rb",
-     "spec/lib/simple_navigation/item_spec.rb",
-     "spec/lib/simple_navigation/items_provider_spec.rb",
-     "spec/lib/simple_navigation/renderer/base_spec.rb",
-     "spec/lib/simple_navigation/renderer/breadcrumbs_spec.rb",
-     "spec/lib/simple_navigation/renderer/links_spec.rb",
-     "spec/lib/simple_navigation/renderer/list_spec.rb",
-     "spec/lib/simple_navigation_spec.rb",
-     "spec/spec_helper.rb"
-  ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
