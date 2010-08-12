@@ -15,11 +15,11 @@ $:.unshift File.join(File.dirname(__FILE__), '../lib')
 
 require 'simple_navigation'
 
-SimpleNavigation.rails_root = './'
+SimpleNavigation.root = './'
 
 # Spec::Runner.configure do |config|
   # no special config
-# endx
+# end
 
 # spec helper methods
 def sub_items
