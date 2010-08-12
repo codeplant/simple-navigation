@@ -6,12 +6,46 @@ describe SimpleNavigation::Adapters::Rails do
     SimpleNavigation::Adapters::Rails.new(@context)
   end
 
+  before(:all) do
+    RAILS_ROOT = './' unless defined?(RAILS_ROOT)
+    RAILS_ENV = 'test' unless defined?(RAILS_ENV)
+  end
+
   before(:each) do
     @context = stub(:context)
     @controller = stub(:controller)
     @context.stub!(:controller => @controller)
     @template = stub(:template)
     @adapter = create_adapter
+  end
+  
+  describe 'self.init_framework' do
+    before(:each) do
+      SimpleNavigation.stub!(:default_config_file_path => 'default_path')
+      ActionController::Base.stub!(:include)
+    end
+    context 'SimpleNavigation.config_file_path is already set' do
+      before(:each) do
+        SimpleNavigation.config_file_path = 'my_path'
+      end
+      it "should not override the config_file_path" do
+        SimpleNavigation.init_framework
+        SimpleNavigation.config_file_path.should == 'my_path'
+      end
+    end
+    context 'SimpleNavigation.config_file_path is not set' do
+      before(:each) do
+        SimpleNavigation.config_file_path = nil
+      end
+      it "should set the config_file_path to the default" do
+        SimpleNavigation.init_framework
+        SimpleNavigation.config_file_path.should == 'default_path'
+      end
+    end
+    it "should extend the ActionController::Base" do
+      ActionController::Base.should_receive(:include).with(SimpleNavigation::ControllerMethods)
+      SimpleNavigation.init_framework
+    end
   end
 
 

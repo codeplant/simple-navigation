@@ -1,4 +1,5 @@
 # Load all source files (if this is not done explicitly some naming conflicts may occur if rails app has classes with the same name)
+require 'simple_navigation/deprecated'
 require 'simple_navigation/configuration'
 require 'simple_navigation/helpers'
 require 'simple_navigation/controller_methods'
@@ -10,15 +11,14 @@ require 'simple_navigation/renderer/base'
 require 'simple_navigation/renderer/list'
 require 'simple_navigation/renderer/links'
 require 'simple_navigation/renderer/breadcrumbs'
-require 'simple_navigation/initializer'
-require 'simple_navigation/railtie' if Rails::VERSION::MAJOR == 3
+require 'simple_navigation/railtie' if defined?(Rails) && Rails::VERSION::MAJOR == 3
 
 require 'simple_navigation/adapters/rails'
 
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
 
-  mattr_accessor :adapter_class, :adapter, :config_files, :config_file_paths, :default_renderer, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root, :registered_renderers
+  mattr_accessor :adapter_class, :adapter, :config_files, :config_file_paths, :default_renderer, :registered_renderers, :root, :environment
 
   self.adapter_class = SimpleNavigation::Adapters::Rails
   self.config_files = {}
@@ -31,19 +31,14 @@ module SimpleNavigation
 
   class << self
     delegate :request, :request_uri, :request_path, :context_for_eval, :current_page?, :to => :adapter
+    delegate :init_framework, :to => :adapter_class
 
     def init_adapter_from(context)
       self.adapter = self.adapter_class.new(context)
     end
-
-    # Sets the config file path and installs the ControllerMethods in ActionController::Base.
-    def init_rails
-      SimpleNavigation.config_file_paths ||= [SimpleNavigation.default_config_file_path]
-      ActionController::Base.send(:include, SimpleNavigation::ControllerMethods)
-    end
-
+  
     def default_config_file_path
-      File.join(SimpleNavigation.rails_root, 'config')
+      File.join(SimpleNavigation.root, 'config')
     end
 
     # Returns true if the config_file for specified context does exist.
@@ -71,14 +66,10 @@ module SimpleNavigation
       config.primary_navigation
     end
 
-    def explicit_navigation_args
-      self.controller.instance_variable_get(:"@sn_current_navigation_args")
-    end
-
-    # Reads the current navigation for the specified level from the controller.
-    # Returns nil if there is no current navigation set for level.
-    def current_navigation_for(level)
-      self.controller.instance_variable_get(:"@sn_current_navigation_#{level}")
+    # Returns the path to the config_file for the given navigation_context
+    def config_file_name(navigation_context = :default)
+      file_name = navigation_context == :default ? '' : "#{navigation_context.to_s.underscore}_"
+      File.join(config_file_path, "#{file_name}navigation.rb")
     end
 
     # Returns the active item container for the specified level. Valid levels are
@@ -100,20 +91,6 @@ module SimpleNavigation
       end
     end
 
-    # If any navigation has been explicitely set in the controller this method evaluates the specified args set in the controller and sets
-    # the correct instance variable in the controller.
-    def handle_explicit_navigation
-      if SimpleNavigation.explicit_navigation_args
-        begin
-          level, navigation = parse_explicit_navigation_args
-          self.controller.instance_variable_set(:"@sn_current_navigation_#{level}", navigation)
-        rescue
-          #we do nothing here
-          #TODO: check if this is the right way to handle wrong explicit navigation
-        end
-      end
-    end
-
     # Registers a renderer.
     #
     # === Example
@@ -127,33 +104,6 @@ module SimpleNavigation
     #
     def register_renderer(renderer_hash)
       self.registered_renderers.merge!(renderer_hash)
-    end
-
-    private
-
-    # TODO: refactor this ugly thing to make it nice and short
-    def parse_explicit_navigation_args
-      args = SimpleNavigation.explicit_navigation_args
-      args = [Hash.new] if args.empty?
-      if args.first.kind_of? Hash
-        options = args.first
-      else # args is a list of current navigation for several levels
-        options = {}
-        if args.size == 1 #only an navi-key has been specified, try to find out level
-          level = SimpleNavigation.primary_navigation.level_for_item(args.first)
-          options[:"level_#{level}"] = args.first if level
-        else
-          args.each_with_index {|arg, i| options[:"level_#{i + 1}"] = arg}
-        end
-      end
-      #only the deepest level is relevant
-      level = options.inject(0) do |max, kv|
-        kv.first.to_s =~ /level_(\d)/
-        max = $1.to_i if $1.to_i > max
-        max
-      end
-      raise ArgumentError, "Invalid level specified or item key not found" if level == 0
-      [level, options[:"level_#{level}"]]
     end
 
   end

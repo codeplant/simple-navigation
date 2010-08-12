@@ -4,6 +4,13 @@ module SimpleNavigation
 
       attr_reader :controller, :template
 
+      def self.init_framework
+        SimpleNavigation.root = rails3? ? ::Rails.root : ::RAILS_ROOT
+        SimpleNavigation.environment = rails3? ? ::Rails.env : ::RAILS_ENV
+        SimpleNavigation.config_file_path = SimpleNavigation.default_config_file_path unless SimpleNavigation.config_file_path
+        ActionController::Base.send(:include, SimpleNavigation::ControllerMethods)
+      end
+      
       def initialize(context)
         @controller = extract_controller_from context
         @template = @controller.instance_variable_get(:@template) || (@controller.respond_to?(:view_context) ? @controller.view_context : nil)
@@ -44,8 +51,12 @@ module SimpleNavigation
       end
 
       protected
+      
+      def self.rails3?
+        ::Rails::VERSION::MAJOR == 3
+      end
 
-      # Marks the specified input as html_safe (for Rails3). Does nothing if html_safe is not defined on input.
+      # Marks the specified input as html_safe (for Rails3). Does nothing if html_safe is not defined on input. 
       #
       def html_safe(input)
         input.respond_to?(:html_safe) ? input.html_safe : input
