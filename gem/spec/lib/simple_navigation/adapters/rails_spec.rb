@@ -6,11 +6,6 @@ describe SimpleNavigation::Adapters::Rails do
     SimpleNavigation::Adapters::Rails.new(@context)
   end
 
-  before(:all) do
-    RAILS_ROOT = './' unless defined?(RAILS_ROOT)
-    RAILS_ENV = 'test' unless defined?(RAILS_ENV)
-  end
-
   before(:each) do
     @context = stub(:context)
     @controller = stub(:controller)
@@ -42,10 +37,19 @@ describe SimpleNavigation::Adapters::Rails do
         SimpleNavigation.config_file_path.should == 'default_path'
       end
     end
-    it "should extend the ActionController::Base" do
+    it "should extend the ActionController::Base with the ControllerMethods" do
       ActionController::Base.should_receive(:include).with(SimpleNavigation::ControllerMethods)
       SimpleNavigation.init_framework
     end
+    it "should extend the ActionController::Base with the Helpers" do
+      ActionController::Base.should_receive(:include).with(SimpleNavigation::Helpers)
+      SimpleNavigation.init_framework
+    end
+    it "should install the helper methods in the controller" do
+      ActionController::Base.should_receive(:helper_method).with(:render_navigation, :render_primary_navigation, :render_sub_navigation)
+      SimpleNavigation.init_framework
+    end
+    
   end
 
   describe 'initialize' do
