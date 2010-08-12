@@ -1,4 +1,4 @@
-*master
+*2.7.1
 
 * added SimpleNavigation.request and SimpleNavigation.request_uri as abstraction for getting request_uri (rails2/rails3)
 * use request.fullpath instead of request.request_uri for Rails3. Credits to Ben Langfeld.
