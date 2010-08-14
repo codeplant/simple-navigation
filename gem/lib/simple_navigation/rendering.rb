@@ -1,0 +1,5 @@
+require 'simple_navigation/rendering/helpers'
+require 'simple_navigation/rendering/renderer/base'
+require 'simple_navigation/rendering/renderer/list'
+require 'simple_navigation/rendering/renderer/links'
+require 'simple_navigation/rendering/renderer/breadcrumbs'
