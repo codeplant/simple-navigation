@@ -162,13 +162,6 @@ describe SimpleNavigation::ItemContainer do
     end
   end
 
-  describe 'current_explicit_navigation' do
-    it "should call SimpleNavigation.current_navigation with the container's level" do
-      SimpleNavigation.should_receive(:current_navigation_for).with(1)
-      @item_container.current_explicit_navigation
-    end
-  end
-
   describe 'item' do
     
     context 'unconditional item' do

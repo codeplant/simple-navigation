@@ -92,14 +92,7 @@ module SimpleNavigation
     # Returns the currently selected item, nil if no item is selected.
     #
     def selected_item
-      self[current_explicit_navigation] || items.find {|i| i.selected?}
-    end
-
-    # Returns the current navigation that has been explicitely defined in the controller for this container's level.
-    # Returns nil if no explicit current navigation has been set.
-    #
-    def current_explicit_navigation
-      SimpleNavigation.current_navigation_for(level)
+      items.find {|i| i.selected?}
     end
 
     # Returns the active item_container for the specified level
