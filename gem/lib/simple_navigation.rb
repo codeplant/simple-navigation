@@ -1,17 +1,6 @@
-# Load all source files (if this is not done explicitly some naming conflicts may occur if rails app has classes with the same name)
-require 'simple_navigation/core/configuration'
-require 'simple_navigation/core/item_adapter'
-require 'simple_navigation/core/item'
-require 'simple_navigation/core/item_container'
-require 'simple_navigation/core/items_provider'
-
-require 'simple_navigation/view/helpers'
-require 'simple_navigation/view/renderer/base'
-require 'simple_navigation/view/renderer/list'
-require 'simple_navigation/view/renderer/links'
-require 'simple_navigation/view/renderer/breadcrumbs'
-
-require 'simple_navigation/adapters/rails'
+require 'simple_navigation/core'
+require 'simple_navigation/rendering'
+require 'simple_navigation/adapters'
 
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
@@ -25,7 +14,6 @@ module SimpleNavigation
     :links        => SimpleNavigation::Renderer::Links,
     :breadcrumbs  => SimpleNavigation::Renderer::Breadcrumbs
   }
-
 
   class << self
     delegate :request, :request_uri, :request_path, :context_for_eval, :current_page?, :to => :adapter

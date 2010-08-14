@@ -1,0 +1,5 @@
+require 'simple_navigation/core/configuration'
+require 'simple_navigation/core/item_adapter'
+require 'simple_navigation/core/item'
+require 'simple_navigation/core/item_container'
+require 'simple_navigation/core/items_provider'
