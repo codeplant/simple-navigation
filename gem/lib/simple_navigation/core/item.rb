@@ -57,9 +57,8 @@ module SimpleNavigation
       sub_navigation && sub_navigation.selected?
     end
 
-    # Return true if item has explicitly selected in controllers
     def selected_by_config?
-      key == @container.current_explicit_navigation
+      false
     end
 
     # Returns true if the item's url matches the request's current url.

@@ -133,4 +133,20 @@ module SimpleNavigation
 
   end
 
+  class Item
+
+    def selected_by_config?
+      key == SimpleNavigation.current_navigation_for(@container.level)
+    end
+
+  end
+
+  class ItemContainer
+
+    def selected_item
+      self[SimpleNavigation.current_navigation_for(self.level)] || items.find {|i| i.selected?}
+    end
+
+  end
+
 end
