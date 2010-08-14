@@ -1,6 +1,4 @@
 # Load all source files (if this is not done explicitly some naming conflicts may occur if rails app has classes with the same name)
-require 'simple_navigation/deprecated'
-
 require 'simple_navigation/core/configuration'
 require 'simple_navigation/core/item_adapter'
 require 'simple_navigation/core/item'
@@ -12,8 +10,6 @@ require 'simple_navigation/view/renderer/base'
 require 'simple_navigation/view/renderer/list'
 require 'simple_navigation/view/renderer/links'
 require 'simple_navigation/view/renderer/breadcrumbs'
-
-require 'simple_navigation/railtie' if defined?(Rails) && Rails::VERSION::MAJOR == 3
 
 require 'simple_navigation/adapters/rails'
 
