@@ -1,3 +1,5 @@
+require 'simple_navigation/deprecated'
+
 module SimpleNavigation
   module Adapters
     class Rails
@@ -8,7 +10,7 @@ module SimpleNavigation
         SimpleNavigation.root = rails3? ? ::Rails.root : ::RAILS_ROOT
         SimpleNavigation.environment = rails3? ? ::Rails.env : ::RAILS_ENV
         SimpleNavigation.config_file_path = SimpleNavigation.default_config_file_path unless SimpleNavigation.config_file_path
-        ActionController::Base.send(:include, SimpleNavigation::ControllerMethods)
+        ActionController::Base.send(:include, SimpleNavigation::ControllerMethods) if defined?(SimpleNavigation::ControllerMethods)
         ActionController::Base.send(:include, SimpleNavigation::Helpers)
         ActionController::Base.send(:helper_method, :render_navigation, :render_primary_navigation, :render_sub_navigation)
       end
@@ -73,6 +75,17 @@ module SimpleNavigation
         end
       end
 
+    end
+  end
+end
+
+# Initializer for Rails3
+if defined?(Rails) && Rails::VERSION::MAJOR == 3
+  module SimpleNavigation
+    class Railtie < Rails::Railtie
+      initializer "simple_navigation.init_framework" do |app|
+        SimpleNavigation.init_framework
+      end
     end
   end
 end
