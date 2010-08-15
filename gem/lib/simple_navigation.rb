@@ -19,6 +19,24 @@ module SimpleNavigation
     delegate :request, :request_uri, :request_path, :context_for_eval, :current_page?, :to => :adapter
     delegate :init_framework, :to => :adapter_class
 
+    def framework
+      return :rails if defined?(Rails)
+      return :sinatra if defined?(Sinatra)
+      return :padrino if defined?(Padrino)
+      raise 'simple_navigation currently only works for Rails, Sinatra and Padrino apps'
+    end
+    
+    def choose_adapter
+      self.adapter_class = case framework
+      when :rails
+        SimpleNavigation::Adapters::Rails
+      when :sinatra
+        SimpleNavigation::Adapters::Sinatra
+      when :padrino
+        SimpleNavigation::Adapters::Padrino
+      end
+    end
+
     def init_adapter_from(context)
       self.adapter = self.adapter_class.new(context)
     end
