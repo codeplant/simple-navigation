@@ -3,8 +3,8 @@ require 'simple_navigation/deprecated'
 module SimpleNavigation
   module Adapters
     class Rails
-
-      attr_reader :controller, :template
+            
+      attr_reader :controller, :template, :request
 
       def self.init_framework
         SimpleNavigation.root = rails3? ? ::Rails.root : ::RAILS_ROOT
@@ -17,13 +17,10 @@ module SimpleNavigation
       
       def initialize(context)
         @controller = extract_controller_from context
-        @template = @controller.instance_variable_get(:@template) || (@controller.respond_to?(:view_context) ? @controller.view_context : nil)
+        @template = template_from @controller
+        @request = @template.request if @template
       end
-
-      def request
-        template.request if template
-      end
-
+      
       def request_uri
         return '' unless request
         return request.fullpath if request.respond_to?(:fullpath)
@@ -58,6 +55,10 @@ module SimpleNavigation
       
       def self.rails3?
         ::Rails::VERSION::MAJOR == 3
+      end
+      
+      def template_from(controller)
+        controller.instance_variable_get(:@template) || (controller.respond_to?(:view_context) ? controller.view_context : nil)
       end
 
       # Marks the specified input as html_safe (for Rails3). Does nothing if html_safe is not defined on input. 

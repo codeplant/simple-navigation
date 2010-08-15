@@ -10,7 +10,8 @@ describe SimpleNavigation::Adapters::Rails do
     @context = stub(:context)
     @controller = stub(:controller)
     @context.stub!(:controller => @controller)
-    @template = stub(:template)
+    @request = stub(:request)
+    @template = stub(:template, :request => @request)
     @adapter = create_adapter
   end
   
@@ -54,6 +55,21 @@ describe SimpleNavigation::Adapters::Rails do
 
 
   describe 'initialize' do
+    context 'regarding setting the request' do
+      context 'template is present' do
+        before(:each) do
+          @controller.stub!(:instance_variable_get => @template)
+          @adapter = create_adapter
+        end
+        it {@adapter.request.should == @request}
+      end
+      context 'template is not present' do
+        before(:each) do
+          @controller.stub!(:instance_variable_get => nil)
+        end
+        it {@adapter.request.should be_nil}
+      end
+    end
     context 'regarding setting the controller' do
       it "should set the controller" do
         @adapter.controller.should == @controller
@@ -94,23 +110,7 @@ describe SimpleNavigation::Adapters::Rails do
       end
     end
   end
-
-  describe 'request' do
-    context 'template is set' do
-      before(:each) do
-        @request = stub(:request)
-        @adapter.stub!(:template => stub(:template, :request => @request))
-      end
-      it {@adapter.request.should == @request}
-    end
-    context 'template is not set' do
-      before(:each) do
-        @adapter.stub!(:template => nil)
-      end
-      it {@adapter.request.should be_nil}
-    end
-  end
-
+  
   describe 'request_uri' do
     context 'request is set' do
       context 'fullpath is defined on request' do
