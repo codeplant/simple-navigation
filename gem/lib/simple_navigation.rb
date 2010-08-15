@@ -1,3 +1,4 @@
+require 'active_support'
 require 'simple_navigation/core'
 require 'simple_navigation/rendering'
 require 'simple_navigation/adapters'
@@ -7,7 +8,6 @@ module SimpleNavigation
 
   mattr_accessor :adapter_class, :adapter, :config_files, :config_file_paths, :default_renderer, :registered_renderers, :root, :environment
 
-  self.adapter_class = SimpleNavigation::Adapters::Rails
   self.config_files = {}
   self.registered_renderers = {
     :list         => SimpleNavigation::Renderer::List,
@@ -113,6 +113,8 @@ module SimpleNavigation
   end
 
 end
+
+SimpleNavigation.choose_adapter
 
 # TODOs for the next releases:
 # 1) add ability to specify explicit highlighting in the config-file itself (directly with the item)
