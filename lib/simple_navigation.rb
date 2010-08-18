@@ -16,7 +16,7 @@ require 'simple_navigation/railtie' if Rails::VERSION::MAJOR == 3
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
 
-  mattr_accessor :config_files, :config_file_path, :default_renderer, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root, :registered_renderers
+  mattr_accessor :config_files, :config_file_paths, :default_renderer, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root, :registered_renderers
 
   self.config_files = {}
   self.registered_renderers = {
@@ -30,7 +30,7 @@ module SimpleNavigation
 
     # Sets the config file path and installs the ControllerMethods in ActionController::Base.
     def init_rails
-      SimpleNavigation.config_file_path = SimpleNavigation.default_config_file_path unless SimpleNavigation.config_file_path
+      SimpleNavigation.config_file_paths ||= [SimpleNavigation.default_config_file_path]
       ActionController::Base.send(:include, SimpleNavigation::ControllerMethods)
     end
   
@@ -40,13 +40,21 @@ module SimpleNavigation
   
     # Returns true if the config_file for specified context does exist.
     def config_file?(navigation_context = :default)
-      File.exists?(config_file_name(navigation_context))
+      not config_file_name(navigation_context).nil?
     end
   
     # Reads the config_file for the specified navigation_context and stores it for later evaluation.
     def load_config(navigation_context = :default)
-      raise "config_file_path is not set!" unless self.config_file_path
-      raise "Config file '#{config_file_name(navigation_context)}' does not exists!" unless config_file?(navigation_context)
+      raise "config_file_paths is not set!" unless self.config_file_paths
+      
+      if not config_file?(navigation_context)
+        config_file_paths_sentence = self.config_file_paths.to_sentence(
+          :last_word_connector => ', or ',
+          :two_words_connector => ' or '
+        )
+        raise "Config file for #{navigation_context} context not found in #{config_file_paths_sentence}!"
+      end
+      
       if SimpleNavigation.rails_env == 'production'
         self.config_files[navigation_context] ||= IO.read(config_file_name(navigation_context))
       else
@@ -79,7 +87,12 @@ module SimpleNavigation
     # Returns the path to the config_file for the given navigation_context
     def config_file_name(navigation_context = :default)
       file_name = navigation_context == :default ? '' : "#{navigation_context.to_s.underscore}_"
-      File.join(config_file_path, "#{file_name}navigation.rb")
+      base_name = "#{file_name}navigation.rb"
+      
+      config_file_names = config_file_paths.collect { |path| File.join(path, base_name) }
+      config_file_names.detect { |name|
+        File.exist?(name)
+      }
     end
 
     def explicit_navigation_args
