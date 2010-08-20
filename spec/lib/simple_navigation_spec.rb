@@ -11,46 +11,124 @@ describe SimpleNavigation do
     end
   end
   
-  describe 'config_file?' do
-    it "should check for the file existance with the file_name" do
-      File.should_receive(:exists?).with('path_to_config/ctx_navigation.rb')
-      SimpleNavigation.config_file?(:ctx)
-    end
-    it "should check for the file existance on default context" do
-      File.should_receive(:exists?).with('path_to_config/navigation.rb')
-      SimpleNavigation.config_file?
-    end
-    context 'config file exists' do
-      before(:each) do
-        File.stub!(:exists? => true)
+  describe 'config_file_name' do
+    context 'for :default navigation_context' do
+      it "should return the name of the default config file" do
+        SimpleNavigation.config_file_name.should == 'navigation.rb'
       end
-      it {SimpleNavigation.config_file?(:ctx).should be_true}
     end
-    context 'config file does not exist' do
-      before(:each) do
-        File.stub!(:exists? => false)
+    context 'for other navigation_context' do
+      it "should return the name of the config file matching the specified context" do
+        SimpleNavigation.config_file_name(:my_other_context).should == 'my_other_context_navigation.rb'
       end
-      it {SimpleNavigation.config_file?(:ctx).should be_false}
+      it "should convert camelcase-contexts to underscore" do
+        SimpleNavigation.config_file_name(:WhyWouldYouDoThis).should == 'why_would_you_do_this_navigation.rb'
+      end
     end
   end
   
-  describe 'config_file_name' do
+  describe 'config_file_paths_sentence' do
+    context 'no paths are set' do
+      before(:each) do
+        SimpleNavigation.config_file_paths = []
+      end
+      it {SimpleNavigation.config_file_paths_sentence.should == ''}
+    end
+    context 'one path is set' do
+      before(:each) do
+        SimpleNavigation.config_file_paths = ['first_path']
+      end
+      it {SimpleNavigation.config_file_paths_sentence.should == 'first_path'}
+    end
+    context 'two paths are set' do
+      before(:each) do
+        SimpleNavigation.config_file_paths = ['first_path', 'second_path']
+      end
+      it {SimpleNavigation.config_file_paths_sentence.should == 'first_path or second_path'}
+    end
+    context 'three pahts are set' do
+      before(:each) do
+        SimpleNavigation.config_file_paths = ['first_path', 'second_path', 'third_path']
+      end
+      it {SimpleNavigation.config_file_paths_sentence.should == 'first_path, second_path, or third_path'}
+    end
+  end
+  
+  describe 'config_file_path=' do
     before(:each) do
-      SimpleNavigation.config_file_path = 'path_to_config'
+      SimpleNavigation.config_file_paths = ['existing_path']
     end
-    context 'for :default navigation_context' do
-      it "should return the path to default config file" do
-        SimpleNavigation.config_file_name.should == 'path_to_config/navigation.rb'
+    it "should override the config_file_paths" do
+      SimpleNavigation.config_file_path = 'new_path'
+      SimpleNavigation.config_file_paths.should == ['new_path']
+    end
+  end
+  
+  describe 'config_file' do
+    context 'no config_file_paths are set' do
+      before(:each) do
+        SimpleNavigation.config_file_paths = []
+      end
+      it "should return nil" do
+        SimpleNavigation.config_file.should be_nil
       end
     end
-    
-    context 'for other navigation_context' do
-      it "should return the path to the config file matching the specified context" do
-        SimpleNavigation.config_file_name(:my_other_context).should == 'path_to_config/my_other_context_navigation.rb'
+    context 'one config_file_path is set' do
+      before(:each) do
+        SimpleNavigation.config_file_paths = ['my_config_file_path']
       end
-      it "should convert camelcase-contexts to underscore" do
-        SimpleNavigation.config_file_name(:WhyWouldYouDoThis).should == 'path_to_config/why_would_you_do_this_navigation.rb'
+      context 'requested config file does exist' do
+        before(:each) do
+          File.stub!(:exists? => true)
+        end
+        it "should return the path to the config_file" do
+          SimpleNavigation.config_file.should == 'my_config_file_path/navigation.rb'
+        end
       end
+      context 'requested config file does not exist' do
+        before(:each) do
+          File.stub!(:exists? => false)
+        end
+        it "should return nil" do
+          SimpleNavigation.config_file.should be_nil        
+        end
+      end
+    end
+    context 'multiple config_file_paths are set' do
+      before(:each) do
+        SimpleNavigation.config_file_paths = ['first_path', 'second_path']
+      end
+      context 'requested config file does exist' do
+        before(:each) do
+          File.stub!(:exists? => true)
+        end
+        it "should return the path to the first matching config_file" do
+          SimpleNavigation.config_file.should == 'first_path/navigation.rb'
+        end
+      end
+      context 'requested config file does not exist' do
+        before(:each) do
+          File.stub!(:exists? => false)
+        end
+        it "should return nil" do
+          SimpleNavigation.config_file.should be_nil        
+        end
+      end
+    end
+  end
+  
+  describe 'config_file?' do
+    context 'config_file present' do
+      before(:each) do
+        SimpleNavigation.stub!(:config_file => 'file')
+      end
+      it {SimpleNavigation.config_file?.should be_true}
+    end
+    context 'config_file not present' do
+      before(:each) do
+        SimpleNavigation.stub!(:config_file => nil)
+      end
+      it {SimpleNavigation.config_file?.should be_false}
     end
   end
   
@@ -119,16 +197,16 @@ describe SimpleNavigation do
       end
       it "should not override the config_file_path" do
         SimpleNavigation.init_rails
-        SimpleNavigation.config_file_path.should == 'my_path'
+        SimpleNavigation.config_file_paths.should == ['my_path']
       end
     end
-    context 'SimpleNavigation.config_file_path is not set' do
+    context 'SimpleNavigation.config_file_paths are not set' do
       before(:each) do
-        SimpleNavigation.config_file_path = nil
+        SimpleNavigation.config_file_paths = nil
       end
       it "should set the config_file_path to the default" do
         SimpleNavigation.init_rails
-        SimpleNavigation.config_file_path.should == 'default_path'
+        SimpleNavigation.config_file_paths.should == ['default_path']
       end
     end
     it "should extend the ActionController::Base" do
@@ -226,29 +304,27 @@ describe SimpleNavigation do
   describe 'load_config' do
     context 'config_file_path is set' do
       before(:each) do
-        SimpleNavigation.config_file_path = 'path_to_config'
-        #SimpleNavigation.stub!(:config_file_name => 'path_to_config/navigation.rb')
+        SimpleNavigation.stub!(:config_file => 'path_to_config_file')
       end
-      
       context 'config_file does exist' do
         before(:each) do
           SimpleNavigation.stub!(:config_file? => true)
-          IO.stub!(:read).and_return('file_content')
+          IO.stub!(:read => 'file_content')
         end
         it "should not raise an error" do
           lambda{SimpleNavigation.load_config}.should_not raise_error
         end
         it "should read the specified config file from disc" do
-          IO.should_receive(:read).with('path_to_config/navigation.rb')
+          IO.should_receive(:read).with('path_to_config_file')
           SimpleNavigation.load_config
         end
         it "should store the read content in the module (default context)" do
-          SimpleNavigation.should_receive(:config_file_name).with(:default)
+          SimpleNavigation.should_receive(:config_file).with(:default)
           SimpleNavigation.load_config
           SimpleNavigation.config_files[:default].should == 'file_content'
         end
         it "should store the content in the module (non default context)" do
-          SimpleNavigation.should_receive(:config_file_name).with(:my_context)
+          SimpleNavigation.should_receive(:config_file).with(:my_context)
           SimpleNavigation.load_config(:my_context)
           SimpleNavigation.config_files[:my_context].should == 'file_content'
         end
