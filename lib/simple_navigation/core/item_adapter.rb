@@ -1,3 +1,5 @@
+require 'forwardable'
+
 module SimpleNavigation
 
   # This class acts as an adapter to items that are not defined using the DSL in the config/navigation.rb, but directly provided inside the application.
@@ -14,7 +16,9 @@ module SimpleNavigation
   #
   # See SimpleNavigation::ItemContainer#item for the purpose of these methods.
   class ItemAdapter
-    delegate :key, :name, :url, :to => :item
+    extend Forwardable
+    
+    def_delegators :item, :key, :name, :url
 
     attr_reader :item
 

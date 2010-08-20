@@ -2,10 +2,12 @@ require 'active_support'
 require 'simple_navigation/core'
 require 'simple_navigation/rendering'
 require 'simple_navigation/adapters'
+require 'forwardable'
 
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
-
+  
+  
   mattr_accessor :adapter_class, :adapter, :config_files, :config_file_paths, :default_renderer, :registered_renderers, :root, :environment
 
   self.config_files = {}
@@ -16,8 +18,10 @@ module SimpleNavigation
   }
   
   class << self
-    delegate :request, :request_uri, :request_path, :context_for_eval, :current_page?, :to => :adapter
-    delegate :init_framework, :to => :adapter_class
+    extend Forwardable
+    
+    def_delegators :adapter, :request, :request_uri, :request_path, :context_for_eval, :current_page?
+    def_delegators :adapter_class, :init_framework
 
     def framework
       return :rails if defined?(Rails)
@@ -63,14 +67,6 @@ module SimpleNavigation
       "#{prefix}navigation.rb"      
     end
     
-    # Returns a nice sentence including all config_paths
-    def config_file_paths_sentence
-      self.config_file_paths.to_sentence(
-        :last_word_connector => ', or ',
-        :two_words_connector => ' or '
-      )
-    end
-
     # Sets the config_file_path
     def config_file_path=(path)
       self.config_file_paths = [path]
@@ -78,7 +74,7 @@ module SimpleNavigation
 
     # Reads the config_file for the specified navigation_context and stores it for later evaluation.
     def load_config(navigation_context = :default)
-      raise "Config file for #{navigation_context} context not found in #{config_file_paths_sentence}!" unless config_file?(navigation_context)      
+      raise "Config file '#{config_file_name(navigation_context)}' not found in path(s) #{config_file_paths.join(', ')}!" unless config_file?(navigation_context)      
       if SimpleNavigation.environment == 'production'
         self.config_files[navigation_context] ||= IO.read(config_file(navigation_context))
       else

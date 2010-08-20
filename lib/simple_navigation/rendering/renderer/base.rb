@@ -1,13 +1,17 @@
+require 'forwardable'
+
 module SimpleNavigation
   module Renderer
 
     # This is the base class for all renderers.
     #
     # A renderer is responsible for rendering an ItemContainer and its containing items to HTML.
-    class Base      
+    class Base
+      extend Forwardable
+            
       attr_reader :options, :adapter
       
-      delegate :link_to, :content_tag, :to => :adapter
+      def_delegators :adapter, :link_to, :content_tag
             
       def initialize(options) #:nodoc:
         @options = options

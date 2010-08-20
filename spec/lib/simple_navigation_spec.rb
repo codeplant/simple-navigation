@@ -31,33 +31,6 @@ describe SimpleNavigation do
     end
   end
   
-  describe 'config_file_paths_sentence' do
-    context 'no paths are set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = []
-      end
-      it {SimpleNavigation.config_file_paths_sentence.should == ''}
-    end
-    context 'one path is set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = ['first_path']
-      end
-      it {SimpleNavigation.config_file_paths_sentence.should == 'first_path'}
-    end
-    context 'two paths are set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = ['first_path', 'second_path']
-      end
-      it {SimpleNavigation.config_file_paths_sentence.should == 'first_path or second_path'}
-    end
-    context 'three pahts are set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = ['first_path', 'second_path', 'third_path']
-      end
-      it {SimpleNavigation.config_file_paths_sentence.should == 'first_path, second_path, or third_path'}
-    end
-  end
-  
   describe 'config_file_path=' do
     before(:each) do
       SimpleNavigation.config_file_paths = ['existing_path']
