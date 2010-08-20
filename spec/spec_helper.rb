@@ -1,7 +1,6 @@
 ENV["RAILS_ENV"] = "test"
 require 'rubygems'
 require 'spec'
-require 'active_support'
 require 'action_controller'
 
 module Rails

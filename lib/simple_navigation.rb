@@ -1,4 +1,3 @@
-require 'active_support'
 require 'simple_navigation/core'
 require 'simple_navigation/rendering'
 require 'simple_navigation/adapters'
