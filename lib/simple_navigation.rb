@@ -96,12 +96,6 @@ module SimpleNavigation
       config.primary_navigation
     end
 
-    # Returns the path to the config_file for the given navigation_context
-    def config_file_name(navigation_context = :default)
-      file_name = navigation_context == :default ? '' : "#{navigation_context.to_s.underscore}_"
-      File.join(config_file_path, "#{file_name}navigation.rb")
-    end
-
     # Returns the active item container for the specified level. Valid levels are
     # * :all - in this case the primary_navigation is returned.
     # * a specific level - the active item_container for the specified level will be returned
