@@ -37,10 +37,8 @@ module SimpleNavigation
       options = {:context => :default, :level => :all}.merge(options)
       ctx = options.delete(:context)
       SimpleNavigation.init_adapter_from self
-      if SimpleNavigation.config_file?(ctx)
-        SimpleNavigation.load_config(ctx) 
-        SimpleNavigation::Configuration.eval_config(ctx) 
-      end
+      SimpleNavigation.load_config(ctx) 
+      SimpleNavigation::Configuration.eval_config(ctx) 
       SimpleNavigation.config.items(options[:items]) if options[:items]
       #SimpleNavigation.handle_explicit_navigation
       raise "no primary navigation defined, either use a navigation config file or pass items directly to render_navigation" unless SimpleNavigation.primary_navigation
