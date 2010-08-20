@@ -38,8 +38,8 @@ module SimpleNavigation
       ctx = options.delete(:context)
       SimpleNavigation.init_adapter_from self
       if SimpleNavigation.config_file?(ctx)
-        SimpleNavigation.load_config(ctx)
-        SimpleNavigation::Configuration.eval_config(ctx)
+        SimpleNavigation.load_config(ctx) 
+        SimpleNavigation::Configuration.eval_config(ctx) 
       end
       SimpleNavigation.config.items(options[:items]) if options[:items]
       #SimpleNavigation.handle_explicit_navigation

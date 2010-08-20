@@ -5,7 +5,7 @@ describe SimpleNavigation do
   before(:each) do
     SimpleNavigation.config_file_path = 'path_to_config'
   end
-
+  
   describe 'config_files' do
     before(:each) do
       SimpleNavigation.config_files = {}
@@ -30,115 +30,11 @@ describe SimpleNavigation do
       end
     end
   end
-  
-  describe 'config_file_paths_sentence' do
-    context 'no paths are set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = []
-      end
-      it {SimpleNavigation.config_file_paths_sentence.should == ''}
-    end
-    context 'one path is set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = ['first_path']
-      end
-      it {SimpleNavigation.config_file_paths_sentence.should == 'first_path'}
-    end
-    context 'two paths are set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = ['first_path', 'second_path']
-      end
-      it {SimpleNavigation.config_file_paths_sentence.should == 'first_path or second_path'}
-    end
-    context 'three pahts are set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = ['first_path', 'second_path', 'third_path']
-      end
-      it {SimpleNavigation.config_file_paths_sentence.should == 'first_path, second_path, or third_path'}
-    end
-  end
-  
-  describe 'config_file_path=' do
-    before(:each) do
-      SimpleNavigation.config_file_paths = ['existing_path']
-    end
-    it "should override the config_file_paths" do
-      SimpleNavigation.config_file_path = 'new_path'
-      SimpleNavigation.config_file_paths.should == ['new_path']
-    end
-  end
-  
-  describe 'config_file' do
-    context 'no config_file_paths are set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = []
-      end
-      it "should return nil" do
-        SimpleNavigation.config_file.should be_nil
-      end
-    end
-    context 'one config_file_path is set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = ['my_config_file_path']
-      end
-      context 'requested config file does exist' do
-        before(:each) do
-          File.stub!(:exists? => true)
-        end
-        it "should return the path to the config_file" do
-          SimpleNavigation.config_file.should == 'my_config_file_path/navigation.rb'
-        end
-      end
-      context 'requested config file does not exist' do
-        before(:each) do
-          File.stub!(:exists? => false)
-        end
-        it "should return nil" do
-          SimpleNavigation.config_file.should be_nil        
-        end
-      end
-    end
-    context 'multiple config_file_paths are set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = ['first_path', 'second_path']
-      end
-      context 'requested config file does exist' do
-        before(:each) do
-          File.stub!(:exists? => true)
-        end
-        it "should return the path to the first matching config_file" do
-          SimpleNavigation.config_file.should == 'first_path/navigation.rb'
-        end
-      end
-      context 'requested config file does not exist' do
-        before(:each) do
-          File.stub!(:exists? => false)
-        end
-        it "should return nil" do
-          SimpleNavigation.config_file.should be_nil        
-        end
-      end
-    end
-  end
-  
-  describe 'config_file?' do
-    context 'config_file present' do
-      before(:each) do
-        SimpleNavigation.stub!(:config_file => 'file')
-      end
-      it {SimpleNavigation.config_file?.should be_true}
-    end
-    context 'config_file not present' do
-      before(:each) do
-        SimpleNavigation.stub!(:config_file => nil)
-      end
-      it {SimpleNavigation.config_file?.should be_false}
-    end
-  end
+
   describe 'self.default_config_file_path' do
     it {SimpleNavigation.default_config_file_path.should == './config'}
   end
-
+  
   describe 'regarding renderers' do
     it "should have registered the builtin renderers by default" do
       SimpleNavigation.registered_renderers.should_not be_empty
@@ -159,7 +55,7 @@ describe SimpleNavigation do
   describe 'load_config' do
     context 'config_file_path is set' do
       before(:each) do
-        SimpleNavigation.stub!(:config_file => 'path_to_config_file')
+        SimpleNavigation.config_file_path = 'path_to_config'
       end
       context 'config_file does exist' do
         before(:each) do
@@ -218,7 +114,7 @@ describe SimpleNavigation do
       end
       context "RAILS_ENV defined" do
         before(:each) do
-          SimpleNavigation.stub!(:environment => :production)
+          SimpleNavigation.stub!(:environment => 'production')
         end
         context "RAILS_ENV=production" do
           it "should load the config file only once" do
@@ -230,7 +126,7 @@ describe SimpleNavigation do
         
         context "RAILS_ENV=development" do
           before(:each) do
-            SimpleNavigation.stub!(:environment => :development)
+            SimpleNavigation.stub!(:environment => 'development')
           end
           it "should load the config file twice" do
             IO.should_receive(:read).twice
@@ -241,7 +137,7 @@ describe SimpleNavigation do
         
         context "RAILS_ENV=test" do
           before(:each) do
-            SimpleNavigation.stub!(:environment => :test)
+            SimpleNavigation.stub!(:environment => 'test')
           end
           it "should load the config file twice" do
             IO.should_receive(:read).twice

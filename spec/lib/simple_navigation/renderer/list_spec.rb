@@ -124,6 +124,6 @@ describe SimpleNavigation::Renderer::List do
         end
       end
     end
-
+    
   end
 end

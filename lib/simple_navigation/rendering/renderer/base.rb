@@ -4,11 +4,11 @@ module SimpleNavigation
     # This is the base class for all renderers.
     #
     # A renderer is responsible for rendering an ItemContainer and its containing items to HTML.
-    class Base
+    class Base      
       attr_reader :options, :adapter
-
+      
       delegate :link_to, :content_tag, :to => :adapter
-
+            
       def initialize(options) #:nodoc:
         @options = options
         @adapter = SimpleNavigation.adapter
@@ -33,7 +33,7 @@ module SimpleNavigation
       def render_sub_navigation_for(item)
         item.sub_navigation.render(self.options)
       end
-
+                  
       # Renders the specified ItemContainer to HTML.
       #
       # When implementing a renderer, please consider to call include_sub_navigation? to determin
@@ -61,7 +61,7 @@ module SimpleNavigation
       def expand_sub_navigation?(item)
         expand_all? || item.selected?
       end
-
+            
     end
   end
 end

@@ -14,7 +14,7 @@ module SimpleNavigation
     :links        => SimpleNavigation::Renderer::Links,
     :breadcrumbs  => SimpleNavigation::Renderer::Breadcrumbs
   }
-
+  
   class << self
     delegate :request, :request_uri, :request_path, :context_for_eval, :current_page?, :to => :adapter
     delegate :init_framework, :to => :adapter_class
@@ -25,7 +25,7 @@ module SimpleNavigation
       return :padrino if defined?(Padrino)
       raise 'simple_navigation currently only works for Rails, Sinatra and Padrino apps'
     end
-
+    
     def choose_adapter
       self.adapter_class = case framework
       when :rails
@@ -40,7 +40,7 @@ module SimpleNavigation
     def init_adapter_from(context)
       self.adapter = self.adapter_class.new(context)
     end
-
+  
     def default_config_file_path
       File.join(SimpleNavigation.root, 'config')
     end
@@ -96,6 +96,12 @@ module SimpleNavigation
       config.primary_navigation
     end
 
+    # Returns the path to the config_file for the given navigation_context
+    def config_file_name(navigation_context = :default)
+      file_name = navigation_context == :default ? '' : "#{navigation_context.to_s.underscore}_"
+      File.join(config_file_path, "#{file_name}navigation.rb")
+    end
+
     # Returns the active item container for the specified level. Valid levels are
     # * :all - in this case the primary_navigation is returned.
     # * a specific level - the active item_container for the specified level will be returned
@@ -114,7 +120,7 @@ module SimpleNavigation
         raise ArgumentError, "Invalid navigation level: #{level}"
       end
     end
-
+        
     # Registers a renderer.
     #
     # === Example

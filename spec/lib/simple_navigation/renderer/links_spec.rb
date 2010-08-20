@@ -3,7 +3,7 @@ require 'html/document' unless defined? HTML::Document
 
 describe SimpleNavigation::Renderer::Links do
 
-
+    
   describe 'render' do
 
 
@@ -52,8 +52,8 @@ describe SimpleNavigation::Renderer::Links do
           HTML::Selector.new('a.selected').select(render).should be_empty
         end
       end
-
+  
     end
-
+    
   end
 end

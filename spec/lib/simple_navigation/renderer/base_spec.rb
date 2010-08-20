@@ -7,7 +7,7 @@ describe SimpleNavigation::Renderer::Base do
     SimpleNavigation.stub!(:adapter => @adapter)
     @base_renderer = SimpleNavigation::Renderer::Base.new(@options)
   end
-
+  
   describe 'delegated methods' do
     it {@base_renderer.should respond_to(:link_to)}
     it {@base_renderer.should respond_to(:content_tag)}
@@ -17,13 +17,13 @@ describe SimpleNavigation::Renderer::Base do
     it {@base_renderer.adapter.should == @adapter}
     it {@base_renderer.options.should == @options}
   end
-
+    
   describe 'render' do
     it "be subclass responsability" do
       lambda {@base_renderer.render(:container)}.should raise_error('subclass responsibility')
     end
   end
-
+    
   describe 'expand_all?' do
     context 'option is set' do
       context 'expand_all is true' do

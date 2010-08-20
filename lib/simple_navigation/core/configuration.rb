@@ -69,8 +69,8 @@ module SimpleNavigation
     # Returns true if the config_file has already been evaluated.
     def loaded?
       !@primary_navigation.nil?
-    end
-
-  end
-
+    end    
+        
+  end  
+  
 end

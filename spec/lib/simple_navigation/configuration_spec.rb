@@ -26,7 +26,7 @@ describe SimpleNavigation::Configuration do
       it "should instance_eval the default config_file-string inside the context" do
         @context.should_receive(:instance_eval).with('default')
         SimpleNavigation::Configuration.eval_config
-      end
+      end    
     end
     context 'with non default navigation context' do
       it "should instance_eval the specified config_file-string inside the context" do
@@ -125,7 +125,7 @@ describe SimpleNavigation::Configuration do
       @config.should_not be_loaded
     end
   end
-
+  
 end
 
 
