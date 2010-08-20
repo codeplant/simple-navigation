@@ -22,6 +22,12 @@ module SimpleNavigation
     def_delegators :adapter, :request, :request_uri, :request_path, :context_for_eval, :current_page?
     def_delegators :adapter_class, :init_framework
 
+    def set_env(root, environment)
+      self.root = root
+      self.environment = environment
+      self.config_file_paths ||= [SimpleNavigation.default_config_file_path]
+    end
+
     def framework
       return :rails if defined?(Rails)
       return :sinatra if defined?(Sinatra)
@@ -74,7 +80,7 @@ module SimpleNavigation
     # Reads the config_file for the specified navigation_context and stores it for later evaluation.
     def load_config(navigation_context = :default)
       raise "Config file '#{config_file_name(navigation_context)}' not found in path(s) #{config_file_paths.join(', ')}!" unless config_file?(navigation_context)      
-      if SimpleNavigation.environment == 'production'
+      if self.environment == 'production'
         self.config_files[navigation_context] ||= IO.read(config_file(navigation_context))
       else
         self.config_files[navigation_context] = IO.read(config_file(navigation_context))

@@ -7,9 +7,8 @@ module SimpleNavigation
       attr_reader :controller, :template, :request
 
       def self.init_framework
-        SimpleNavigation.root = rails3? ? ::Rails.root : ::RAILS_ROOT
-        SimpleNavigation.environment = rails3? ? ::Rails.env : ::RAILS_ENV
-        SimpleNavigation.config_file_paths ||= [SimpleNavigation.default_config_file_path]
+        SimpleNavigation.set_env(rails_root, rails_env)
+        
         ActionController::Base.send(:include, SimpleNavigation::ControllerMethods) if defined?(SimpleNavigation::ControllerMethods)
         ActionController::Base.send(:include, SimpleNavigation::Helpers)
         ActionController::Base.send(:helper_method, :render_navigation, :render_primary_navigation, :render_sub_navigation)
@@ -52,6 +51,14 @@ module SimpleNavigation
       end
       
       protected
+      
+      def self.rails_root
+        rails3? ? ::Rails.root : ::RAILS_ROOT
+      end
+      
+      def self.rails_env
+        rails3? ? ::Rails.env : ::RAILS_ENV
+      end
       
       def self.rails3?
         ::Rails::VERSION::MAJOR == 3
