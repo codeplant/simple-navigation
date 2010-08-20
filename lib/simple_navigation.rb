@@ -50,10 +50,36 @@ module SimpleNavigation
       !!config_file(navigation_context)
     end
 
+    # Returns the config file for the given navigation context or nil if no matching config file can be found.
+    # If multiple config_paths are set, it returns the first matching file.
+    #
+    def config_file(navigation_context = :default)
+      config_file_paths.collect { |path| File.join(path, config_file_name(navigation_context)) }.detect {|full_path| File.exists?(full_path)}
+    end
+
+    # Returns the name of the config file for the given navigation_context
+    def config_file_name(navigation_context = :default)
+      prefix = navigation_context == :default ? '' : "#{navigation_context.to_s.underscore}_"
+      "#{prefix}navigation.rb"      
+    end
+    
+    # Returns a nice sentence including all config_paths
+    def config_file_paths_sentence
+      self.config_file_paths.to_sentence(
+        :last_word_connector => ', or ',
+        :two_words_connector => ' or '
+      )
+    end
+
+    # Sets the config_file_path
+    def config_file_path=(path)
+      self.config_file_paths = [path]
+    end
+
     # Reads the config_file for the specified navigation_context and stores it for later evaluation.
     def load_config(navigation_context = :default)
       raise "Config file for #{navigation_context} context not found in #{config_file_paths_sentence}!" unless config_file?(navigation_context)      
-      if SimpleNavigation.rails_env == 'production'
+      if SimpleNavigation.environment == 'production'
         self.config_files[navigation_context] ||= IO.read(config_file(navigation_context))
       else
         self.config_files[navigation_context] = IO.read(config_file(navigation_context))
@@ -68,12 +94,6 @@ module SimpleNavigation
     # Returns the ItemContainer that contains the items for the primary navigation
     def primary_navigation
       config.primary_navigation
-    end
-
-    # Returns the path to the config_file for the given navigation_context
-    def config_file_name(navigation_context = :default)
-      file_name = navigation_context == :default ? '' : "#{navigation_context.to_s.underscore}_"
-      File.join(config_file_path, "#{file_name}navigation.rb")
     end
 
     # Returns the active item container for the specified level. Valid levels are

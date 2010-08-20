@@ -26,16 +26,16 @@ describe SimpleNavigation::Adapters::Rails do
       end
       it "should not override the config_file_path" do
         SimpleNavigation.init_framework
-        SimpleNavigation.config_file_path.should == 'my_path'
+        SimpleNavigation.config_file_paths.should == ['my_path']
       end
     end
     context 'SimpleNavigation.config_file_path is not set' do
       before(:each) do
-        SimpleNavigation.config_file_path = nil
+        SimpleNavigation.config_file_paths = nil
       end
       it "should set the config_file_path to the default" do
         SimpleNavigation.init_framework
-        SimpleNavigation.config_file_path.should == 'default_path'
+        SimpleNavigation.config_file_paths.should == ['default_path']
       end
     end
     it "should extend the ActionController::Base with the ControllerMethods" do

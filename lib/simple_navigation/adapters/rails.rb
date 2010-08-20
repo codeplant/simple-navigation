@@ -9,7 +9,7 @@ module SimpleNavigation
       def self.init_framework
         SimpleNavigation.root = rails3? ? ::Rails.root : ::RAILS_ROOT
         SimpleNavigation.environment = rails3? ? ::Rails.env : ::RAILS_ENV
-        SimpleNavigation.config_file_path = SimpleNavigation.default_config_file_path unless SimpleNavigation.config_file_path
+        SimpleNavigation.config_file_paths ||= [SimpleNavigation.default_config_file_path]
         ActionController::Base.send(:include, SimpleNavigation::ControllerMethods) if defined?(SimpleNavigation::ControllerMethods)
         ActionController::Base.send(:include, SimpleNavigation::Helpers)
         ActionController::Base.send(:helper_method, :render_navigation, :render_primary_navigation, :render_sub_navigation)
