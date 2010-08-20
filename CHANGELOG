@@ -1,3 +1,7 @@
+*2.7.2
+
+* added ability to have more than one config_file_path (useful if simple-navigation is used as a part of another gem/plugin). Credits to Luke Imhoff.
+
 *2.7.1
 
 * added SimpleNavigation.request and SimpleNavigation.request_uri as abstraction for getting request_uri (rails2/rails3)
