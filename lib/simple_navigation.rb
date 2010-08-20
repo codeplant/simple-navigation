@@ -79,7 +79,6 @@ module SimpleNavigation
       end
     end
 
-
     def set_template_from(context)
       SimpleNavigation.controller = extract_controller_from context
       SimpleNavigation.template = SimpleNavigation.controller.instance_variable_get(:@template) || (SimpleNavigation.controller.respond_to?(:view_context) ? SimpleNavigation.controller.view_context : nil)
