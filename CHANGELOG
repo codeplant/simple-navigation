@@ -1,3 +1,7 @@
+*2.7.3
+
+* initializing SimpleNavigation.config_file_path with empty array (was nil before). Allows for adding paths before gem has been initialized.
+
 *2.7.2
 
 * added ability to have more than one config_file_path (useful if simple-navigation is used as a part of another gem/plugin). Credits to Luke Imhoff.
