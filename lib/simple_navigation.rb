@@ -19,6 +19,7 @@ module SimpleNavigation
   mattr_accessor :config_files, :config_file_paths, :default_renderer, :controller, :template, :explicit_current_navigation, :rails_env, :rails_root, :registered_renderers
 
   self.config_files = {}
+  self.config_file_paths = []
   self.registered_renderers = {
     :list         => SimpleNavigation::Renderer::List,
     :links        => SimpleNavigation::Renderer::Links,
@@ -30,7 +31,7 @@ module SimpleNavigation
 
     # Sets the config file path and installs the ControllerMethods in ActionController::Base.
     def init_rails
-      SimpleNavigation.config_file_paths ||= [SimpleNavigation.default_config_file_path]
+      SimpleNavigation.config_file_paths << SimpleNavigation.default_config_file_path
       ActionController::Base.send(:include, SimpleNavigation::ControllerMethods)
     end
   

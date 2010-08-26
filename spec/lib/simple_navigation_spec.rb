@@ -1,16 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe SimpleNavigation do
-  
-  describe 'config_files' do
-    before(:each) do
-      SimpleNavigation.config_files = {}
-    end
-    it "should be an empty hash after loading the module" do
-      SimpleNavigation.config_files.should == {}
-    end
-  end
-  
+    
   describe 'config_file_name' do
     context 'for :default navigation_context' do
       it "should return the name of the default config file" do
@@ -188,6 +179,7 @@ describe SimpleNavigation do
 
   describe 'self.init_rails' do
     before(:each) do
+      SimpleNavigation.config_file_paths = []
       SimpleNavigation.stub!(:default_config_file_path => 'default_path')
       ActionController::Base.stub!(:include)
     end
@@ -195,15 +187,12 @@ describe SimpleNavigation do
       before(:each) do
         SimpleNavigation.config_file_path = 'my_path'
       end
-      it "should not override the config_file_path" do
+      it "should have both the default_path and the new path" do
         SimpleNavigation.init_rails
-        SimpleNavigation.config_file_paths.should == ['my_path']
+        SimpleNavigation.config_file_paths.should == ['my_path', 'default_path']
       end
     end
     context 'SimpleNavigation.config_file_paths are not set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = nil
-      end
       it "should set the config_file_path to the default" do
         SimpleNavigation.init_rails
         SimpleNavigation.config_file_paths.should == ['default_path']
