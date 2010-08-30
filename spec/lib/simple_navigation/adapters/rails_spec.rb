@@ -23,16 +23,12 @@ describe SimpleNavigation::Adapters::Rails do
       SimpleNavigation.should_receive(:set_env).with('./', 'test')
       SimpleNavigation.init_framework
     end
-    it "should extend the ActionController::Base with the ControllerMethods" do
-      ActionController::Base.should_receive(:include).with(SimpleNavigation::ControllerMethods)
-      SimpleNavigation.init_framework
-    end
     it "should extend the ActionController::Base with the Helpers" do
       ActionController::Base.should_receive(:include).with(SimpleNavigation::Helpers)
       SimpleNavigation.init_framework
     end
     it "should install the helper methods in the controller" do
-      ActionController::Base.should_receive(:helper_method).with(:render_navigation, :render_primary_navigation, :render_sub_navigation)
+      ActionController::Base.should_receive(:helper_method).with(:render_navigation)
       SimpleNavigation.init_framework
     end
     

@@ -1,5 +1,3 @@
-require 'simple_navigation/deprecated'
-
 module SimpleNavigation
   module Adapters
     class Rails
@@ -7,11 +5,9 @@ module SimpleNavigation
       attr_reader :controller, :template, :request
 
       def self.init_framework
-        SimpleNavigation.set_env(rails_root, rails_env)
-        
-        ActionController::Base.send(:include, SimpleNavigation::ControllerMethods) if defined?(SimpleNavigation::ControllerMethods)
+        SimpleNavigation.set_env(rails_root, rails_env)        
         ActionController::Base.send(:include, SimpleNavigation::Helpers)
-        ActionController::Base.send(:helper_method, :render_navigation, :render_primary_navigation, :render_sub_navigation)
+        ActionController::Base.send(:helper_method, :render_navigation)
       end
       
       def initialize(context)

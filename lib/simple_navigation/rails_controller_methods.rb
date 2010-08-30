@@ -150,3 +150,5 @@ module SimpleNavigation
   end
   
 end
+  
+ActionController::Base.send(:include, SimpleNavigation::ControllerMethods)

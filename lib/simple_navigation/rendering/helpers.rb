@@ -40,7 +40,7 @@ module SimpleNavigation
       SimpleNavigation.load_config(ctx) 
       SimpleNavigation::Configuration.eval_config(ctx) 
       SimpleNavigation.config.items(options[:items]) if options[:items]
-      #SimpleNavigation.handle_explicit_navigation
+      SimpleNavigation.handle_explicit_navigation if SimpleNavigation.respond_to?(:handle_explicit_navigation)
       raise "no primary navigation defined, either use a navigation config file or pass items directly to render_navigation" unless SimpleNavigation.primary_navigation
       active_item_container = SimpleNavigation.active_item_container_for(options[:level])
       active_item_container.render(options) unless active_item_container.nil?

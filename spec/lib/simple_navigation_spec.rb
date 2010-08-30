@@ -245,17 +245,6 @@ describe SimpleNavigation do
     it {SimpleNavigation.config.should == SimpleNavigation::Configuration.instance}
   end
 
-  describe 'current_navigation_for' do
-    before(:each) do
-      @controller = stub(:controller)
-      SimpleNavigation.stub!(:controller => @controller)
-    end
-    it "should access the correct instance_var in the controller" do
-      @controller.should_receive(:instance_variable_get).with(:@sn_current_navigation_1)
-      SimpleNavigation.current_navigation_for(1)
-    end
-  end
-
   describe 'active_item_container_for' do
     before(:each) do
       @primary = stub(:primary)
@@ -284,78 +273,4 @@ describe SimpleNavigation do
       end
     end
   end
-
-  describe 'handle_explicit_navigation' do
-    def args(*args)
-      SimpleNavigation.stub!(:explicit_navigation_args => args.compact.empty? ? nil : args)
-    end
-
-    before(:each) do
-      @controller = stub(:controller)
-      SimpleNavigation.stub!(:controller => @controller)
-    end
-
-    context 'with explicit navigation set' do
-      context 'list of navigations' do
-        before(:each) do
-          args :first, :second, :third
-        end
-        it "should set the correct instance var in the controller" do
-          @controller.should_receive(:instance_variable_set).with(:@sn_current_navigation_3, :third)
-          SimpleNavigation.handle_explicit_navigation
-        end
-      end
-      context 'single navigation' do
-        context 'specified key is a valid navigation item' do
-          before(:each) do
-            @primary = stub(:primary, :level_for_item => 2)
-            SimpleNavigation.stub!(:primary_navigation => @primary)
-            args :key
-          end
-          it "should set the correct instance var in the controller" do
-            @controller.should_receive(:instance_variable_set).with(:@sn_current_navigation_2, :key)
-            SimpleNavigation.handle_explicit_navigation
-          end
-        end
-        context 'specified key is an invalid navigation item' do
-          before(:each) do
-            @primary = stub(:primary, :level_for_item => nil)
-            SimpleNavigation.stub!(:primary_navigation => @primary)
-            args :key
-          end
-          it "should not raise an ArgumentError" do
-            lambda {SimpleNavigation.handle_explicit_navigation}.should_not raise_error(ArgumentError)
-          end
-        end
-      end
-      context 'hash with level' do
-        before(:each) do
-          args :level_2 => :key
-        end
-        it "should set the correct instance var in the controller" do
-          @controller.should_receive(:instance_variable_set).with(:@sn_current_navigation_2, :key)
-          SimpleNavigation.handle_explicit_navigation
-        end
-      end
-      context 'hash with multiple_levels' do
-        before(:each) do
-          args :level_2 => :key, :level_1 => :bla
-        end
-        it "should set the correct instance var in the controller" do
-          @controller.should_receive(:instance_variable_set).with(:@sn_current_navigation_2, :key)
-          SimpleNavigation.handle_explicit_navigation
-        end
-      end
-    end
-    context 'without explicit navigation set' do
-      before(:each) do
-        args nil
-      end
-      it "should not set the current_navigation instance var in the controller" do
-        @controller.should_not_receive(:instance_variable_set)
-        SimpleNavigation.handle_explicit_navigation
-      end
-    end
-  end
-
 end
