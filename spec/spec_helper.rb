@@ -14,7 +14,7 @@ $:.unshift File.join(File.dirname(__FILE__), '../lib')
 
 require 'simple_navigation'
 
-SimpleNavigation.root = './'
+# SimpleNavigation.root = './'
 RAILS_ROOT = './' unless defined?(RAILS_ROOT)
 RAILS_ENV = 'test' unless defined?(RAILS_ENV)
 

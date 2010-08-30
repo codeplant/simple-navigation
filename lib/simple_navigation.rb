@@ -10,6 +10,7 @@ module SimpleNavigation
   mattr_accessor :adapter_class, :adapter, :config_files, :config_file_paths, :default_renderer, :registered_renderers, :root, :environment
 
   self.config_files = {}
+  self.config_file_paths = []
   self.registered_renderers = {
     :list         => SimpleNavigation::Renderer::List,
     :links        => SimpleNavigation::Renderer::Links,
@@ -25,7 +26,7 @@ module SimpleNavigation
     def set_env(root, environment)
       self.root = root
       self.environment = environment
-      self.config_file_paths ||= [SimpleNavigation.default_config_file_path]
+      self.config_file_paths << SimpleNavigation.default_config_file_path
     end
 
     def framework
@@ -138,18 +139,8 @@ end
 SimpleNavigation.choose_adapter
 
 # TODOs for the next releases:
-# 1) add ability to specify explicit highlighting in the config-file itself (directly with the item)
-#    - item.highlight_on :controller => 'users', :action => 'show' ...^
-#   --> with that we can get rid of the controller_methods...
-#
-# 2) ability to turn off autohighlighting for a single item...
-#
-# 3) add JoinRenderer (HorizontalRenderer?) (wich does not render a list, but just the items joined with a specified char (e.g. | ))
-#
-# 4) Enhance SampleProject (more examples)
-#
-# 5) Make SampleProject public
-#
+
+# - add JoinRenderer (HorizontalRenderer?) (wich does not render a list, but just the items joined with a specified char (e.g. | ))
 # - allow :function navigation item to specify function
 # - allow specification of link-options in item (currently options are passed to li-element)
 # - render_navigation: do not rescue from config-file not found error if no items are passed in directly

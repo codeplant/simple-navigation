@@ -5,15 +5,6 @@ describe SimpleNavigation do
   before(:each) do
     SimpleNavigation.config_file_path = 'path_to_config'
   end
-  
-  describe 'config_files' do
-    before(:each) do
-      SimpleNavigation.config_files = {}
-    end
-    it "should be an empty hash after loading the module" do
-      SimpleNavigation.config_files.should == {}
-    end
-  end
 
   describe 'config_file_name' do
     context 'for :default navigation_context' do
@@ -110,7 +101,10 @@ describe SimpleNavigation do
   end
 
   describe 'self.default_config_file_path' do
-    it {SimpleNavigation.default_config_file_path.should == './config'}
+    before(:each) do
+      SimpleNavigation.stub!(:root => 'root')
+    end
+    it {SimpleNavigation.default_config_file_path.should == 'root/config'}
   end
   
   describe 'regarding renderers' do
@@ -128,6 +122,23 @@ describe SimpleNavigation do
       end
     end
 
+  end
+
+  describe 'set_env' do
+    before(:each) do
+      SimpleNavigation.config_file_paths = []
+      SimpleNavigation.stub!(:default_config_file_path => 'default_path')
+      SimpleNavigation.set_env('root', 'my_env')
+    end
+    it "should set the root" do
+      SimpleNavigation.root.should == 'root'
+    end
+    it "should set the environment" do
+      SimpleNavigation.environment.should == 'my_env'
+    end
+    it "should add the default-config path to the list of config_file_paths" do
+      SimpleNavigation.config_file_paths.should == ['default_path']
+    end
   end
 
   describe 'load_config' do
