@@ -191,7 +191,7 @@ describe SimpleNavigation do
         SimpleNavigation.config_file_path = 'path_to_config'
         File.stub!(:exists? => true)
       end
-      context "RAILS_ENV undefined" do
+      context "environment undefined" do
         before(:each) do
           SimpleNavigation.stub!(:environment => nil)
         end
@@ -201,11 +201,11 @@ describe SimpleNavigation do
           SimpleNavigation.load_config
         end
       end
-      context "RAILS_ENV defined" do
+      context "environment defined" do
         before(:each) do
           SimpleNavigation.stub!(:environment => 'production')
         end
-        context "RAILS_ENV=production" do
+        context "environment=production" do
           it "should load the config file only once" do
             IO.should_receive(:read).once
             SimpleNavigation.load_config
@@ -213,7 +213,7 @@ describe SimpleNavigation do
           end
         end
         
-        context "RAILS_ENV=development" do
+        context "environment=development" do
           before(:each) do
             SimpleNavigation.stub!(:environment => 'development')
           end
@@ -224,7 +224,7 @@ describe SimpleNavigation do
           end
         end
         
-        context "RAILS_ENV=test" do
+        context "environment=test" do
           before(:each) do
             SimpleNavigation.stub!(:environment => 'test')
           end
