@@ -74,22 +74,12 @@ describe SimpleNavigation::ItemContainer do
 
   describe 'selected_item' do
     before(:each) do
+      @item_container.stub!(:[] => nil)
       @item_1 = stub(:item, :selected? => false)
       @item_2 = stub(:item, :selected? => false)
       @item_container.instance_variable_set(:@items, [@item_1, @item_2])
     end
-    context 'navigation explicitely set' do
-      before(:each) do
-        @item_container.stub!(:[] => @item_1)
-      end
-      it "should return the explicitely selected item" do
-        @item_container.selected_item.should == @item_1
-      end
-    end
     context 'navigation not explicitely set' do
-      before(:each) do
-        @item_container.stub!(:[] => nil)
-      end
       context 'no item selected' do
         it "should return nil" do
           @item_container.selected_item.should be_nil

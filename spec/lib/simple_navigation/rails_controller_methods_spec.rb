@@ -1,8 +1,11 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-require 'simple_navigation/rails_controller_methods'
-
 describe 'explicit navigation in rails' do
+  require 'simple_navigation/rails_controller_methods'
+
+  it 'should have enhanced the ActionController after loading the extensions' do
+    ActionController::Base.instance_methods.map {|m| m.to_s}.should include('current_navigation')
+  end
 
   describe SimpleNavigation::ControllerMethods do
 
@@ -97,7 +100,8 @@ describe 'explicit navigation in rails' do
 
       before(:each) do
         @controller = stub(:controller)
-        SimpleNavigation.stub!(:controller => @controller)
+        @adapter = stub(:adapter, :controller => @controller)
+        SimpleNavigation.stub!(:adapter => @adapter)
       end
 
       context 'with explicit navigation set' do
@@ -128,8 +132,8 @@ describe 'explicit navigation in rails' do
               SimpleNavigation.stub!(:primary_navigation => @primary)
               args :key
             end
-            it "should not raise an ArgumentError" do
-              lambda {SimpleNavigation.handle_explicit_navigation}.should_not raise_error(ArgumentError)
+            it "should raise an ArgumentError" do
+              lambda {SimpleNavigation.handle_explicit_navigation}.should raise_error(ArgumentError)
             end
           end
         end
@@ -166,7 +170,8 @@ describe 'explicit navigation in rails' do
     describe 'current_navigation_for' do
       before(:each) do
         @controller = stub(:controller)
-        SimpleNavigation.stub!(:controller => @controller)
+        @adapter = stub(:adapter, :controller => @controller)
+        SimpleNavigation.stub!(:adapter => @adapter)
       end
       it "should access the correct instance_var in the controller" do
         @controller.should_receive(:instance_variable_get).with(:@sn_current_navigation_1)
@@ -174,16 +179,73 @@ describe 'explicit navigation in rails' do
       end
     end
 
+  end  
 
+  describe SimpleNavigation::Item do
+    before(:each) do
+      @item_container = stub(:item_container, :level => 1)
+      @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
+      
+    end
+    describe 'selected_by_config?' do
+      context 'navigation explicitly set' do
+        it "should return true if current matches key" do
+          SimpleNavigation.stub!(:current_navigation_for => :my_key)
+          @item.should be_selected_by_config
+        end
+        it "should return false if current does not match key" do
+          SimpleNavigation.stub!(:current_navigation_for => :other_key)
+          @item.should_not be_selected_by_config
+        end
+      end
+      context 'navigation not explicitly set' do
+        before(:each) do
+          SimpleNavigation.stub!(:current_navigation_for => nil)
+        end
+        it {@item.should_not be_selected_by_config}
+      end
+    end
   end
-
-
   
-  # it "should extend the ActionController::Base with the ControllerMethods" do
-  #   ActionController::Base.should_receive(:include).with(SimpleNavigation::ControllerMethods)
-  #   SimpleNavigation.init_framework
-  # end
-  
+  describe SimpleNavigation::ItemContainer do
+    describe 'selected_item' do
+      before(:each) do
+        SimpleNavigation.stub!(:current_navigation_for)
+        @item_container = SimpleNavigation::ItemContainer.new
+        
+        @item_1 = stub(:item, :selected? => false)
+        @item_2 = stub(:item, :selected? => false)
+        @item_container.instance_variable_set(:@items, [@item_1, @item_2])
+      end
+      context 'navigation explicitely set' do
+        before(:each) do
+          @item_container.stub!(:[] => @item_1)
+        end
+        it "should return the explicitely selected item" do
+          @item_container.selected_item.should == @item_1
+        end
+      end
+      context 'navigation not explicitely set' do
+        before(:each) do
+          @item_container.stub!(:[] => nil)
+        end
+        context 'no item selected' do
+          it "should return nil" do
+            @item_container.selected_item.should be_nil
+          end
+        end
+        context 'one item selected' do
+          before(:each) do
+            @item_1.stub!(:selected? => true)
+          end
+          it "should return the selected item" do
+            @item_container.selected_item.should == @item_1
+          end
+        end
+      end
+    end
+    
+  end
   
 end
 

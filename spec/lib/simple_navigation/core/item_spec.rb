@@ -261,25 +261,6 @@ describe SimpleNavigation::Item do
     end
   end
 
-  describe 'selected_by_config?' do
-    context 'navigation explicitly set' do
-      it "should return true if current matches key" do
-        SimpleNavigation.stub!(:current_navigation_for => :my_key)
-        @item.should be_selected_by_config
-      end
-      it "should return false if current does not match key" do
-        @item_container.stub!(:current_navigation_for => :other_key)
-        @item.should_not be_selected_by_config
-      end
-    end
-    context 'navigation not explicitly set' do
-      before(:each) do
-        @item_container.stub!(:current_navigation_for => nil)
-      end
-      it {@item.should_not be_selected_by_config}
-    end
-  end
-
   describe 'selected_by_url?' do
     context ':highlights_on option is set' do
       before(:each) do

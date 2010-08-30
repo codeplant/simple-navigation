@@ -1,31 +1,26 @@
 module SimpleNavigation
 
   #deprecated
-  mattr_accessor :controller, :template, :explicit_current_navigation
+  mattr_accessor :controller, :template
 
   class << self
 
     def explicit_navigation_args
-      self.controller.instance_variable_get(:"@sn_current_navigation_args")
+      self.adapter.controller.instance_variable_get(:"@sn_current_navigation_args")
     end
 
     # Reads the current navigation for the specified level from the controller.
     # Returns nil if there is no current navigation set for level.
     def current_navigation_for(level)
-      self.controller.instance_variable_get(:"@sn_current_navigation_#{level}")
+      self.adapter.controller.instance_variable_get(:"@sn_current_navigation_#{level}")
     end
 
     # If any navigation has been explicitely set in the controller this method evaluates the specified args set in the controller and sets
     # the correct instance variable in the controller.
     def handle_explicit_navigation
       if SimpleNavigation.explicit_navigation_args
-        begin
-          level, navigation = parse_explicit_navigation_args
-          self.controller.instance_variable_set(:"@sn_current_navigation_#{level}", navigation)
-        rescue
-          #we do nothing here
-          #TODO: check if this is the right way to handle wrong explicit navigation
-        end
+        level, navigation = parse_explicit_navigation_args
+        self.adapter.controller.instance_variable_set(:"@sn_current_navigation_#{level}", navigation)
       end
     end
 
@@ -37,7 +32,7 @@ module SimpleNavigation
         options = args.first
       else # args is a list of current navigation for several levels
         options = {}
-        if args.size == 1 #only an navi-key has been specified, try to find out level
+        if args.size == 1 #only one navi-key has been specified, try to find out level
           level = SimpleNavigation.primary_navigation.level_for_item(args.first)
           options[:"level_#{level}"] = args.first if level
         else
@@ -109,7 +104,6 @@ module SimpleNavigation
       #
       # The specified symbol must match the keys for your navigation items in your config/navigation.rb file.  
       def navigation(*args)
-        ActiveSupport::Deprecation.warn("Setting the active navigation in the controllers has been deprecated. Please use the new :highlights_on option in the config file for explicit highlighting")
         self.class_eval do
           define_method :sn_set_navigation do
             current_navigation(*args)
@@ -126,7 +120,6 @@ module SimpleNavigation
       #
       # The specified symbol must match the keys for your navigation items in your config/navigation.rb file.
       def current_navigation(*args)
-        ActiveSupport::Deprecation.warn("Setting the active navigation in the controllers has been deprecated. Please use the new :highlights_on option in the config file for explicit highlighting")
         @sn_current_navigation_args = args
       end
     end
