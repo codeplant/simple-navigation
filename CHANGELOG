@@ -1,3 +1,17 @@
+*3.0.0.beta1
+
+* moving deprecated rails controller methods (navigation, current_navigation) to separate file 'rails_controller_methods'. Deprecations removed. File can be required explicitly if controller methods should be still available.
+* decoupling from Rails. Introducing the concept of adapters to work with several frameworks. 
+* tested with Rails 3.0.0
+* adding support for Sinatra and Padrino frameworks.
+* cherry picking active_support stuff instead of requiring the whole bunch (tested with active_support >= 2.3.2 and 3.0.0)
+* created public sample project which includes demo for Rails2, Rails3, Sinatra and Padrino (will be available on github soon)
+* better src file organization (adapters/core/rendering folders)
+
+*2.7.3
+
+* initializing SimpleNavigation.config_file_path with empty array (was nil before). Allows for adding paths before gem has been initialized.
+
 *2.7.2
 
 * added ability to have more than one config_file_path (useful if simple-navigation is used as a part of another gem/plugin). Credits to Luke Imhoff.
