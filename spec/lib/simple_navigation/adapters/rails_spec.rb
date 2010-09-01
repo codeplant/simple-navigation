@@ -15,21 +15,21 @@ describe SimpleNavigation::Adapters::Rails do
     @adapter = create_adapter
   end
   
-  describe 'self.init_framework' do
+  describe 'self.register' do
     before(:each) do
       ActionController::Base.stub!(:include)
     end
     it "should call set_env" do
       SimpleNavigation.should_receive(:set_env).with('./', 'test')
-      SimpleNavigation.init_framework
+      SimpleNavigation.register
     end
     it "should extend the ActionController::Base with the Helpers" do
       ActionController::Base.should_receive(:include).with(SimpleNavigation::Helpers)
-      SimpleNavigation.init_framework
+      SimpleNavigation.register
     end
     it "should install the helper methods in the controller" do
       ActionController::Base.should_receive(:helper_method).with(:render_navigation)
-      SimpleNavigation.init_framework
+      SimpleNavigation.register
     end
     
   end

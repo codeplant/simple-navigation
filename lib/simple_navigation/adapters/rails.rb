@@ -1,10 +1,10 @@
 module SimpleNavigation
   module Adapters
-    class Rails
+    class Rails < Base
             
-      attr_reader :controller, :template, :request
+      attr_reader :controller, :template
 
-      def self.init_framework
+      def self.register
         SimpleNavigation.set_env(rails_root, rails_env)        
         ActionController::Base.send(:include, SimpleNavigation::Helpers)
         ActionController::Base.send(:helper_method, :render_navigation)
@@ -27,8 +27,6 @@ module SimpleNavigation
         request.path
       end
       
-      # Returns the context in which the config file should be evaluated.
-      # This is preferably the template, otherwise te controller
       def context_for_eval
         raise 'no context set for evaluation the config file' unless template || controller
         template || controller
@@ -87,8 +85,8 @@ end
 if defined?(Rails) && Rails::VERSION::MAJOR == 3
   module SimpleNavigation                                                                                                
     class Railtie < Rails::Railtie                                                                                       
-      initializer "simple_navigation.init_framework" do |app|                                                             
-        SimpleNavigation.init_framework
+      initializer "simple_navigation.register" do |app|                                                             
+        SimpleNavigation.register
       end                                                                                                                
     end                                                                                                                  
   end
