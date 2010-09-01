@@ -106,15 +106,6 @@ describe SimpleNavigation::Configuration do
     end
   end
 
-  describe 'render_all_levels=' do
-    it "should set the instance var" do
-      ActiveSupport::Deprecation.silence do
-        @config.render_all_levels = true
-        @config.render_all_levels.should be_true
-      end
-    end
-  end
-
   describe 'loaded?' do
     it "should return true if primary_nav is set" do
       @config.instance_variable_set(:@primary_navigation, :bla)

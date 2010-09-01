@@ -74,6 +74,7 @@ describe SimpleNavigation::ItemContainer do
 
   describe 'selected_item' do
     before(:each) do
+      SimpleNavigation.stub!(:current_navigation_for => :nav)
       @item_container.stub!(:[] => nil)
       @item_1 = stub(:item, :selected? => false)
       @item_2 = stub(:item, :selected? => false)

@@ -31,10 +31,8 @@ module SimpleNavigation
     #   will be loaded and used for rendering the navigation.
     # * <tt>:items</tt> - you can specify the items directly (e.g. if items are dynamically generated from database). See SimpleNavigation::ItemsProvider for documentation on what to provide as items.
     # * <tt>:renderer</tt> - specify the renderer to be used for rendering the navigation. Either provide the Class or a symbol matching a registered renderer. Defaults to :list (html list renderer).
-    def render_navigation(*args)
-      args = [Hash.new] if args.empty?
-      options = extract_backwards_compatible_options(*args)
-      options = {:context => :default, :level => :all}.merge(options)
+    def render_navigation(options={})
+      options = apply_defaults(options)
       ctx = options.delete(:context)
       SimpleNavigation.init_adapter_from self
       SimpleNavigation.load_config(ctx) 
@@ -46,50 +44,11 @@ module SimpleNavigation
       active_item_container.render(options) unless active_item_container.nil?
     end
 
-    # Deprecated. Renders the primary_navigation with the configured renderer. Calling render_navigation(:level => 0) has the same effect.
-    def render_primary_navigation(options = {})
-      ActiveSupport::Deprecation.warn("SimpleNavigation::Helpers.render_primary_navigation has been deprecated. Please use render_navigation(:level => 1) instead")
-      render_navigation(options.merge(:level => 1))
-    end
-
-    # Deprecated. Renders the sub_navigation with the configured renderer. Calling render_navigation(:level => 1) has the same effect.
-    def render_sub_navigation(options = {})
-      ActiveSupport::Deprecation.warn("SimpleNavigation::Helpers.render_primary_navigation has been deprecated. Please use render_navigation(:level => 2) instead")
-      render_navigation(options.merge(:level => 2))
-    end
-
     private
 
-    def extract_backwards_compatible_options(*args)
-      case args.first
-      when Hash
-        options = args.first
-        options[:level] = options.delete(:levels) if options[:levels]
-        deprecated_api! if options[:level] == :primary || options[:level] == :secondary || options[:level] == :nested
-        options[:level] = 1 if options[:level] == :primary
-        options[:level] = 2 if options[:level] == :secondary
-        options[:level] = :all if options[:level] == :nested
-      when Symbol
-        deprecated_api!
-        raise ArgumentError, "Invalid arguments" unless [:primary, :secondary, :nested].include? args.first
-        options = Hash.new
-        options[:level] = args.first
-        options[:level] = :all if options[:level] == :nested
-        options[:level] = 1 if options[:level] == :primary
-        options[:level] = 2 if options[:level] == :secondary
-        options.merge!(args[1] || {})
-      else
-        raise ArgumentError, "Invalid arguments"
-      end
-      if options[:all_open]
-        options[:expand_all] = options.delete(:all_open)
-        ActiveSupport::Deprecation.warn("render_navigation(:all_open => true) has been deprecated, please use render_navigation(:expand_all => true) instead")
-      end
-      options
-    end
-
-    def deprecated_api!
-      ActiveSupport::Deprecation.warn("You are using a deprecated API of SimpleNavigation::Helpers.render_navigation, please check the documentation on http://wiki.github.com/andi/simple-navigation")
+    def apply_defaults(options)
+      options[:level] = options.delete(:levels) if options[:levels]
+      {:context => :default, :level => :all}.merge(options)
     end
 
   end

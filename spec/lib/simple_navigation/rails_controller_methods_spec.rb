@@ -43,10 +43,8 @@ describe 'explicit navigation in rails' do
       describe 'navigation' do
 
         def call_navigation(key1, key2=nil)
-          ActiveSupport::Deprecation.silence do
-            @controller.class_eval do
-              navigation key1, key2
-            end
+          @controller.class_eval do
+            navigation key1, key2
           end
         end
 
@@ -78,11 +76,11 @@ describe 'explicit navigation in rails' do
 
       describe 'current_navigation' do
         it "should set the sn_current_navigation_args as specified" do
-          ActiveSupport::Deprecation.silence {@controller.current_navigation(:first)}
+          @controller.current_navigation(:first)
           @controller.instance_variable_get(:@sn_current_navigation_args).should == [:first]
         end
         it "should set the sn_current_navigation_args as specified" do
-          ActiveSupport::Deprecation.silence {@controller.current_navigation(:first, :second)}
+          @controller.current_navigation(:first, :second)
           @controller.instance_variable_get(:@sn_current_navigation_args).should == [:first, :second]
         end
       end
