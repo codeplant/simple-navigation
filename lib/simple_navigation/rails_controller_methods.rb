@@ -1,8 +1,5 @@
 module SimpleNavigation
 
-  #deprecated
-  mattr_accessor :controller, :template
-
   class << self
 
     def explicit_navigation_args
