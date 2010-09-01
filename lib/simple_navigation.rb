@@ -21,22 +21,25 @@ module SimpleNavigation
     extend Forwardable
     
     def_delegators :adapter, :request, :request_uri, :request_path, :context_for_eval, :current_page?
-    def_delegators :adapter_class, :init_framework
+    def_delegators :adapter_class, :register
 
+    # Sets the root path and current environment as specified. Also sets the default config_file_path.
     def set_env(root, environment)
       self.root = root
       self.environment = environment
       self.config_file_paths << SimpleNavigation.default_config_file_path
     end
 
+    # Returns the current framework in which the plugin is running.
     def framework
       return :rails if defined?(Rails)
-      return :sinatra if defined?(Sinatra)
       return :padrino if defined?(Padrino)
+      return :sinatra if defined?(Sinatra)
       raise 'simple_navigation currently only works for Rails, Sinatra and Padrino apps'
     end
     
-    def choose_adapter
+    # Loads the adapter for the current framework
+    def load_adapter
       self.adapter_class = case framework
       when :rails
         SimpleNavigation::Adapters::Rails

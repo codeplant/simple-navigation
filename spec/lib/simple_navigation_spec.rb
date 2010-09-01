@@ -244,7 +244,7 @@ describe SimpleNavigation do
   describe 'config' do
     it {SimpleNavigation.config.should == SimpleNavigation::Configuration.instance}
   end
-
+  
   describe 'active_item_container_for' do
     before(:each) do
       @primary = stub(:primary)
@@ -273,4 +273,29 @@ describe SimpleNavigation do
       end
     end
   end
+
+  describe 'load_adapter' do
+    context 'Rails' do
+      before(:each) do
+        SimpleNavigation.stub!(:framework => :rails)
+        SimpleNavigation.load_adapter
+      end
+      it {SimpleNavigation.adapter_class.should == SimpleNavigation::Adapters::Rails}
+    end
+    context 'Padrino' do
+      before(:each) do
+        SimpleNavigation.stub!(:framework => :padrino)
+        SimpleNavigation.load_adapter
+      end
+      it {SimpleNavigation.adapter_class.should == SimpleNavigation::Adapters::Padrino}
+    end
+    context 'Sinatra' do
+      before(:each) do
+        SimpleNavigation.stub!(:framework => :sinatra)
+        SimpleNavigation.load_adapter
+      end
+      it {SimpleNavigation.adapter_class.should == SimpleNavigation::Adapters::Sinatra}
+    end
+  end
+  
 end
