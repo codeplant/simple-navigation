@@ -1,1 +1,1 @@
-SimpleNavigation.init_framework
+SimpleNavigation.register
