@@ -1,8 +1,7 @@
 
 == Simple Navigation
 
-Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Ruby on Rails application.
-If you upgrade to version 2.x.x please recheck the updated documentation on http://wiki.github.com/andi/simple-navigation.
+Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Rails 2, Rails 3, Sinatra or Padrino applications.
 
 Source code:
   git://github.com/andi/simple-navigation.git
