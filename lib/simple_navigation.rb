@@ -1,16 +1,26 @@
+# cherry picking active_support stuff
+require 'active_support/core_ext/array'
+require 'active_support/core_ext/hash'
+require 'active_support/core_ext/module/attribute_accessors'
+
 require 'simple_navigation/core'
 require 'simple_navigation/rendering'
 require 'simple_navigation/adapters'
+
 require 'forwardable'
 
 # A plugin for generating a simple navigation. See README for resources on usage instructions.
 module SimpleNavigation
   
-  
   mattr_accessor :adapter_class, :adapter, :config_files, :config_file_paths, :default_renderer, :registered_renderers, :root, :environment
 
+  # Cache for loaded config files
   self.config_files = {}
+
+  # Allows for multiple config_file_paths. Needed if a plugin itself uses simple-navigation and therefore has its own config file
   self.config_file_paths = []
+  
+  # Maps renderer keys to classes. The keys serve as shortcut in the render_navigation calls (:renderer => :list)
   self.registered_renderers = {
     :list         => SimpleNavigation::Renderer::List,
     :links        => SimpleNavigation::Renderer::Links,
@@ -50,6 +60,7 @@ module SimpleNavigation
       end
     end
 
+    # Creates a new adapter instance based on the context in which render_navigation has been called.
     def init_adapter_from(context)
       self.adapter = self.adapter_class.new(context)
     end
@@ -63,9 +74,8 @@ module SimpleNavigation
       !!config_file(navigation_context)
     end
 
-    # Returns the config file for the given navigation context or nil if no matching config file can be found.
-    # If multiple config_paths are set, it returns the first matching file.
-    #
+    # Returns the path to the config file for the given navigation context or nil if no matching config file can be found.
+    # If multiple config_paths are set, it returns the first matching path.
     def config_file(navigation_context = :default)
       config_file_paths.collect { |path| File.join(path, config_file_name(navigation_context)) }.detect {|full_path| File.exists?(full_path)}
     end
@@ -76,7 +86,7 @@ module SimpleNavigation
       "#{prefix}navigation.rb"      
     end
     
-    # Sets the config_file_path
+    # Resets the list of config_file_paths to the specified path
     def config_file_path=(path)
       self.config_file_paths = [path]
     end
@@ -130,20 +140,12 @@ module SimpleNavigation
     # Then in the view you can call:
     #
     #   render_navigation(:renderer => :my_renderer)
-    #
     def register_renderer(renderer_hash)
       self.registered_renderers.merge!(renderer_hash)
-    end
+    end    
 
   end
 
 end
 
-SimpleNavigation.choose_adapter
-
-# TODOs for the next releases:
-
-# - add JoinRenderer (HorizontalRenderer?) (wich does not render a list, but just the items joined with a specified char (e.g. | ))
-# - allow :function navigation item to specify function
-# - allow specification of link-options in item (currently options are passed to li-element)
-# - render_navigation: do not rescue from config-file not found error if no items are passed in directly
+SimpleNavigation.load_adapter
