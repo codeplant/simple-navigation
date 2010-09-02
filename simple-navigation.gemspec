@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simple-navigation}
-  s.version = "3.0.0.beta1"
+  s.version = "3.0.0.beta2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke"]
-  s.date = %q{2010-09-01}
-  s.description = %q{With the simple-navigation gem installed you can easily create multilevel navigations for your Ruby on Rails applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation.}
+  s.date = %q{2010-09-02}
+  s.description = %q{With the simple-navigation gem installed you can easily create multilevel navigations for your Rails, Sinatra or Padrino applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation through regular expressions.}
   s.email = %q{andreas.schacke@gmail.com}
   s.extra_rdoc_files = [
     "README"
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
     "CHANGELOG",
      "README",
      "Rakefile",
-     "VERSION.yml",
+     "VERSION",
      "generators/navigation_config/USAGE",
      "generators/navigation_config/navigation_config_generator.rb",
      "generators/navigation_config/templates/config/navigation.rb",
@@ -67,7 +67,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{andi}
   s.rubygems_version = %q{1.3.6}
-  s.summary = %q{Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Ruby on Rails application.}
+  s.summary = %q{simple-navigation is a ruby library for creating navigations (with multiple levels) for your Rails2, Rails3, Sinatra or Padrino application.}
   s.test_files = [
     "spec/lib/simple_navigation/adapters/padrino_spec.rb",
      "spec/lib/simple_navigation/adapters/rails_spec.rb",
