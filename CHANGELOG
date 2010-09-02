@@ -1,3 +1,7 @@
+*3.0.0.beta2
+
+* moving code for initializing plugin in sinatra to separate gem
+
 *3.0.0.beta1
 
 * moving deprecated rails controller methods (navigation, current_navigation) to separate file 'rails_controller_methods'. Deprecations removed. File can be required explicitly if controller methods should be still available.

@@ -64,13 +64,3 @@ module SimpleNavigation
     end
   end
 end
-
-module SimpleNavigation
-  
-  # Adds registered method to SimpleNavigation. This is called when executing 'register SimpleNavigation'.
-  def self.registered(app)
-    register
-    app.helpers Helpers
-  end
-  
-end
