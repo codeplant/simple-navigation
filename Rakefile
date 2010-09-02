@@ -34,10 +34,10 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "simple-navigation"
-    gemspec.summary = "Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Ruby on Rails application."
+    gemspec.summary = "simple-navigation is a ruby library for creating navigations (with multiple levels) for your Rails2, Rails3, Sinatra or Padrino application."
     gemspec.email = "andreas.schacke@gmail.com"
     gemspec.homepage = "http://github.com/andi/simple-navigation"
-    gemspec.description = "With the simple-navigation gem installed you can easily create multilevel navigations for your Ruby on Rails applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation."
+    gemspec.description = "With the simple-navigation gem installed you can easily create multilevel navigations for your Rails, Sinatra or Padrino applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation through regular expressions."
     gemspec.add_development_dependency('rspec', '>= 1.2.8')
     gemspec.add_dependency('activesupport', '>= 2.3.2')
     gemspec.authors = ["Andi Schacke"]
