@@ -71,7 +71,7 @@ module SimpleNavigation
     #
     # The options are the same as in the view's render_navigation call (they get passed on)
     def render(options={})
-      renderer_class = if options[:renderer]
+      renderer_instance = if options[:renderer]
         if options[:renderer].instance_of?(Symbol) && SimpleNavigation.registered_renderers.key?(options[:renderer])
           SimpleNavigation.registered_renderers[options[:renderer]].new(options)
         else
@@ -80,7 +80,7 @@ module SimpleNavigation
       else
         self.renderer.new(options)
       end
-      renderer_class.render(self)
+      renderer_instance.render(self)
     end
 
     # Returns true if any of this container's items is selected.
