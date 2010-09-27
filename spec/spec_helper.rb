@@ -35,7 +35,7 @@ def primary_items
   [
     [:users, 'users', 'first_url', {:id => 'my_id'}],
     [:invoices, 'invoices', 'second_url', {}],
-    [:accounts, 'accounts', 'third_url', {:style => 'float:right'}]
+    [:accounts, 'accounts', 'third_url', {:style => 'float:right', :link => {:style => 'float:left'}}]
   ]
 end
 
