@@ -35,9 +35,9 @@ module SimpleNavigation
     # This is the main method for specifying the navigation items. It can be used in two ways:
     #
     # 1. Declaratively specify your items in the config/navigation.rb file using a block. It then yields an SimpleNavigation::ItemContainer for adding navigation items.
-    # 1. Directly provide your items to the method (e.g. when loading your items from the database). Either specify
+    # 1. Directly provide your items to the method (e.g. when loading your items from the database).
     #
-    # ==== Example for block style
+    # ==== Example for block style (configuration file)
     #   config.items do |primary|
     #     primary.item :my_item, 'My item', my_item_path
     #     ...

@@ -27,7 +27,9 @@ module SimpleNavigation
       end
       
       protected
-
+      
+      # Extracts the options relevant for the generated link
+      #
       def link_options_for(item)
         special_options = {:method => item.method, :class => item.selected_class}.reject {|k, v| v.nil? }
         link_options = item.html_options[:link]

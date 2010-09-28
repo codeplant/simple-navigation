@@ -14,6 +14,9 @@ module SimpleNavigation
   # * <tt>options</tt>
   # * <tt>items</tt> - if one of your items has a subnavigation it must respond to <tt>items</tt> providing the subnavigation.
   #
+  # You can also specify your items as a list of hashes. The hashes will be converted to objects automatically.
+  # The hashes representing the items obviously must have the keys :key, :name and :url and optionally the keys :options and :items.
+  #
   # See SimpleNavigation::ItemContainer#item for the purpose of these methods.
   class ItemAdapter
     extend Forwardable
@@ -43,6 +46,8 @@ module SimpleNavigation
 
     protected
     
+    # Converts the specified hash into an object. Each key will be added as method.
+    #
     def to_object(hash)
       mod = Module.new do
         hash.each_pair do |key, value|
