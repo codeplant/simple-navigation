@@ -1,6 +1,7 @@
 *master
 
-* ability to specify attributes for the generated link-tag in list renderer (up to now the attributes have been applied to the li-tag). Credits to Anthony Navarre for input and discussion.
+* added ability to specify dynamic items using an array of hashes. Credits to Anshul Khandelwal for input and discussion.
+* added ability to specify attributes for the generated link-tag in list renderer (up to now the attributes have been applied to the li-tag). Credits to Anthony Navarre for input and discussion.
 
 *3.0.0.beta2
 
