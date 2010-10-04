@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../../../spec_helper'
+require 'spec_helper'
 require 'html/document' unless defined? HTML::Document
 
 describe SimpleNavigation::Renderer::List do
