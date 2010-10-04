@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require 'spec_helper'
 
 describe 'explicit navigation in rails' do
   require 'simple_navigation/rails_controller_methods'
