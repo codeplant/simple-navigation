@@ -1,3 +1,8 @@
+*master
+
+* upgraded to rspec 2.0.0
+* fixed cgi error in sinatra adapter. Credits to Jack Dempsey.
+
 *3.0.0
 
 * added ability to specify dynamic items using an array of hashes. Credits to Anshul Khandelwal for input and discussion.
