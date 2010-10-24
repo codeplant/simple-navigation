@@ -1,8 +1,8 @@
-require File.dirname(__FILE__) + '/../../../../spec_helper'
+require 'spec_helper'
 
 describe SimpleNavigation::Renderer::Base do
   before(:each) do
-    @options = stub(:options, :null_object => true)
+    @options = stub(:options).as_null_object
     @adapter = stub(:adapter)
     SimpleNavigation.stub!(:adapter => @adapter)
     @base_renderer = SimpleNavigation::Renderer::Base.new(@options)

@@ -1,6 +1,6 @@
 ENV["RAILS_ENV"] = "test"
 require 'rubygems'
-require 'spec'
+require 'rspec'
 require 'action_controller'
 
 module Rails
@@ -19,9 +19,17 @@ RAILS_ROOT = './' unless defined?(RAILS_ROOT)
 RAILS_ENV = 'test' unless defined?(RAILS_ENV)
 
 
-# Spec::Runner.configure do |config|
-  # no special config
-# end
+RSpec.configure do |config|
+  # == Mock Framework
+  #
+  # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
+  #
+  # config.mock_with :mocha
+  # config.mock_with :flexmock
+  # config.mock_with :rr
+  config.mock_with :rspec
+
+end
 
 # spec helper methods
 def sub_items
@@ -60,9 +68,9 @@ def select_item(key)
     primary_item(:invoices) do |item|
       item.instance_variable_get(:@sub_navigation).items.find { |i| i.key == key}.stub!(:selected? => true)
     end
-
+  else
+    primary_item(key) {|item| item.stub!(:selected? => true) unless item.frozen?}
   end
-  primary_item(key) {|item| item.stub!(:selected? => true) unless item.frozen?}
 end
 
 def subnav_container

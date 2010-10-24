@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../../../spec_helper'
+require 'spec_helper'
 require 'html/document' unless defined? HTML::Document
 
 describe SimpleNavigation::Renderer::List do
@@ -145,7 +145,7 @@ describe SimpleNavigation::Renderer::List do
     
     describe 'link_options_for' do
       before(:each) do
-        setup_renderer_for SimpleNavigation::Renderer::List, :rails, options
+        setup_renderer_for SimpleNavigation::Renderer::List, :rails, {}
       end
       context 'no link options specified' do
         context 'method specified' do

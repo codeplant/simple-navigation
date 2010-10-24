@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../../spec_helper'
+require 'spec_helper'
 
 describe SimpleNavigation::Item do
 
@@ -12,7 +12,7 @@ describe SimpleNavigation::Item do
   describe 'initialize' do
     context 'subnavigation' do
       before(:each) do
-        @subnav_container = stub(:subnav_container, :null_object => true)
+        @subnav_container = stub(:subnav_container).as_null_object
         SimpleNavigation::ItemContainer.stub!(:new => @subnav_container)
       end
       context 'block given' do

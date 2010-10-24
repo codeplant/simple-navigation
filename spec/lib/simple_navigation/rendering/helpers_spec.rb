@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../../spec_helper'
+require 'spec_helper'
 
 describe SimpleNavigation::Helpers do
   class ControllerMock
@@ -9,7 +9,7 @@ describe SimpleNavigation::Helpers do
     @controller = ControllerMock.new
     SimpleNavigation.stub!(:load_config)
     SimpleNavigation::Configuration.stub!(:eval_config)
-    @primary_navigation = stub(:primary_navigation, :null_object => true)
+    @primary_navigation = stub(:primary_navigation).as_null_object
     SimpleNavigation.stub!(:primary_navigation).and_return(@primary_navigation)
     SimpleNavigation.stub!(:config_file? => true)
   end
@@ -64,7 +64,7 @@ describe SimpleNavigation::Helpers do
 
     context 'rendering of the item_container' do
       before(:each) do
-        @active_item_container = stub(:item_container, :null_object => true)
+        @active_item_container = stub(:item_container).as_null_object
         SimpleNavigation.stub!(:active_item_container_for => @active_item_container)
       end
       it "should lookup the active_item_container based on the level" do
@@ -98,7 +98,7 @@ describe SimpleNavigation::Helpers do
     context 'secondary' do
       context 'with current_primary_navigation set' do
         before(:each) do
-          @selected_item_container = stub(:selected_container, :null_object => true)
+          @selected_item_container = stub(:selected_container).as_null_object
           SimpleNavigation.stub!(:active_item_container_for => @selected_item_container)
         end
         it "should find the selected sub_navigation for the specified level" do
@@ -134,7 +134,7 @@ describe SimpleNavigation::Helpers do
 
   describe "should treat :level and :levels options the same" do
     before(:each) do
-      @selected_item_container = stub(:selected_container, :null_object => true)
+      @selected_item_container = stub(:selected_container).as_null_object
       SimpleNavigation.stub!(:active_item_container_for => @selected_item_container)
     end
     it  "should pass a valid levels options as level" do

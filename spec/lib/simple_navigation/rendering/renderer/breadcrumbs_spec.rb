@@ -1,5 +1,5 @@
-require File.dirname(__FILE__) + '/../../../../spec_helper'
-require 'html/document' unless defined? HTML::Document
+require 'spec_helper'
+require 'html/document'# unless defined? HTML::Document
 
 describe SimpleNavigation::Renderer::Breadcrumbs do
 
@@ -15,23 +15,23 @@ describe SimpleNavigation::Renderer::Breadcrumbs do
     context 'regarding result' do
 
       it "should render a div-tag around the items" do
-        HTML::Selector.new('div').select(render).should have(1).entries
-      end
-      it "the rendered div-tag should have the specified dom_id" do
-        HTML::Selector.new('div#nav_dom_id').select(render).should have(1).entries
-      end
-      it "the rendered div-tag should have the specified class" do
-        HTML::Selector.new('div.nav_dom_class').select(render).should have(1).entries
-      end
-
-      context 'without current_navigation set' do
-        it "should not render any a-tag in the div-tag" do
-          HTML::Selector.new('div a').select(render).should have(0).entries
+          HTML::Selector.new('div').select(render).should have(1).entries
         end
-      end
+        it "the rendered div-tag should have the specified dom_id" do
+          HTML::Selector.new('div#nav_dom_id').select(render).should have(1).entries
+        end
+        it "the rendered div-tag should have the specified class" do
+          HTML::Selector.new('div.nav_dom_class').select(render).should have(1).entries
+        end
+  
+        context 'without current_navigation set' do
+          it "should not render any a-tag in the div-tag" do
+            HTML::Selector.new('div a').select(render).should have(0).entries
+          end
+        end
 
       context 'with current_navigation set' do
-        before :all do
+        before(:each) do
           @selection = HTML::Selector.new('div a').select(render(:invoices))
         end
         it "should render the selected a tags" do

@@ -1,11 +1,10 @@
-require File.dirname(__FILE__) + '/../../../../spec_helper'
+require 'spec_helper'
 require 'html/document' unless defined? HTML::Document
 
 describe SimpleNavigation::Renderer::Links do
 
     
   describe 'render' do
-
 
     def render(current_nav=nil, options={:level => :all})
       primary_navigation = primary_container

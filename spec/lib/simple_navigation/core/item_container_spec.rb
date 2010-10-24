@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../../spec_helper'
+require 'spec_helper'
 
 describe SimpleNavigation::ItemContainer do
   before(:each) do
@@ -19,7 +19,7 @@ describe SimpleNavigation::ItemContainer do
     before(:each) do
       @item = stub(:item)
       @items = [@item]
-      @item_adapter = stub(:item_adapter, :null_object => true)
+      @item_adapter = stub(:item_adapter).as_null_object
       SimpleNavigation::ItemAdapter.stub(:new => @item_adapter)
       @item_container.stub!(:should_add_item? => true)
     end
@@ -290,7 +290,7 @@ describe SimpleNavigation::ItemContainer do
 
   describe 'render' do
     before(:each) do
-      @renderer_instance = stub(:renderer, :null_object => true)
+      @renderer_instance = stub(:renderer).as_null_object
       @renderer_class = stub(:renderer_class, :new => @renderer_instance)
     end
     context 'renderer specified as option' do
