@@ -1,3 +1,5 @@
+require 'cgi'
+
 module SimpleNavigation
   module Adapters
     class Sinatra < Base
