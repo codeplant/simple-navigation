@@ -1,4 +1,4 @@
-*master
+*3.0.1
 
 * allow controller instance variables named @template for rails3 apps. Credits to cmartyn.
 * added possibility to specify and item's URL as a block which is evaulated after the :if and :unless conditions have been checked. Credits to Nicholas Firth-McCoy.
