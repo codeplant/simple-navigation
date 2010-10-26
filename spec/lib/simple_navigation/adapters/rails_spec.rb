@@ -265,5 +265,19 @@ describe SimpleNavigation::Adapters::Rails do
     end
   end
   
+  describe 'template_from' do
+    context 'Rails3' do 
+      before(:each) do
+        @controller.stub!(:view_context => 'view')
+      end
+      it {@adapter.send(:template_from, @controller).should == 'view'}
+    end
+    context 'Rails2' do
+      before(:each) do
+        @controller.instance_variable_set(:@template, 'view')
+      end
+      it {@adapter.send(:template_from, @controller).should == 'view'}
+    end
+  end
   
 end

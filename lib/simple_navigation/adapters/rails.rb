@@ -59,7 +59,7 @@ module SimpleNavigation
       end
       
       def template_from(controller)
-        controller.instance_variable_get(:@template) || (controller.respond_to?(:view_context) ? controller.view_context : nil)
+        controller.respond_to?(:view_context) ? controller.view_context : controller.instance_variable_get(:@template)
       end
       
       # Marks the specified input as html_safe (for Rails3). Does nothing if html_safe is not defined on input. 
