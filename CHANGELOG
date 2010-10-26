@@ -1,5 +1,6 @@
 *master
 
+* added possibility to specify and item's URL as a block which is evaulated after the :if and :unless conditions have been checked. Credits to Nicholas Firth-McCoy.
 * upgraded to rspec 2.0.0
 * fixed cgi error in sinatra adapter. Credits to Jack Dempsey.
 

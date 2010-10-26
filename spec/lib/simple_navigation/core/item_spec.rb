@@ -89,6 +89,22 @@ describe SimpleNavigation::Item do
         end
       end
     end
+    
+    context 'url' do
+      context 'url is a string' do
+        before(:each) do
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})  
+        end
+        it {@item.url.should == 'url'}
+      end
+      context 'url is a proc' do
+        before(:each) do
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', Proc.new {"my_" + "url"}, {})  
+        end
+        it {@item.url.should == 'my_url'}
+      end
+    end
+    
   end
 
   describe 'selected?' do
