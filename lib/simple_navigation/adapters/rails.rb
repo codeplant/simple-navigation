@@ -2,7 +2,7 @@ module SimpleNavigation
   module Adapters
     class Rails < Base
             
-      attr_reader :controller, :template
+      attr_reader :controller, :nav_template
 
       def self.register
         SimpleNavigation.set_env(rails_root, rails_env)        
