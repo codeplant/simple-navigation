@@ -11,7 +11,7 @@ describe SimpleNavigation::Adapters::Rails do
     @controller = stub(:controller)
     @context.stub!(:controller => @controller)
     @request = stub(:request)
-    @template = stub(:template, :request => @request)
+    @nav_template = stub(:template, :request => @request)
     @adapter = create_adapter
   end
   
@@ -38,7 +38,7 @@ describe SimpleNavigation::Adapters::Rails do
     context 'regarding setting the request' do
       context 'template is present' do
         before(:each) do
-          @controller.stub!(:instance_variable_get => @template)
+          @controller.stub!(:instance_variable_get => @nav_template)
           @adapter = create_adapter
         end
         it {@adapter.request.should == @request}
@@ -59,10 +59,10 @@ describe SimpleNavigation::Adapters::Rails do
       context 'template is stored in controller as instance_var (Rails2)' do
         context 'template is set' do
           before(:each) do
-            @controller.stub!(:instance_variable_get => @template)
+            @controller.stub!(:instance_variable_get => @nav_template)
             @adapter = create_adapter
           end
-          it {@adapter.template.should == @template}
+          it {@adapter.template.should == @nav_template}
          end
         context 'template is not set' do
           before(:each) do
@@ -75,10 +75,10 @@ describe SimpleNavigation::Adapters::Rails do
       context 'template is stored in controller as view_context (Rails3)' do
         context 'template is set' do
           before(:each) do            
-            @controller.stub!(:view_context => @template)
+            @controller.stub!(:view_context => @nav_template)
             @adapter = create_adapter
           end
-          it {@adapter.template.should == @template}
+          it {@adapter.template.should == @nav_template}
         end
         context 'template is not set' do
           before(:each) do            
@@ -140,14 +140,14 @@ describe SimpleNavigation::Adapters::Rails do
       end
       context 'template is present' do
         before(:each) do
-          @template = stub(:template)
-          @adapter.instance_variable_set(:@template, @template)
+          @nav_template = stub(:template)
+          @adapter.instance_variable_set(:@nav_template, @nav_template)
         end
-        it {@adapter.context_for_eval.should == @template}
+        it {@adapter.context_for_eval.should == @nav_template}
       end
       context 'template is not present' do
         before(:each) do
-          @adapter.instance_variable_set(:@template, nil)
+          @adapter.instance_variable_set(:@nav_template, nil)
         end
         it {@adapter.context_for_eval.should == @controller}
       end
@@ -158,14 +158,14 @@ describe SimpleNavigation::Adapters::Rails do
       end
       context 'template is present' do
         before(:each) do
-          @template = stub(:template)
-          @adapter.instance_variable_set(:@template, @template)
+          @nav_template = stub(:template)
+          @adapter.instance_variable_set(:@nav_template, @nav_template)
         end
-        it {@adapter.context_for_eval.should == @template}
+        it {@adapter.context_for_eval.should == @nav_template}
       end
       context 'template is not present' do
         before(:each) do
-          @adapter.instance_variable_set(:@template, nil)
+          @adapter.instance_variable_set(:@nav_template, nil)
         end
         it {lambda {@adapter.context_for_eval}.should raise_error}
       end
@@ -175,10 +175,10 @@ describe SimpleNavigation::Adapters::Rails do
   describe 'current_page?' do
     context 'template is set' do
       before(:each) do
-        @adapter.stub!(:template => @template)
+        @adapter.stub!(:template => @nav_template)
       end
       it "should delegate the call to the template" do
-        @template.should_receive(:current_page?).with(:page)
+        @nav_template.should_receive(:current_page?).with(:page)
         @adapter.current_page?(:page)
       end
     end
@@ -193,12 +193,12 @@ describe SimpleNavigation::Adapters::Rails do
   describe 'link_to' do
     context 'template is set' do
       before(:each) do
-        @adapter.stub!(:template => @template)
+        @adapter.stub!(:template => @nav_template)
         @adapter.stub!(:html_safe => 'safe_text')
         @options = stub(:options)
       end
       it "should delegate the call to the template (with html_safe text)" do
-        @template.should_receive(:link_to).with('safe_text', 'url', @options)
+        @nav_template.should_receive(:link_to).with('safe_text', 'url', @options)
         @adapter.link_to('text', 'url', @options)
       end
     end
@@ -213,12 +213,12 @@ describe SimpleNavigation::Adapters::Rails do
   describe 'content_tag' do
     context 'template is set' do
       before(:each) do
-        @adapter.stub!(:template => @template)
+        @adapter.stub!(:template => @nav_template)
         @adapter.stub!(:html_safe => 'safe_text')
         @options = stub(:options)
       end
       it "should delegate the call to the template (with html_safe text)" do
-        @template.should_receive(:content_tag).with(:div, 'safe_text', @options)
+        @nav_template.should_receive(:content_tag).with(:div, 'safe_text', @options)
         @adapter.content_tag(:div, 'text', @options)
       end
     end
