@@ -2,7 +2,7 @@ module SimpleNavigation
   module Adapters
     class Rails < Base
             
-      attr_reader :controller, :nav_template
+      attr_reader :controller
 
       def self.register
         SimpleNavigation.set_env(rails_root, rails_env)        
@@ -25,6 +25,10 @@ module SimpleNavigation
       def request_path
         return '' unless request
         request.path
+      end
+      
+      def template
+        @nav_template
       end
       
       def context_for_eval
