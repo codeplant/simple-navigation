@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SimpleNavigation::Item do
 
   before(:each) do
-    @item_container = stub(:item_container, :level => 1)
+    @item_container = stub(:item_container, :level => 1).as_null_object
     @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
     @adapter = stub(:adapter)
     SimpleNavigation.stub!(:adapter => @adapter)
@@ -65,6 +65,17 @@ describe SimpleNavigation::Item do
         it 'should set the instance-var to nil' do
           @item.method.should be_nil
         end
+      end
+    end
+    
+    context 'setting class and id on the container' do
+      before(:each) do
+        @options = {:container_class => 'container_class', :container_id => 'container_id'}
+      end
+      it {@item_container.should_receive(:dom_class=).with('container_class')}
+      it {@item_container.should_receive(:dom_id=).with('container_id')}
+      after(:each) do
+        SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
       end
     end
 

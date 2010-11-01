@@ -10,6 +10,8 @@ module SimpleNavigation
     # The subnavigation (if any) is either provided by a block or passed in directly as <tt>items</tt>
     def initialize(container, key, name, url, options, items=nil, &sub_nav_block)
       @container = container
+      @container.dom_class = options.delete(:container_class) if options[:container_class]
+      @container.dom_id = options.delete(:container_id) if options[:container_id]
       @key = key
       @method = options.delete(:method)
       @name = name
