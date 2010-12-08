@@ -39,6 +39,12 @@ describe SimpleNavigation::Renderer::Links do
       it "should not apply the the default id where there is an id specified in the html_options" do
         HTML::Selector.new('a#users').select(render).should be_empty
       end
+      it "should render the result of calling the procs" do
+        HTML::Selector.new('div a').select(render)[1].tap do |tag|
+          tag.children[0].content.should == primary_items[1][1].call
+          tag["href"].should == primary_items[1][2].call
+        end
+      end
 
       context 'with current_navigation set' do
         it "should mark the matching a-item as selected (with the css_class specified in configuration)" do

@@ -65,7 +65,19 @@ module SimpleNavigation
       def expand_sub_navigation?(item)
         expand_all? || item.selected?
       end
-            
+
+      # Some configuration file items can be procs or strings - this
+      # function figures out which is which.  If it's a proc then it
+      # gets called, otherwise it just gets returned.
+      def call_maybe(url)
+        case url
+        when Proc, Method
+          url.call
+        else
+          url
+        end
+      end
+
     end
   end
 end

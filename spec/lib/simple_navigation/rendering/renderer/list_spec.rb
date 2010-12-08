@@ -29,6 +29,12 @@ describe SimpleNavigation::Renderer::List do
       it "should render an a-tag inside each li-tag" do
         HTML::Selector.new('li a').select(render).should have(3).entries
       end
+      it "should render the result of calling the procs" do
+        HTML::Selector.new('li a').select(render)[1].tap do |tag|
+          tag.children[0].content.should == primary_items[1][1].call
+          tag["href"].should == primary_items[1][2].call
+        end
+      end
 
       context 'concerning html attributes' do
         context 'default case (no options defined for link tag)' do
@@ -81,7 +87,7 @@ describe SimpleNavigation::Renderer::List do
 
       context 'nested sub_navigation' do
         it "should nest the current_primary's subnavigation inside the selected li-element" do
-          HTML::Selector.new('li.selected ul li').select(render(:invoices)).should have(2).entries
+          HTML::Selector.new('li.selected ul li').select(render(:invoices)).should have(3).entries
         end
         it "should be possible to identify sub items using an html selector (using ids)" do
           HTML::Selector.new('#invoices #subnav1').select(render(:invoices)).should have(1).entries

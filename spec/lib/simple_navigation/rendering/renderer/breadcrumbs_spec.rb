@@ -45,6 +45,14 @@ describe SimpleNavigation::Renderer::Breadcrumbs do
             tag["class"].should be_nil
           end
         end
+
+        it "should render the result of calling the procs" do
+          @selection[0].tap do |tag|
+            raise unless tag.name == "a"
+            tag.children[0].content.should == primary_items[1][1].call
+            tag["href"].should == primary_items[1][2].call
+          end
+        end
       end
 
 

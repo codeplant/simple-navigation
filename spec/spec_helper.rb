@@ -35,14 +35,15 @@ end
 def sub_items
   [
     [:subnav1, 'subnav1', 'subnav1_url', {}],
-    [:subnav2, 'subnav2', 'subnav2_url', {}]
+    [:subnav2, 'subnav2', 'subnav2_url', {}],
+    [:subnav_with_procs, proc { 'subnav3' }, proc { 'subnav3_url' }, {}]
   ]
 end
 
 def primary_items
   [
     [:users, 'users', 'first_url', {:id => 'my_id'}],
-    [:invoices, 'invoices', 'second_url', {}],
+    [:invoices, proc { 'invoices' }, proc { 'second_url' }, {}],
     [:accounts, 'accounts', 'third_url', {:style => 'float:right', :link => {:style => 'float:left'}}]
   ]
 end
