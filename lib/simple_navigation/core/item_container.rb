@@ -103,6 +103,14 @@ module SimpleNavigation
       return nil unless selected_sub_navigation?
       return selected_item.sub_navigation.active_item_container_for(desired_level)
     end
+    
+    def active_leaf_container
+      if selected_sub_navigation?
+        selected_item.sub_navigation.active_leaf_container
+      else
+        self
+      end
+    end
 
     # Returns true if there are no items defined for this container.
     def empty?

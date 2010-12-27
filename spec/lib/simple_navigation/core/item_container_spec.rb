@@ -152,6 +152,30 @@ describe SimpleNavigation::ItemContainer do
       end
     end
   end
+  
+  describe 'active_leaf_container' do
+    context 'the current container has a selected subnavigation' do
+      before(:each) do
+        @item_container.stub!(:selected_sub_navigation? => true)
+        @sub_nav = stub(:sub_nav)
+        @selected_item = stub(:selected_item)
+        @item_container.stub!(:selected_item => @selected_item)
+        @selected_item.stub!(:sub_navigation => @sub_nav)
+      end
+      it "should call recursively on the sub_navigation" do
+        @sub_nav.should_receive(:active_leaf_container)
+        @item_container.active_leaf_container
+      end
+    end
+    context 'the current container is the leaf already' do
+      before(:each) do
+        @item_container.stub!(:selected_sub_navigation? => false)
+      end
+      it "should return itsself" do
+        @item_container.active_leaf_container.should == @item_container
+      end
+    end
+  end
 
   describe 'item' do
 
