@@ -1,3 +1,6 @@
+*3.1.0
+* added new helper method 'active_navigation_item_name' to render the name of the currently active item
+
 *3.0.2
 
 * dom_id and dom_class can now be set as option in the item's definition (useful for dynamic menu items).
