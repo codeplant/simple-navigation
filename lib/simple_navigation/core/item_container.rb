@@ -104,6 +104,8 @@ module SimpleNavigation
       return selected_item.sub_navigation.active_item_container_for(desired_level)
     end
     
+    # Returns the deepest possible active item_container. 
+    # (recursively searches in the sub_navigation if this container has a selected sub_navigation). 
     def active_leaf_container
       if selected_sub_navigation?
         selected_item.sub_navigation.active_leaf_container
