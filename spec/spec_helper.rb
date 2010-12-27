@@ -48,11 +48,11 @@ def primary_items
 end
 
 def primary_container
-  container = SimpleNavigation::ItemContainer.new(0)
+  container = SimpleNavigation::ItemContainer.new(1)
   container.dom_id = 'nav_dom_id'
   container.dom_class = 'nav_dom_class'
   @items = primary_items.map {|params| SimpleNavigation::Item.new(container, *params)}
-  @items.each {|i| i.stub!(:selected? => false)}
+  @items.each {|i| i.stub!(:selected? => false, :selected_by_config? => false)}
   container.instance_variable_set(:@items, @items)
   primary_item(:invoices) {|item| item.instance_variable_set(:@sub_navigation, subnav_container)}
   container
