@@ -33,6 +33,37 @@ module SimpleNavigation
     # * <tt>:renderer</tt> - specify the renderer to be used for rendering the navigation. Either provide the Class or a symbol matching a registered renderer. Defaults to :list (html list renderer).
     def render_navigation(options={})
       options = apply_defaults(options)
+      load_config(options)
+      active_item_container = SimpleNavigation.active_item_container_for(options[:level])
+      active_item_container.render(options) unless active_item_container.nil?
+    end
+
+    # Returns the name of the currently active navigation item belonging to the specified level.
+    #
+    # The following options are supported:
+    # * <tt>:level</tt> - defaults to :all which returns the most specific/deepest selected item (the leaf).
+    #   Specify a specific level to only look for the selected item in the specified level of navigation (e.g. :level => 1 for primary_navigation etc...).
+    # * <tt>:context</tt> - specifies the context for which you would like to find the active navigation item. Defaults to :default which loads the default navigation.rb (i.e. config/navigation.rb).
+    #   If you specify a context then the plugin tries to load the configuration file for that context, e.g. if you call <tt>active_navigation_item_name(:context => :admin)</tt> the file config/admin_navigation.rb
+    #   will be loaded and used for searching the active item.
+    # * <tt>:items</tt> - you can specify the items directly (e.g. if items are dynamically generated from database). See SimpleNavigation::ItemsProvider for documentation on what to provide as items.
+    #
+    # Returns an empty string if no active item can be found for the specified options
+    def active_navigation_item_name(options={})
+      options = apply_defaults(options)
+      load_config(options)
+      options[:level] = :leaves if options[:level] == :all
+      active_item_container = SimpleNavigation.active_item_container_for(options[:level])
+      if active_item_container && !active_item_container.selected_item.nil?
+        active_item_container.selected_item.name
+      else
+        ''
+      end
+    end
+
+    private
+
+    def load_config(options)
       ctx = options.delete(:context)
       SimpleNavigation.init_adapter_from self
       SimpleNavigation.load_config(ctx) 
@@ -40,11 +71,7 @@ module SimpleNavigation
       SimpleNavigation.config.items(options[:items]) if options[:items]
       SimpleNavigation.handle_explicit_navigation if SimpleNavigation.respond_to?(:handle_explicit_navigation)
       raise "no primary navigation defined, either use a navigation config file or pass items directly to render_navigation" unless SimpleNavigation.primary_navigation
-      active_item_container = SimpleNavigation.active_item_container_for(options[:level])
-      active_item_container.render(options) unless active_item_container.nil?
     end
-
-    private
 
     def apply_defaults(options)
       options[:level] = options.delete(:levels) if options[:levels]
