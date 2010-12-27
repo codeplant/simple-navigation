@@ -52,7 +52,7 @@ def primary_container
   container.dom_id = 'nav_dom_id'
   container.dom_class = 'nav_dom_class'
   @items = primary_items.map {|params| SimpleNavigation::Item.new(container, *params)}
-  @items.each {|i| i.stub!(:selected? => false, :selected_by_config? => false)}
+  @items.each {|i| i.stub!(:selected? => false)}
   container.instance_variable_set(:@items, @items)
   primary_item(:invoices) {|item| item.instance_variable_set(:@sub_navigation, subnav_container)}
   container
@@ -74,7 +74,7 @@ def select_item(key)
 end
 
 def subnav_container
-  container = SimpleNavigation::ItemContainer.new(1)
+  container = SimpleNavigation::ItemContainer.new(2)
   items = sub_items.map {|params| SimpleNavigation::Item.new(container, *params)}
   items.each {|i| i.stub!(:selected? => false)}
   container.instance_variable_set(:@items, items)
@@ -82,10 +82,15 @@ def subnav_container
 end
 
 def setup_renderer_for(renderer_class, framework, options)
+  setup_adapter_for framework
+  @renderer = renderer_class.new(options)
+end
+
+def setup_adapter_for(framework)
   adapter = case framework
   when :rails
     SimpleNavigation::Adapters::Rails.new(stub(:context, :view_context => ActionView::Base.new))
   end
   SimpleNavigation.stub!(:adapter => adapter)
-  @renderer = renderer_class.new(options)
+  adapter
 end
