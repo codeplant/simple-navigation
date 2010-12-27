@@ -29,6 +29,7 @@ describe SimpleNavigation::Adapters::Rails do
     end
     it "should install the helper methods in the controller" do
       ActionController::Base.should_receive(:helper_method).with(:render_navigation)
+      ActionController::Base.should_receive(:helper_method).with(:active_navigation_item_name)
       SimpleNavigation.register
     end
     
