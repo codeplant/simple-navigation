@@ -113,6 +113,7 @@ module SimpleNavigation
 
     # Returns the active item container for the specified level. Valid levels are
     # * :all - in this case the primary_navigation is returned.
+    # * :leaves - the 'deepest' active item_container will be returned
     # * a specific level - the active item_container for the specified level will be returned
     # * a range of levels - the active item_container for the range's minimum will be returned
     #
@@ -121,6 +122,8 @@ module SimpleNavigation
       case level
       when :all
         self.primary_navigation
+      when :leaves
+        self.primary_navigation.active_leaf_container
       when Integer
         self.primary_navigation.active_item_container_for(level)
       when Range
@@ -142,7 +145,15 @@ module SimpleNavigation
     #   render_navigation(:renderer => :my_renderer)
     def register_renderer(renderer_hash)
       self.registered_renderers.merge!(renderer_hash)
-    end    
+    end
+    
+    private
+    
+    def apply_defaults(options)
+      options[:level] = options.delete(:levels) if options[:levels]
+      {:context => :default, :level => :all}.merge(options)
+    end
+    
 
   end
 

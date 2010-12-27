@@ -255,6 +255,12 @@ describe SimpleNavigation do
         SimpleNavigation.active_item_container_for(:all).should == @primary
       end
     end
+    context 'level is :leaves' do
+      it "should return the currently active leaf-container" do
+        @primary.should_receive(:active_leaf_container)
+        SimpleNavigation.active_item_container_for(:leaves)
+      end
+    end
     context 'level is a Range' do
       it "should take the min of the range to lookup the active container" do
         @primary.should_receive(:active_item_container_for).with(2)
