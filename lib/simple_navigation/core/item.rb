@@ -69,7 +69,7 @@ module SimpleNavigation
         raise ArgumentError, ':highlights_on must be a regexp' unless highlights_on.instance_of?(Regexp)
         SimpleNavigation.request_uri =~ highlights_on
       elsif auto_highlight?
-        !!(root_path_match? || SimpleNavigation.current_page?(url))
+        !!(root_path_match? || SimpleNavigation.current_page?(url_without_anchor))
       else
         false
       end
@@ -93,6 +93,10 @@ module SimpleNavigation
     # Return true if auto_highlight is on for this item.
     def auto_highlight?
       SimpleNavigation.config.auto_highlight && @container.auto_highlight
+    end
+
+    def url_without_anchor
+      url.split('#').first  
     end
 
   end

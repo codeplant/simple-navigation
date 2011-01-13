@@ -349,6 +349,11 @@ describe SimpleNavigation::Item do
             @adapter.should_receive(:current_page?).with('url')
             @item.send(:selected_by_url?)
           end
+          it "should remove anchors before testing the item's url" do
+            @item.stub!(:url => 'url#anchor')
+            @adapter.should_receive(:current_page?).with('url')
+            @item.send(:selected_by_url?)
+          end
           it {@item.send(:selected_by_url?).should be_true}
         end
         context 'no match' do
