@@ -1,4 +1,9 @@
+*3.1.1
+
+* Item#selected_by_url? now strips anchors from the item's url before comparing it with the current request's url. Credits to opengovernment.
+
 *3.1.0
+
 * added new helper method 'active_navigation_item_name' to render the name of the currently active item
 
 *3.0.2
