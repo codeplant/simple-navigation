@@ -6,5 +6,6 @@ module SimpleNavigation
     autoload :List, 'simple_navigation/rendering/renderer/list'
     autoload :Links, 'simple_navigation/rendering/renderer/links'
     autoload :Breadcrumbs, 'simple_navigation/rendering/renderer/breadcrumbs'
+    autoload :Title, 'simple_navigation/rendering/renderer/title'
   end
 end
