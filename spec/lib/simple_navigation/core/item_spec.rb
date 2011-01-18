@@ -101,6 +101,28 @@ describe SimpleNavigation::Item do
       end
     end
     
+    context ':exclude_highlight_if option' do
+      context 'defined' do
+        before(:each) do
+          @exclude_highlighting = stub(:option)
+          @options = {:exclude_highlight_if => @exclude_highlighting}
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
+        end
+        it 'should set the method as instance_var' do
+          @item.exclude_highlighting.should == @exclude_highlighting
+        end
+        it 'should set the html-options without the method' do
+          @item.instance_variable_get(:@html_options).key?(:exclude_highlighting).should be_false
+        end
+      end
+      
+      context 'undefined' do
+        it 'should set the instance-var to nil' do
+          @item.exclude_highlighting.should be_nil
+        end
+      end
+    end
+    
     context 'url' do
       context 'url is a string' do
         before(:each) do
