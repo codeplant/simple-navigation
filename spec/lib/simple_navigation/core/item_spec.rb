@@ -106,7 +106,7 @@ describe SimpleNavigation::Item do
         before(:each) do
           @exclude_highlighting = stub(:option)
           @options = {:exclude_highlight_if => @exclude_highlighting}
-          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
+          @item.stub!(:selected? => true)
         end
         it 'should set the method as instance_var' do
           @item.exclude_highlighting.should == @exclude_highlighting
@@ -315,12 +315,17 @@ describe SimpleNavigation::Item do
       before(:each) do
         @item.stub!(:highlights_on => /^\/current/)
         SimpleNavigation.stub!(:request_uri => '/current_url')
+        @item.stub!(:selected? => true)
       end
       it "should not check for autohighlighting" do
         @item.should_not_receive(:auto_highlight?)
         @item.send(:selected_by_url?)
       end
-      context ':highlights_on is a regexp' do
+      it 'should have a selected class' do
+        @item.selected_class.should be_true
+      end
+      
+      context ':highlights_on is a regexp without exclusion' do
         context 'regexp matches current_url' do
           it {@item.send(:selected_by_url?).should be_true}
         end
@@ -331,6 +336,19 @@ describe SimpleNavigation::Item do
           it {@item.send(:selected_by_url?).should be_false}
         end
       end
+      
+      context ':highlights_on is a regexp with exclusion' do
+        before(:each) do
+          @item.stub!(:highlights_on => /^\/current/)
+          @item.stub!(:exclude_highlighting).and_return(/\/current/)
+          @item.stub!(:selected? => true)
+        end
+        
+        it 'should not have a selected class' do
+          @item.selected_class.should be_false
+        end
+      end
+      
       context ':highlights_on is not a regexp' do
         before(:each) do
           @item.stub!(:highlights_on => "not a regexp")
@@ -340,6 +358,7 @@ describe SimpleNavigation::Item do
         end
       end
     end
+    
     context ':highlights_on option is not set' do
       before(:each) do
         @item.stub!(:highlights_on => nil)
