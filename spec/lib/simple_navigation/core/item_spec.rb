@@ -106,6 +106,7 @@ describe SimpleNavigation::Item do
         before(:each) do
           @exclude_highlighting = stub(:option)
           @options = {:exclude_highlight_if => @exclude_highlighting}
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
           @item.stub!(:selected? => true)
         end
         it 'should set the method as instance_var' do
@@ -337,15 +338,31 @@ describe SimpleNavigation::Item do
         end
       end
       
-      context ':highlights_on is a regexp with exclusion' do
+      context ':highlights_on is a regexp' do
         before(:each) do
           @item.stub!(:highlights_on => /^\/current/)
-          @item.stub!(:exclude_highlighting).and_return(/\/current/)
           @item.stub!(:selected? => true)
         end
         
-        it 'should not have a selected class' do
-          @item.selected_class.should be_false
+        it 'should have a selected class' do
+          @item.selected_class.should be_true
+        end
+        
+        
+        context 'with exclusion on a highlighted url' do
+          before(:each) {  @item.stub!(:exclude_highlighting).and_return(/\/current/) }
+          
+          it 'should not have a selected class' do
+            @item.selected_class.should be_false
+          end
+        end
+        
+        context 'with exclusion on a not highlighted url' do
+          before(:each) {  @item.stub!(:exclude_highlighting).and_return(/\/test/) }
+          
+          it 'should have a selected class' do
+            @item.selected_class.should be_true
+          end
         end
       end
       
