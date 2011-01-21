@@ -19,10 +19,10 @@ namespace :spec do
   end
 end
 
-desc 'Generate documentation for the simple_navigation plugin.'
+desc 'Generate documentation for the simple_navigation_ext plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'SimpleNavigation'
+  rdoc.title    = 'SimpleNavigationExt'
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README')
   rdoc.rdoc_files.include('lib/**/*.rb')
@@ -31,17 +31,16 @@ end
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
-    gemspec.name = "simple-navigation"
-    gemspec.summary = "simple-navigation is a ruby library for creating navigations (with multiple levels) for your Rails2, Rails3, Sinatra or Padrino application."
-    gemspec.email = "andreas.schacke@gmail.com"
-    gemspec.homepage = "http://github.com/andi/simple-navigation"
-    gemspec.description = "With the simple-navigation gem installed you can easily create multilevel navigations for your Rails, Sinatra or Padrino applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation through regular expressions."
+    gemspec.name = "simple-navigation-ext"
+    gemspec.summary = "simple-navigation-ext is an extension of andi schacke's library and add the feature to explicitly exclude urls from highlighting."
+    gemspec.email = "info@screenconcept.ch"
+    gemspec.homepage = "https://github.com/screenconcept/simple-navigation"
+    gemspec.description = "simple-navigation-ext is an extension of andi schacke's library and add the feature to explicitly exclude urls from highlighting."
     gemspec.add_development_dependency('rspec', '>= 2.0.1')
     gemspec.add_dependency('activesupport', '>= 2.3.2')
-    gemspec.authors = ["Andi Schacke"]
+    gemspec.authors = ["Marco"]
     gemspec.rdoc_options = ["--inline-source", "--charset=UTF-8"]
     gemspec.files = FileList["[A-Z]*", "{lib,spec,rails,generators}/**/*"] - FileList["**/*.log"]
-    gemspec.rubyforge_project = 'andi'
   end
   Jeweler::GemcutterTasks.new
   Jeweler::RubyforgeTasks.new do |rubyforge|
