@@ -1,3 +1,7 @@
+*master
+
+* Added Renderer::Text for rendering selected navigation items without markup (useful for dynamic page titles). Credits to Tim Cowlishaw.
+
 *3.1.1
 
 * Item#selected_by_url? now strips anchors from the item's url before comparing it with the current request's url. Credits to opengovernment.
