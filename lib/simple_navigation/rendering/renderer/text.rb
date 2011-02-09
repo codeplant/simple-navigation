@@ -1,8 +1,12 @@
 module SimpleNavigation
   module Renderer
-    class Title < SimpleNavigation::Renderer::Base
+    
+    # Renders the 'chain' of selected navigation items as simple text items, joined with an optional separator (similar to breadcrumbs, but without markup).
+    #
+    class Text < SimpleNavigation::Renderer::Base
+      
       def render(item_container)
-        ([options[:site_name]] + list(item_container)).compact.join(options[:join_with] || " ")
+        list(item_container).compact.join(options[:join_with] || " ")
       end
 
       private
