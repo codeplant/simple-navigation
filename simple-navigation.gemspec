@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simple-navigation}
-  s.version = "3.1.1"
+  s.version = "3.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke"]
-  s.date = %q{2011-01-13}
+  s.date = %q{2011-02-09}
   s.description = %q{With the simple-navigation gem installed you can easily create multilevel navigations for your Rails, Sinatra or Padrino applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation through regular expressions.}
   s.email = %q{andreas.schacke@gmail.com}
   s.extra_rdoc_files = [
@@ -44,6 +44,7 @@ Gem::Specification.new do |s|
      "lib/simple_navigation/rendering/renderer/breadcrumbs.rb",
      "lib/simple_navigation/rendering/renderer/links.rb",
      "lib/simple_navigation/rendering/renderer/list.rb",
+     "lib/simple_navigation/rendering/renderer/text.rb",
      "rails/init.rb",
      "spec/lib/simple_navigation/adapters/padrino_spec.rb",
      "spec/lib/simple_navigation/adapters/rails_spec.rb",
@@ -59,6 +60,7 @@ Gem::Specification.new do |s|
      "spec/lib/simple_navigation/rendering/renderer/breadcrumbs_spec.rb",
      "spec/lib/simple_navigation/rendering/renderer/links_spec.rb",
      "spec/lib/simple_navigation/rendering/renderer/list_spec.rb",
+     "spec/lib/simple_navigation/rendering/renderer/text_spec.rb",
      "spec/lib/simple_navigation_spec.rb",
      "spec/spec_helper.rb"
   ]
@@ -83,6 +85,7 @@ Gem::Specification.new do |s|
      "spec/lib/simple_navigation/rendering/renderer/breadcrumbs_spec.rb",
      "spec/lib/simple_navigation/rendering/renderer/links_spec.rb",
      "spec/lib/simple_navigation/rendering/renderer/list_spec.rb",
+     "spec/lib/simple_navigation/rendering/renderer/text_spec.rb",
      "spec/lib/simple_navigation_spec.rb",
      "spec/spec_helper.rb"
   ]
