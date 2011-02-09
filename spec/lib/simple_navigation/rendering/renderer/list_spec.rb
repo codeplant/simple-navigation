@@ -30,6 +30,25 @@ describe SimpleNavigation::Renderer::List do
         HTML::Selector.new('li a').select(render).should have(3).entries
       end
 
+      context 'concerning item names' do
+        context 'with a custom name generator defined' do
+          before(:each) do
+            SimpleNavigation.config.name_generator = Proc.new {|name| "<span>name</span>"}
+          end
+          it "should apply the name generator" do
+            HTML::Selector.new('li a span').select(render).should have(3).entries
+          end
+        end
+        context 'no customer generator defined' do
+          before(:each) do
+            SimpleNavigation.config.name_generator = Proc.new {|name| "name"}
+          end
+          it "should apply the name generator" do
+            HTML::Selector.new('li a span').select(render).should have(0).entries
+          end
+        end
+      end
+
       context 'concerning html attributes' do
         context 'default case (no options defined for link tag)' do
           it "should pass the specified html_options to the li element" do

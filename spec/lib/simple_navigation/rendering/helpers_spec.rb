@@ -39,6 +39,15 @@ describe SimpleNavigation::Helpers do
       context 'container does not have selected item' do
         it {@controller.active_navigation_item_name.should == ''}
       end
+      context 'custom name generator set' do
+        before(:each) do
+          select_item(:subnav1)
+          SimpleNavigation.config.name_generator = Proc.new {|name| "<span>name</span>"}
+        end
+        it "should not apply the generator" do
+          @controller.active_navigation_item_name(:level => 1).should == 'invoices'
+        end
+      end
     end
     context 'no active item_container for desired level' do
       it {@controller.active_navigation_item_name(:level => 5).should == ''}

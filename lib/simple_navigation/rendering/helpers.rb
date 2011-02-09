@@ -55,7 +55,7 @@ module SimpleNavigation
       options[:level] = :leaves if options[:level] == :all
       active_item_container = SimpleNavigation.active_item_container_for(options[:level])
       if active_item_container && !active_item_container.selected_item.nil?
-        active_item_container.selected_item.name
+        active_item_container.selected_item.name(:apply_generator => false)
       else
         ''
       end

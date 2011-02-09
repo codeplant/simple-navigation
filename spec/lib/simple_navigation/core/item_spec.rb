@@ -118,6 +118,18 @@ describe SimpleNavigation::Item do
     
   end
 
+  describe 'name' do
+    before(:each) do
+      SimpleNavigation.config.stub!(:name_generator => Proc.new {|name| "<span>#{name}</span>"})  
+    end
+    context 'default (generator is applied)' do
+      it {@item.name.should == "<span>name</span>"}
+    end
+    context 'generator is skipped' do
+      it {@item.name(:apply_generator => false).should == 'name'}
+    end
+  end
+
   describe 'selected?' do
     context 'explicitly selected' do
       before(:each) do
