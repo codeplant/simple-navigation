@@ -1,6 +1,7 @@
 *master
 
 * Added Renderer::Text for rendering selected navigation items without markup (useful for dynamic page titles). Credits to Tim Cowlishaw.
+* Added ability to add custom markup around item names specifying a name_generator in the config file. Thanks to Jack Dempsey.
 
 *3.1.1
 
