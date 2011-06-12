@@ -7,8 +7,9 @@ module SimpleNavigation
       def self.register
         SimpleNavigation.set_env(rails_root, rails_env)        
         ActionController::Base.send(:include, SimpleNavigation::Helpers)
-        ActionController::Base.send(:helper_method, :render_navigation)
-        ActionController::Base.send(:helper_method, :active_navigation_item_name)
+        SimpleNavigation::Helpers.instance_methods.each do |m|
+          ActionController::Base.send(:helper_method, m.to_sym)
+        end
       end
       
       def initialize(context)
