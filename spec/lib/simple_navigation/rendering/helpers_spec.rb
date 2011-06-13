@@ -7,10 +7,13 @@ describe SimpleNavigation::Helpers do
 
   def blackbox_setup()
     @controller = ControllerMock.new
-    @controller.stub!(:load_config)
+    SimpleNavigation.stub!(:load_config)
+    SimpleNavigation::Configuration.stub!(:eval_config)
     setup_adapter_for :rails
-    primary_navigation = primary_container
-    SimpleNavigation.stub!(:primary_navigation => primary_navigation)
+    @primary_container, @subnav_container = containers
+    @subnav1_item = sub_item(:subnav1)
+    @invoices_item = primary_item(:invoices)
+    SimpleNavigation.stub!(:primary_navigation => @primary_container)
   end
 
   def whitebox_setup
@@ -51,6 +54,76 @@ describe SimpleNavigation::Helpers do
     end
     context 'no active item_container for desired level' do
       it {@controller.active_navigation_item_name(:level => 5).should == ''}
+    end
+  end
+
+  describe 'active_navigation_item_key' do
+    before(:each) do
+      blackbox_setup
+    end
+    context 'active item_container for desired level exists' do
+      context 'container has selected item' do
+        before(:each) do
+          select_item(:subnav1)
+        end
+        it {@controller.active_navigation_item_key(:level => 2).should == :subnav1}
+        it {@controller.active_navigation_item_key.should == :subnav1}
+        it {@controller.active_navigation_item_key(:level => 1).should == :invoices}
+        it {@controller.active_navigation_item_key(:level => :all).should == :subnav1}
+      end
+      context 'container does not have selected item' do
+        it {@controller.active_navigation_item_key.should == nil}
+      end
+    end
+    context 'no active item_container for desired level' do
+      it {@controller.active_navigation_item_key(:level => 5).should == nil}
+    end
+  end
+
+  describe 'active_navigation_item' do
+    before(:each) do
+      blackbox_setup
+    end
+    context 'active item_container for desired level exists' do
+      context 'container has selected item' do
+        before(:each) do
+          select_item(:subnav1)
+        end
+        it {@controller.active_navigation_item(:level => 2).should == @subnav1_item}
+        it {@controller.active_navigation_item.should == @subnav1_item}
+        it {@controller.active_navigation_item(:level => 1).should == @invoices_item}
+        it {@controller.active_navigation_item(:level => :all).should == @subnav1_item}
+      end
+      context 'container does not have selected item' do
+        context 'return value defaults to nil' do
+          it {@controller.active_navigation_item.should == nil}
+        end
+        context 'return value reflects passed in value' do
+          it {@controller.active_navigation_item({},'none').should == 'none'}
+          it {@controller.active_navigation_item({},@invoices_item).should == @invoices_item}
+        end
+      end
+    end
+    context 'no active item_container for desired level' do
+      it {@controller.active_navigation_item(:level => 5).should == nil}
+    end
+  end
+
+  describe 'active_navigation_item_container' do
+    before(:each) do
+      blackbox_setup
+    end
+    context 'active item_container for desired level exists' do
+      before(:each) do
+        select_item(:subnav1)
+      end
+      it {@controller.active_navigation_item_container(:level => 2).should == @subnav_container}
+      it {@controller.active_navigation_item_container.should == @primary_container}
+      it {@controller.active_navigation_item_container(:level => 1).should == @primary_container}
+      it {@controller.active_navigation_item_container(:level => :all).should == @primary_container}
+    end
+    context 'no active item_container for desired level' do
+      it {@controller.active_navigation_item_container(:level => 5).should == nil}
     end
   end
 

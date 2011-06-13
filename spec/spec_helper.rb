@@ -48,18 +48,28 @@ def primary_items
 end
 
 def primary_container
+  containers.first
+end
+
+def containers
   container = SimpleNavigation::ItemContainer.new(1)
   container.dom_id = 'nav_dom_id'
   container.dom_class = 'nav_dom_class'
   @items = primary_items.map {|params| SimpleNavigation::Item.new(container, *params)}
   @items.each {|i| i.stub!(:selected? => false)}
   container.instance_variable_set(:@items, @items)
-  primary_item(:invoices) {|item| item.instance_variable_set(:@sub_navigation, subnav_container)}
-  container
+  sub_container = subnav_container
+  primary_item(:invoices) {|item| item.instance_variable_set(:@sub_navigation, sub_container)}
+  [container,sub_container]
 end
 
 def primary_item(key)
-  yield @items.find {|i| i.key == key}
+  item = @items.find {|i| i.key == key}
+  block_given? ? yield(item) : item
+end
+
+def sub_item(key)
+  primary_item(:invoices).instance_variable_get(:@sub_navigation).items.find { |i| i.key == key}
 end
 
 def select_item(key)
