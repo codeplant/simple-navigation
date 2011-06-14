@@ -1,3 +1,13 @@
+*master
+
+* add a new method active_navigation_item_key which returns the symbol for the currently selected navigation item in a similar way to active_navigation_item_name does for the name (useful for CSS class styling for eg.)
+* open up the helper API to provide active_navigation_item and active_navigation_item_container methods to make it easy to access the items/containers should it be necessary (came for free with the above refactoring)
+* isolate the apply_defaults and load_config private methods from ActionController mixin leakage by refactoring to module class instance methods
+* addition of test coverage for the added helpers within helpers_spec.rb
+* inclusion of new helpers within the rails adapter and minor refactoring to DRY up the helper_method invocations
+* addition of test coverage for the newly included helpers
+* Credits to Mark J. Titorenko for all the changes in this release! Thanks.
+
 *3.2.0
 
 * Added Renderer::Text for rendering selected navigation items without markup (useful for dynamic page titles). Credits to Tim Cowlishaw.
