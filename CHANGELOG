@@ -1,4 +1,4 @@
-*master
+*3.3.0
 
 * add a new method active_navigation_item_key which returns the symbol for the currently selected navigation item in a similar way to active_navigation_item_name does for the name (useful for CSS class styling for eg.)
 * open up the helper API to provide active_navigation_item and active_navigation_item_container methods to make it easy to access the items/containers should it be necessary (came for free with the above refactoring)
