@@ -1,3 +1,7 @@
+*3.3.2
+
+* The patch listed in 3.3.1 somehow did not make it into the gem... sorry. Re-releasing...
+
 *3.3.1
 
 * bugfix in sinatra adapter. Use Rack::Request#scheme instead of Rack::Request#protocol. Credits to Matthew Gast.
