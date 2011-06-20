@@ -1,6 +1,6 @@
 require 'rake'
 require 'rspec/core/rake_task'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 desc 'Default: run specs.'
 task :default => :spec
@@ -20,7 +20,7 @@ namespace :spec do
 end
 
 desc 'Generate documentation for the simple_navigation plugin.'
-Rake::RDocTask.new(:rdoc) do |rdoc|
+RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title    = 'SimpleNavigation'
   rdoc.options << '--line-numbers' << '--inline-source'
