@@ -34,6 +34,7 @@ module SimpleNavigation
         else
           uri = request_uri.split('?').first
         end
+        uri = CGI.unescape(uri)
         if url_string =~ /^\w+:\/\//
           url_string == "#{request.scheme}://#{request.host_with_port}#{uri}"
         else
