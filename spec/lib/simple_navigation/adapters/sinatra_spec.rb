@@ -35,15 +35,34 @@ describe SimpleNavigation::Adapters::Sinatra do
     before(:each) do
       @request.stub!(:scheme => 'http', :host_with_port => 'my_host:5000')
     end
-    it {@adapter.current_page?('/full?param=true').should be_true}
-    it {@adapter.current_page?('/full?param3=true').should be_false}
-    it {@adapter.current_page?('/full').should be_true}
-    it {@adapter.current_page?('http://my_host:5000/full?param=true').should be_true}
-    it {@adapter.current_page?('http://my_host:5000/full?param3=true').should be_false}
-    it {@adapter.current_page?('http://my_host:5000/full').should be_true}
-    it {@adapter.current_page?('https://my_host:5000/full').should be_false}
-    it {@adapter.current_page?('http://my_host:6000/full').should be_false}
-    it {@adapter.current_page?('http://my_other_host:5000/full').should be_false}
+
+    describe 'when URL is not encoded' do
+      it {@adapter.current_page?('/full?param=true').should be_true}
+      it {@adapter.current_page?('/full?param3=true').should be_false}
+      it {@adapter.current_page?('/full').should be_true}
+      it {@adapter.current_page?('http://my_host:5000/full?param=true').should be_true}
+      it {@adapter.current_page?('http://my_host:5000/full?param3=true').should be_false}
+      it {@adapter.current_page?('http://my_host:5000/full').should be_true}
+      it {@adapter.current_page?('https://my_host:5000/full').should be_false}
+      it {@adapter.current_page?('http://my_host:6000/full').should be_false}
+      it {@adapter.current_page?('http://my_other_host:5000/full').should be_false}
+    end
+
+    describe 'when URL is encoded' do
+      before(:each) do
+        @request.stub!(:fullpath => '/full%20with%20spaces?param=true', :path => '/full%20with%20spaces')
+      end
+
+      it {@adapter.current_page?('/full%20with%20spaces?param=true').should be_true}
+      it {@adapter.current_page?('/full%20with%20spaces?param3=true').should be_false}
+      it {@adapter.current_page?('/full%20with%20spaces').should be_true}
+      it {@adapter.current_page?('http://my_host:5000/full%20with%20spaces?param=true').should be_true}
+      it {@adapter.current_page?('http://my_host:5000/full%20with%20spaces?param3=true').should be_false}
+      it {@adapter.current_page?('http://my_host:5000/full%20with%20spaces').should be_true}
+      it {@adapter.current_page?('https://my_host:5000/full%20with%20spaces').should be_false}
+      it {@adapter.current_page?('http://my_host:6000/full%20with%20spaces').should be_false}
+      it {@adapter.current_page?('http://my_other_host:5000/full%20with%20spaces').should be_false}
+    end
   end
 
   describe 'link_to' do
