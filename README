@@ -10,7 +10,7 @@ Documentation:
   http://wiki.github.com/andi/simple-navigation
 
 RDoc:
-  http://andi.rubyforge.org/simple-navigation
+  Please checkout the repository and execute 'rake rdoc'.
 
 Online Demo:
   http://simple-navigation-demo.andischacke.com
@@ -18,5 +18,5 @@ Online Demo:
 Discussion Group for Feedback and Questions
   http://groups.google.com/group/simple-navigation
 
-Copyright (c) 2010 Andi Schacke, released under the MIT license
+Copyright (c) 2011 Andi Schacke, released under the MIT license
 
