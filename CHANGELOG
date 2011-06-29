@@ -1,3 +1,7 @@
+*3.3.3
+
+* Bugfix in Adapters::Sinatra#current_url? (compares unencoded URIs). Thanks to Matthew Gast.
+
 *3.3.2
 
 * The patch listed in 3.3.1 somehow did not make it into the gem... sorry. Re-releasing...
