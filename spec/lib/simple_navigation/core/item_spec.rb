@@ -138,7 +138,7 @@ describe SimpleNavigation::Item do
       it {@item.should be_selected}
       it "should not evaluate the subnav or urls" do
         @item.should_not_receive(:selected_by_subnav?)
-        @item.should_not_receive(:selected_by_url?)
+        @item.should_not_receive(:selected_by_condition?)
         @item.selected?
       end
     end
@@ -156,15 +156,15 @@ describe SimpleNavigation::Item do
         before(:each) do
            @item.stub!(:selected_by_subnav? => false)
         end
-        context 'selected by url' do
+        context 'selected by condition' do
           before(:each) do
-             @item.stub!(:selected_by_url? => true)
+             @item.stub!(:selected_by_condition? => true)
           end
           it {@item.should be_selected}
         end
-        context 'not selected by url' do
+        context 'not selected by condition' do
           before(:each) do
-            @item.stub!(:selected_by_url? => false)
+            @item.stub!(:selected_by_condition? => false)
           end
           it {@item.should_not be_selected}
         end
@@ -300,7 +300,7 @@ describe SimpleNavigation::Item do
     end
   end
 
-  describe 'selected_by_url?' do
+  describe 'selected_by_condition?' do
     context ':highlights_on option is set' do
       before(:each) do
         @item.stub!(:highlights_on => /^\/current/)
@@ -308,17 +308,17 @@ describe SimpleNavigation::Item do
       end
       it "should not check for autohighlighting" do
         @item.should_not_receive(:auto_highlight?)
-        @item.send(:selected_by_url?)
+        @item.send(:selected_by_condition?)
       end
       context ':highlights_on is a regexp' do
         context 'regexp matches current_url' do
-          it {@item.send(:selected_by_url?).should be_true}
+          it {@item.send(:selected_by_condition?).should be_true}
         end
         context 'regexp does not match current_url' do
           before(:each) do
             @item.stub!(:highlights_on => /^\/no_match/)
           end
-          it {@item.send(:selected_by_url?).should be_false}
+          it {@item.send(:selected_by_condition?).should be_false}
         end
       end
       context ':highlights_on is not a regexp' do
@@ -326,7 +326,7 @@ describe SimpleNavigation::Item do
           @item.stub!(:highlights_on => "not a regexp")
         end
         it "should raise an error" do
-          lambda {@item.send(:selected_by_url?).should raise_error(ArgumentError)}
+          lambda {@item.send(:selected_by_condition?).should raise_error(ArgumentError)}
         end
       end
     end
@@ -336,7 +336,7 @@ describe SimpleNavigation::Item do
       end
       it "should check for autohighlighting" do
         @item.should_receive(:auto_highlight?)
-        @item.send(:selected_by_url?)
+        @item.send(:selected_by_condition?)
       end
     end
     context 'auto_highlight is turned on' do
@@ -347,7 +347,7 @@ describe SimpleNavigation::Item do
         before(:each) do
           @item.stub!(:root_path_match? => true)
         end
-        it {@item.send(:selected_by_url?).should be_true}
+        it {@item.send(:selected_by_condition?).should be_true}
       end
       context 'root path does not match' do
         before(:each) do
@@ -359,20 +359,20 @@ describe SimpleNavigation::Item do
           end
           it "should test with the item's url" do
             @adapter.should_receive(:current_page?).with('url')
-            @item.send(:selected_by_url?)
+            @item.send(:selected_by_condition?)
           end
           it "should remove anchors before testing the item's url" do
             @item.stub!(:url => 'url#anchor')
             @adapter.should_receive(:current_page?).with('url')
-            @item.send(:selected_by_url?)
+            @item.send(:selected_by_condition?)
           end
-          it {@item.send(:selected_by_url?).should be_true}
+          it {@item.send(:selected_by_condition?).should be_true}
         end
         context 'no match' do
           before(:each) do
             @adapter.stub!(:current_page? => false)
           end
-          it {@item.send(:selected_by_url?).should be_false}
+          it {@item.send(:selected_by_condition?).should be_false}
         end
       end
     end
@@ -380,7 +380,7 @@ describe SimpleNavigation::Item do
       before(:each) do
         @item.stub!(:auto_highlight? => false)
       end
-      it {@item.send(:selected_by_url?).should be_false}
+      it {@item.send(:selected_by_condition?).should be_false}
     end
   end
 

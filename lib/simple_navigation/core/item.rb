@@ -45,7 +45,7 @@ module SimpleNavigation
     # * its url matches the url of the current request (auto highlighting)
     #
     def selected?
-      @selected = @selected || selected_by_config? || selected_by_subnav? || selected_by_url?
+      @selected = @selected || selected_by_config? || selected_by_subnav? || selected_by_condition?
     end
 
     # Returns the html-options hash for the item, i.e. the options specified for this item in the config-file.
@@ -76,10 +76,16 @@ module SimpleNavigation
     end
 
     # Returns true if the item's url matches the request's current url.
-    def selected_by_url?
+    def selected_by_condition?
       if highlights_on
-        raise ArgumentError, ':highlights_on must be a regexp' unless highlights_on.instance_of?(Regexp)
-        SimpleNavigation.request_uri =~ highlights_on
+        case highlights_on
+        when Regexp
+          SimpleNavigation.request_uri =~ highlights_on
+        when Proc
+          highlights_on.call
+        else
+          raise ArgumentError, ':highlights_on must be a Regexp or Proc'
+        end
       elsif auto_highlight?
         !!(root_path_match? || SimpleNavigation.current_page?(url_without_anchor))
       else
