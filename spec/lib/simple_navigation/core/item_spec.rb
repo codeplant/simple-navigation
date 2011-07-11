@@ -321,7 +321,21 @@ describe SimpleNavigation::Item do
           it {@item.send(:selected_by_condition?).should be_false}
         end
       end
-      context ':highlights_on is not a regexp' do
+      context ':highlights_on is a lambda' do
+        context 'truthy lambda results in selection' do
+          before(:each) do
+            @item.stub!(:highlights_on => lambda{true})
+          end
+          it {@item.send(:selected_by_condition?).should be_true}
+        end
+        context 'falsey lambda results in no selection' do
+          before(:each) do
+            @item.stub!(:highlights_on => lambda{false})
+          end
+          it {@item.send(:selected_by_condition?).should be_false}
+        end
+      end
+      context ':highlights_on is not a regexp or a proc' do
         before(:each) do
           @item.stub!(:highlights_on => "not a regexp")
         end
