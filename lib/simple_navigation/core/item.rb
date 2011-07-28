@@ -83,8 +83,10 @@ module SimpleNavigation
           SimpleNavigation.request_uri =~ highlights_on
         when Proc
           highlights_on.call
+        when :auto
+          !!(SimpleNavigation.request_uri =~ /^#{Regexp.escape url_without_anchor}/)
         else
-          raise ArgumentError, ':highlights_on must be a Regexp or Proc'
+          raise ArgumentError, ':highlights_on must be a Regexp, Proc or :auto'
         end
       elsif auto_highlight?
         !!(root_path_match? || SimpleNavigation.current_page?(url_without_anchor))
@@ -114,7 +116,7 @@ module SimpleNavigation
     end
 
     def url_without_anchor
-      url.split('#').first  
+      url.split('#').first
     end
 
   end
