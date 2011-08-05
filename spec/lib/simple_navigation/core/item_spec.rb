@@ -335,10 +335,10 @@ describe SimpleNavigation::Item do
           it {@item.send(:selected_by_condition?).should be_false}
         end
       end
-      context ':highlights_on is :auto' do
+      context ':highlights_on is :subpath' do
         before(:each) do
           @item.stub!(:url => '/resources')
-          @item.stub!(:highlights_on => :auto)
+          @item.stub!(:highlights_on => :subpath)
         end
         context 'we are in a route beginning with this item path' do
           before(:each) do
