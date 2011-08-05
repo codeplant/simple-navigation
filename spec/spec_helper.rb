@@ -1,4 +1,7 @@
 ENV["RAILS_ENV"] = "test"
+require "rubygems"
+require "bundler/setup"
+
 require 'rubygems'
 require 'rspec'
 require 'action_controller'
