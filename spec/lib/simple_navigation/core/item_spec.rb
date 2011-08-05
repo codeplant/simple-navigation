@@ -67,7 +67,7 @@ describe SimpleNavigation::Item do
         end
       end
     end
-    
+
     context 'setting class and id on the container' do
       before(:each) do
         @options = {:container_class => 'container_class', :container_id => 'container_id'}
@@ -100,27 +100,27 @@ describe SimpleNavigation::Item do
         end
       end
     end
-    
+
     context 'url' do
       context 'url is a string' do
         before(:each) do
-          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})  
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
         end
         it {@item.url.should == 'url'}
       end
       context 'url is a proc' do
         before(:each) do
-          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', Proc.new {"my_" + "url"}, {})  
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', Proc.new {"my_" + "url"}, {})
         end
         it {@item.url.should == 'my_url'}
       end
     end
-    
+
   end
 
   describe 'name' do
     before(:each) do
-      SimpleNavigation.config.stub!(:name_generator => Proc.new {|name| "<span>#{name}</span>"})  
+      SimpleNavigation.config.stub!(:name_generator => Proc.new {|name| "<span>#{name}</span>"})
     end
     context 'default (generator is applied)' do
       it {@item.name.should == "<span>name</span>"}
@@ -331,6 +331,24 @@ describe SimpleNavigation::Item do
         context 'falsey lambda results in no selection' do
           before(:each) do
             @item.stub!(:highlights_on => lambda{false})
+          end
+          it {@item.send(:selected_by_condition?).should be_false}
+        end
+      end
+      context ':highlights_on is :auto' do
+        before(:each) do
+          @item.stub!(:url => '/resources')
+          @item.stub!(:highlights_on => :auto)
+        end
+        context 'we are in a route beginning with this item path' do
+          before(:each) do
+            SimpleNavigation.stub!(:request_uri => '/resources/id')
+          end
+          it {@item.send(:selected_by_condition?).should be_true}
+        end
+        context 'we are in a route not beginning with this item path' do
+          before(:each) do
+            SimpleNavigation.stub!(:request_uri => '/another_resource/id')
           end
           it {@item.send(:selected_by_condition?).should be_false}
         end
