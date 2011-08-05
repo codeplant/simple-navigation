@@ -40,7 +40,7 @@ begin
     gemspec.add_dependency('activesupport', '>= 2.3.2')
     gemspec.authors = ["Andi Schacke", "Mark J. Titorenko"]
     gemspec.rdoc_options = ["--inline-source", "--charset=UTF-8"]
-    gemspec.files = FileList["[A-Z]*", "{lib,spec,rails,generators}/**/*"] - FileList["**/*.log"]
+    gemspec.files = FileList["[A-Z]*", "{lib,spec,rails,generators}/**/*"] - FileList["**/*.log", "Gemfile.lock"]
     gemspec.rubyforge_project = 'andi'
   end
   Jeweler::GemcutterTasks.new
