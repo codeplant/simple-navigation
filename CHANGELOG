@@ -1,3 +1,7 @@
+*3.4.1
+
+* Added "active" class to last selected element and elements that have :highlights_on return true (thenoseman)
+
 *3.4.0
 
 * Added Gemfile for easier development with Bundler. Thanks to Josep Jaume.
