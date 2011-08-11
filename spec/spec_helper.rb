@@ -56,7 +56,7 @@ def containers
   container.dom_id = 'nav_dom_id'
   container.dom_class = 'nav_dom_class'
   @items = primary_items.map {|params| SimpleNavigation::Item.new(container, *params)}
-  @items.each {|i| i.stub!(:selected? => false)}
+  @items.each {|i| i.stub!(:selected? => false, :selected_by_condition? => false)}
   container.instance_variable_set(:@items, @items)
   sub_container = subnav_container
   primary_item(:invoices) {|item| item.instance_variable_set(:@sub_navigation, sub_container)}
@@ -79,14 +79,14 @@ def select_item(key)
       item.instance_variable_get(:@sub_navigation).items.find { |i| i.key == key}.stub!(:selected? => true)
     end
   else
-    primary_item(key) {|item| item.stub!(:selected? => true) unless item.frozen?}
+    primary_item(key) {|item| item.stub!(:selected? => true, :selected_by_condition? => true) unless item.frozen?}
   end
 end
 
 def subnav_container
   container = SimpleNavigation::ItemContainer.new(2)
   items = sub_items.map {|params| SimpleNavigation::Item.new(container, *params)}
-  items.each {|i| i.stub!(:selected? => false)}
+  items.each {|i| i.stub!(:selected? => false, :selected_by_condition? => false)}
   container.instance_variable_set(:@items, items)
   container
 end
