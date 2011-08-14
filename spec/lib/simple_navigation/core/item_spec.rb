@@ -199,7 +199,7 @@ describe SimpleNavigation::Item do
           before(:each) do
             @item.stub!(:selected? => true, :selected_by_condition? => true)
           end
-          it {@item.html_options[:class].should == 'my_class selected active'}
+          it {@item.html_options[:class].should == 'my_class selected simple-navigation-active-leaf'}
         end
 
         context 'with item not selected' do
@@ -219,7 +219,7 @@ describe SimpleNavigation::Item do
           before(:each) do
             @item.stub!(:selected? => true, :selected_by_condition? => true)
           end
-          it {@item.html_options[:class].should == 'selected active'}
+          it {@item.html_options[:class].should == 'selected simple-navigation-active-leaf'}
         end
 
         context 'with item not selected' do
