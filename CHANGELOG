@@ -1,3 +1,7 @@
+*3.4.2
+
+* Improve Gemfile dependencies with :development and :rails groups.
+
 *3.4.1
 
 * Rerelease using ruby-1.8.7 rather than ruby-1.9.2 in order that the rubygems.org gemspec is generated in a compatible fashion.
