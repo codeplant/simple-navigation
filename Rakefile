@@ -36,8 +36,6 @@ begin
     gemspec.email = "andreas.schacke@gmail.com"
     gemspec.homepage = "http://github.com/andi/simple-navigation"
     gemspec.description = "With the simple-navigation gem installed you can easily create multilevel navigations for your Rails, Sinatra or Padrino applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation through regular expressions."
-    gemspec.add_development_dependency('rspec', '>= 2.0.1')
-    gemspec.add_dependency('activesupport', '>= 2.3.2')
     gemspec.authors = ["Andi Schacke", "Mark J. Titorenko"]
     gemspec.rdoc_options = ["--inline-source", "--charset=UTF-8"]
     gemspec.files = FileList["[A-Z]*", "{lib,spec,rails,generators}/**/*"] - FileList["**/*.log", "Gemfile.lock"]

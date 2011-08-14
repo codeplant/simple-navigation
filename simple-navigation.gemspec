@@ -77,27 +77,21 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<actionpack>, [">= 0"])
-      s.add_runtime_dependency(%q<rspec>, [">= 0"])
-      s.add_runtime_dependency(%q<rake>, [">= 0"])
-      s.add_runtime_dependency(%q<rdoc>, [">= 0"])
-      s.add_development_dependency(%q<rspec>, [">= 2.0.1"])
       s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2"])
+      s.add_development_dependency(%q<rspec>, [">= 2.0.1"])
+      s.add_development_dependency(%q<rake>, [">= 0"])
+      s.add_development_dependency(%q<rdoc>, [">= 0"])
     else
-      s.add_dependency(%q<actionpack>, [">= 0"])
-      s.add_dependency(%q<rspec>, [">= 0"])
+      s.add_dependency(%q<activesupport>, [">= 2.3.2"])
+      s.add_dependency(%q<rspec>, [">= 2.0.1"])
       s.add_dependency(%q<rake>, [">= 0"])
       s.add_dependency(%q<rdoc>, [">= 0"])
-      s.add_dependency(%q<rspec>, [">= 2.0.1"])
-      s.add_dependency(%q<activesupport>, [">= 2.3.2"])
     end
   else
-    s.add_dependency(%q<actionpack>, [">= 0"])
-    s.add_dependency(%q<rspec>, [">= 0"])
+    s.add_dependency(%q<activesupport>, [">= 2.3.2"])
+    s.add_dependency(%q<rspec>, [">= 2.0.1"])
     s.add_dependency(%q<rake>, [">= 0"])
     s.add_dependency(%q<rdoc>, [">= 0"])
-    s.add_dependency(%q<rspec>, [">= 2.0.1"])
-    s.add_dependency(%q<activesupport>, [">= 2.3.2"])
   end
 end
 
