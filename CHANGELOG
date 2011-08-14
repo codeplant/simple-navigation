@@ -1,3 +1,6 @@
+*3.5.0
+* Added "active" class to last selected element and elements that have :highlights_on return true (thenoseman)
+
 *3.4.1
 
 * Rerelease using ruby-1.8.7 rather than ruby-1.9.2 in order that the rubygems.org gemspec is generated in a compatible fashion.

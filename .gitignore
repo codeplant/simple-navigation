@@ -3,3 +3,4 @@ rdoc
 pkg
 coverage
 Gemfile.lock
+.rvmrc
