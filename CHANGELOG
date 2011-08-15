@@ -1,3 +1,7 @@
+*3.5.0
+
+* Added (configurable) "simple-navigation-active-leaf" class to last selected element and elements that have :highlights_on return true. Thanks to Frank Schumacher (thenoseman).
+
 *3.4.2
 
 * Improve Gemfile dependencies with :development and :rails groups.

@@ -197,14 +197,14 @@ describe SimpleNavigation::Item do
         end
         context 'with item selected' do
           before(:each) do
-            @item.stub!(:selected? => true)
+            @item.stub!(:selected? => true, :selected_by_condition? => true)
           end
-          it {@item.html_options[:class].should == 'my_class selected'}
+          it {@item.html_options[:class].should == 'my_class selected simple-navigation-active-leaf'}
         end
 
         context 'with item not selected' do
           before(:each) do
-            @item.stub!(:selected? => false)
+            @item.stub!(:selected? => false, :selected_by_condition? => false)
           end
           it {@item.html_options[:class].should == 'my_class'}
         end
@@ -217,25 +217,26 @@ describe SimpleNavigation::Item do
         end
         context 'with item selected' do
           before(:each) do
-            @item.stub!(:selected? => true)
+            @item.stub!(:selected? => true, :selected_by_condition? => true)
           end
-          it {@item.html_options[:class].should == 'selected'}
+          it {@item.html_options[:class].should == 'selected simple-navigation-active-leaf'}
         end
 
         context 'with item not selected' do
           before(:each) do
-            @item.stub!(:selected? => false)
+            @item.stub!(:selected? => false, :selected_by_condition? => false)
           end
           it {@item.html_options[:class].should be_blank}
         end
       end
+
     end
 
     describe 'id' do
       context 'with autogenerate_item_ids == true' do
         before(:each) do
           @item.stub!(:autogenerate_item_ids? => true)
-          @item.stub!(:selected? => false)
+          @item.stub!(:selected? => false, :selected_by_condition? => false)
         end
         context 'with id defined in options' do
           before(:each) do
@@ -255,7 +256,7 @@ describe SimpleNavigation::Item do
       context 'with autogenerate_item_ids == false' do
         before(:each) do
           @item.stub!(:autogenerate_item_ids? => false)
-          @item.stub!(:selected? => false)
+          @item.stub!(:selected? => false, :selected_by_condition? => false)
         end
         context 'with id defined in options' do
           before(:each) do
@@ -284,11 +285,11 @@ describe SimpleNavigation::Item do
         @item.stub!(:sub_navigation => @sub_navigation)
       end
       it "should return true if subnav is selected" do
-        @sub_navigation.stub!(:selected? => true)
+        @sub_navigation.stub!(:selected? => true, :selected_by_condition? => true)
         @item.should be_selected_by_subnav
       end
       it "should return false if subnav is not selected" do
-        @sub_navigation.stub!(:selected? => false)
+        @sub_navigation.stub!(:selected? => false, :selected_by_condition? => true)
         @item.should_not be_selected_by_subnav
       end
     end

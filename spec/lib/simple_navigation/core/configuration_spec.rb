@@ -43,6 +43,9 @@ describe SimpleNavigation::Configuration do
     it "should set the selected_class to 'selected' as default" do
       @config.selected_class.should == 'selected'
     end
+    it "should set the active_leaf_class to 'simple-navigation-active-leaf' as default" do
+      @config.active_leaf_class.should == 'simple-navigation-active-leaf'
+    end
     it "should set autogenerate_item_ids to true as default" do
       @config.autogenerate_item_ids.should be_true
     end

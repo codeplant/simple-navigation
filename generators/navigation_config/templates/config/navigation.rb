@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Configures your navigation
 SimpleNavigation::Configuration.run do |navigation|
   # Specify a custom renderer if needed.
@@ -7,6 +8,10 @@ SimpleNavigation::Configuration.run do |navigation|
 
   # Specify the class that will be applied to active navigation items. Defaults to 'selected'
   # navigation.selected_class = 'your_selected_class'
+
+  # Specify the class that will be applied to the current leaf of
+  # active navigation items. Defaults to 'simple-navigation-active-leaf'
+  # navigation.active_leaf_class = 'your_active_leaf_class'
 
   # Item keys are normally added to list items as id.
   # This setting turns that off
@@ -42,7 +47,7 @@ SimpleNavigation::Configuration.run do |navigation|
     #           :method - Specifies the http-method for the generated link - default is :get.
     #           :highlights_on - if autohighlighting is turned off and/or you want to explicitly specify
     #                            when the item should be highlighted, you can set a regexp which is matched
-    #                            against the current URI.
+    #                            against the current URI.  You may also use a proc, or the symbol <tt>:subpath</tt>. 
     #
     primary.item :key_1, 'name', url, options
 
