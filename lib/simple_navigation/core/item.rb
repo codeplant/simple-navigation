@@ -95,7 +95,7 @@ module SimpleNavigation
           raise ArgumentError, ':highlights_on must be a Regexp, Proc or :subpath'
         end
       elsif auto_highlight?
-        !!(root_path_match? || SimpleNavigation.current_page?(url_without_anchor))
+        !!(root_path_match? || (url_without_anchor && SimpleNavigation.current_page?(url_without_anchor)))
       else
         false
       end
@@ -122,7 +122,7 @@ module SimpleNavigation
     end
 
     def url_without_anchor
-      url.split('#').first
+      url && url.split('#').first
     end
 
   end
