@@ -114,6 +114,12 @@ describe SimpleNavigation::Item do
         end
         it {@item.url.should == 'my_url'}
       end
+      context 'url is nil' do
+        before(:each) do
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', nil, {})
+        end
+        it {@item.url.should == nil}
+      end
     end
 
   end
@@ -399,6 +405,11 @@ describe SimpleNavigation::Item do
             @adapter.should_receive(:current_page?).with('url')
             @item.send(:selected_by_condition?)
           end
+          it "should not be queried when url is nil" do
+            @item.stub!(:url => nil)
+            @adapter.should_not_receive(:current_page?)
+            @item.send(:selected_by_condition?)
+          end
           it {@item.send(:selected_by_condition?).should be_true}
         end
         context 'no match' do
@@ -436,6 +447,11 @@ describe SimpleNavigation::Item do
     it "should not match if urls do not match" do
       @adapter.stub(:request_path => 'bla')
       @item.stub!(:url => '/bli')
+      @item.send(:root_path_match?).should be_false
+    end
+    it "should not match if url is nil" do
+      @adapter.stub(:request_path => 'bla')
+      @item.stub!(:url => nil)
       @item.send(:root_path_match?).should be_false
     end
   end
