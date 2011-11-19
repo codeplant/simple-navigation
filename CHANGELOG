@@ -1,3 +1,7 @@
+*3.5.1
+
+* Fixed specs related to testing name_generator functionality - stub the name_generator method rather than calling it to ensure subsequent tests aren't affected.
+
 *3.5.0
 
 * Added (configurable) "simple-navigation-active-leaf" class to last selected element and elements that have :highlights_on return true. Thanks to Frank Schumacher (thenoseman).
