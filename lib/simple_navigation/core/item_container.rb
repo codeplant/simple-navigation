@@ -19,7 +19,7 @@ module SimpleNavigation
     #
     # The <tt>name</tt> will be displayed in the rendered navigation. This can also be a call to your I18n-framework.
     #
-    # The <tt>url</tt> is the address that the generated item points to. You can also use url_helpers (named routes, restful routes helper, url_for etc.)
+    # The <tt>url</tt> is the address that the generated item points to. You can also use url_helpers (named routes, restful routes helper, url_for etc.) <tt>url</tt> is optional - items without URLs should not be rendered as links.
     #
     # The <tt>options</tt> can be used to specify the following things:
     # * <tt>any html_attributes</tt> - will be included in the rendered navigation item (e.g. id, class etc.)
@@ -34,8 +34,9 @@ module SimpleNavigation
     #   when the item should be highlighted, you can set a regexp which is matched againstthe current URI.
     #
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
-    def item(key, name, url, options={}, &block)
-      (@items << SimpleNavigation::Item.new(self, key, name, url, options, nil, &block)) if should_add_item?(options)
+    def item(key, name, url_or_options = {}, options_or_nil = {}, &block)
+      options = url_or_options.is_a?(Hash) ? url_or_options : options_or_nil
+      (@items << SimpleNavigation::Item.new(self, key, name, url_or_options, options_or_nil, nil, &block)) if should_add_item?(options)
     end
 
     def items=(items)

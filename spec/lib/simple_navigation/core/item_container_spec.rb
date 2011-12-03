@@ -220,6 +220,61 @@ describe SimpleNavigation::ItemContainer do
 
     end
 
+    context 'optional url and optional options' do
+      context 'item specifed without url or options' do
+        it 'should add the create item to the list of items' do
+          @item_container.items.should_receive(:<<)
+          @item_container.item('key', 'name')
+        end
+      end
+      context 'item specified with only a url' do
+        it 'should add the item to the list' do
+          @item_container.items.should_receive(:<<)
+          @item_container.item('key', 'name', 'url')
+        end
+      end
+      context 'item specified with only options' do        
+        context 'containing no conditions' do
+          it 'should add the created item to the list of items' do
+            @item_container.items.should_receive(:<<)
+            @item_container.item('key', 'name', {:option => true})
+          end
+        end
+        context 'containing negative condition' do
+          it 'should not add the created item to the list of items' do
+            @item_container.items.should_not_receive(:<<)
+            @item_container.item('key', 'name', {:if => lambda{false}, :option => true})
+          end
+        end
+        context 'containing positive condition' do
+          it 'should add the created item to the list of items' do
+            @item_container.items.should_receive(:<<)
+            @item_container.item('key', 'name', {:if => lambda{true}, :option => true})
+          end
+        end
+      end
+      context 'item specified with a url and options' do
+        context 'containing no conditions' do
+          it 'should add the created item to the list of items' do
+            @item_container.items.should_receive(:<<)
+            @item_container.item('key', 'name', 'url', {:option => true})
+          end
+        end
+        context 'containing negative condition' do
+          it 'should not add the created item to the list of items' do
+            @item_container.items.should_not_receive(:<<)
+            @item_container.item('key', 'name', 'url', {:if => lambda{false}, :option => true})
+          end
+        end
+        context 'containing positive condition' do
+          it 'should add the created item to the list of items' do
+            @item_container.items.should_receive(:<<)
+            @item_container.item('key', 'name', 'url', {:if => lambda{true}, :option => true})
+          end
+        end
+      end
+    end
+
     context 'conditions given for item' do
 
       context '"if" given' do

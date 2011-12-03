@@ -14,11 +14,18 @@ module SimpleNavigation
 
       def render(item_container)
         div_content = item_container.items.inject([]) do |list, item|
-          list << link_to(item.name, item.url, {:method => item.method}.merge(item.html_options))
+          list << tag_for(item)
         end.join
         content_tag(:div, div_content, {:id => item_container.dom_id, :class => item_container.dom_class})
       end
 
+      def tag_for(item)
+        if item.url.nil?
+          content_tag('span', item.name, item.html_options)
+        else
+          link_to(item.name, item.url, {:method => item.method}.merge(item.html_options))
+        end
+      end
     end
 
   end

@@ -24,10 +24,13 @@ describe SimpleNavigation::Renderer::List do
         HTML::Selector.new('ul.nav_dom_class').select(render).should have(1).entries
       end
       it "should render a li tag for each item" do
-        HTML::Selector.new('li').select(render).should have(3).entries
+        HTML::Selector.new('li').select(render).should have(4).entries
       end
-      it "should render an a-tag inside each li-tag" do
+      it "should render an a-tag inside each li-tag (for items with links)" do
         HTML::Selector.new('li a').select(render).should have(3).entries
+      end
+      it "should render a span-tag inside each li-tag (for items without links)" do
+        HTML::Selector.new('li span').select(render).should have(1).entries
       end
 
       context 'concerning item names' do

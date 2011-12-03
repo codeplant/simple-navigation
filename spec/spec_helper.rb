@@ -34,16 +34,17 @@ end
 # spec helper methods
 def sub_items
   [
-    [:subnav1, 'subnav1', 'subnav1_url', {}],
-    [:subnav2, 'subnav2', 'subnav2_url', {}]
+    [:subnav1, 'subnav1', 'subnav1_url'],
+    [:subnav2, 'subnav2', 'subnav2_url']
   ]
 end
 
 def primary_items
   [
     [:users, 'users', 'first_url', {:id => 'my_id'}],
-    [:invoices, 'invoices', 'second_url', {}],
-    [:accounts, 'accounts', 'third_url', {:style => 'float:right', :link => {:style => 'float:left'}}]
+    [:invoices, 'invoices', 'second_url'],
+    [:accounts, 'accounts', 'third_url', {:style => 'float:right', :link => {:style => 'float:left'}}],
+    [:miscellany, 'miscellany']
   ]
 end
 

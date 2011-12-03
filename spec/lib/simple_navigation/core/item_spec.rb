@@ -120,8 +120,44 @@ describe SimpleNavigation::Item do
         end
         it {@item.url.should == nil}
       end
+      context 'url is unspecified' do
+        before(:each) do
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name')
+        end
+        it {@item.url.should == nil}
+      end
     end
 
+    context 'optional url and optional options' do
+      context 'when constructed without any optional parameters' do
+        before(:each) do
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name')
+        end
+        it {@item.url.should == nil}
+        it {@item.instance_variable_get(:@html_options).should == {}}
+      end
+      context 'when constructed with only a url' do
+        before(:each) do
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url')
+        end
+        it {@item.url.should == 'url'}
+        it {@item.instance_variable_get(:@html_options).should == {}}
+      end
+      context 'when constructed with only options' do
+        before(:each) do
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', {:option => true})
+        end
+        it {@item.url.should == nil}
+        it {@item.instance_variable_get(:@html_options).should == {:option => true}}
+      end
+      context 'when constructed with a url and options' do
+        before(:each) do
+          @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {:option => true})
+        end
+        it {@item.url.should == 'url'}
+        it {@item.instance_variable_get(:@html_options).should == {:option => true}}
+      end
+    end
   end
 
   describe 'name' do

@@ -19,7 +19,7 @@ module SimpleNavigation
       def a_tags(item_container)
         item_container.items.inject([]) do |list, item|
           if item.selected?
-            list << link_to(item.name, item.url, {:method => item.method}.merge(item.html_options.except(:class,:id))) if item.selected?
+            list << tag_for(item) if item.selected?
             if include_sub_navigation?(item)
               list.concat a_tags(item.sub_navigation)
             end
@@ -30,6 +30,14 @@ module SimpleNavigation
 
       def join_with
         @join_with ||= options[:join_with] || " "
+      end
+
+      def tag_for(item)
+        if item.url.nil?
+          content_tag('span', item.name, item.html_options.except(:class,:id))
+        else
+          link_to(item.name, item.url, {:method => item.method}.merge(item.html_options.except(:class,:id)))
+        end
       end
     end
 

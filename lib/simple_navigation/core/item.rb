@@ -8,16 +8,14 @@ module SimpleNavigation
     # see ItemContainer#item
     #
     # The subnavigation (if any) is either provided by a block or passed in directly as <tt>items</tt>
-    def initialize(container, key, name, url, options, items=nil, &sub_nav_block)
+    def initialize(container, key, name, url_or_options = {}, options_or_nil={}, items=nil, &sub_nav_block)
       @container = container
+      options = setup_url_and_options(url_or_options, options_or_nil)
       @container.dom_class = options.delete(:container_class) if options[:container_class]
       @container.dom_id = options.delete(:container_id) if options[:container_id]
       @key = key
       @method = options.delete(:method)
       @name = name
-      @url = url.instance_of?(Proc) ? url.call : url
-      @highlights_on = options.delete(:highlights_on)
-      @html_options = options
       if sub_nav_block || items
         @sub_navigation = ItemContainer.new(@container.level + 1)
         sub_nav_block.call @sub_navigation if sub_nav_block
@@ -125,5 +123,21 @@ module SimpleNavigation
       url && url.split('#').first
     end
 
+    private
+    def setup_url_and_options(url_or_options, options_or_nil)
+      options = options_or_nil
+      url = url_or_options
+      case url_or_options
+      when Hash
+        # url_or_options is options (there is no url)
+        options = url_or_options
+      when Proc
+        @url = url.call
+      else
+        @url = url
+      end
+      @highlights_on = options.delete(:highlights_on)
+      @html_options = options
+    end
   end
 end

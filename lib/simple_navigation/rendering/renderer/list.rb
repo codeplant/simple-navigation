@@ -13,7 +13,7 @@ module SimpleNavigation
       def render(item_container)
         list_content = item_container.items.inject([]) do |list, item|
           li_options = item.html_options.reject {|k, v| k == :link}
-          li_content = link_to(item.name, item.url, link_options_for(item))
+          li_content = tag_for(item)
           if include_sub_navigation?(item)
             li_content << render_sub_navigation_for(item)
           end
@@ -27,7 +27,15 @@ module SimpleNavigation
       end
       
       protected
-      
+
+      def tag_for(item)
+        if item.url.nil?
+          content_tag('span', item.name, link_options_for(item).except(:method))
+        else
+          link_to(item.name, item.url, link_options_for(item))
+        end
+      end
+
       # Extracts the options relevant for the generated link
       #
       def link_options_for(item)
