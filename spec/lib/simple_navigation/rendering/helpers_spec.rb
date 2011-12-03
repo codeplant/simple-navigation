@@ -45,7 +45,7 @@ describe SimpleNavigation::Helpers do
       context 'custom name generator set' do
         before(:each) do
           select_item(:subnav1)
-          SimpleNavigation.config.name_generator = Proc.new {|name| "<span>name</span>"}
+          SimpleNavigation.config.stub!(:name_generator => Proc.new {|name| "<span>name</span>"})
         end
         it "should not apply the generator" do
           @controller.active_navigation_item_name(:level => 1).should == 'invoices'

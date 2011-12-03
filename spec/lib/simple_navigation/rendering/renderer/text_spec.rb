@@ -30,7 +30,7 @@ describe SimpleNavigation::Renderer::Text do
       
       context 'custom name generator is set' do
         before(:each) do
-          SimpleNavigation.config.name_generator = Proc.new {|name| "<span>name</span>"}
+          SimpleNavigation.config.stub!(:name_generator => Proc.new {|name| "<span>name</span>"})
         end
         it "should not apply the name generator (since it is text only)" do
           render(:subnav1, :join_with => " | ").should == "invoices | subnav1" 
