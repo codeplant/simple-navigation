@@ -1,3 +1,9 @@
+*3.7.0
+
+* Added new adapater for working with the Nanoc static site generation framework.
+* Fix issue #22 - last link in a breadcrumb trail may now be rendered as static text insted by supplying :static_leaf => true as an option
+* Allow breadcrumbs to be provided with link id and classes by supplying :allow_classes_and_ids => true as an option
+
 *3.6.0
 
 * Added linkless items functionality - the `url` parameter is now optional, items which aren't links will be rendered within a 'span' element rather than an 'a' element. `options` remain optional (defaults to an empty Hash).  `options` may be provided without providing a `url` (detected by checking if the '`url`' parameter is a Hash or otherwise).
