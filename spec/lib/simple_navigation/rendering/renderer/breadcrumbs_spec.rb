@@ -45,6 +45,33 @@ describe SimpleNavigation::Renderer::Breadcrumbs do
             tag["class"].should be_nil
           end
         end
+
+        context 'with allow_classes_and_ids option' do
+          before(:each) do
+            @selection = HTML::Selector.new('div a').select(render(:users, :level => :all, :allow_classes_and_ids => true))
+          end
+          it "should render class and id" do
+            @selection.each do |tag|
+              raise unless tag.name == "a"
+              tag["id"].should_not be_nil
+              tag["class"].should_not be_nil
+            end
+          end
+        end
+
+        context 'with static_leaf option' do
+          before(:each) do
+            @selection = HTML::Selector.new('div *').select(render(:subnav1, :level => :all, :static_leaf => true))
+          end
+          it "should render link for non-leaes" do
+            @selection[0..-2].each do |tag|
+              tag.name.should == 'a'
+            end
+          end
+          it "should not render link for leaf" do
+            @selection.last.name.should == 'span'
+          end
+        end
       end
 
 
