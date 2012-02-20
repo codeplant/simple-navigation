@@ -66,16 +66,29 @@ module SimpleNavigation
         expand_all? || item.selected?
       end
 
-      def suppress_link?
-        false
+      # to allow overriding when there is specific logic determining
+      # when a link should not be rendered (eg. breadcrumbs renderer
+      # does not render the final breadcrumb as a link when instructed
+      # not to do so.)
+      def suppress_link?(item)
+        item.url.nil?
       end
 
+      # determine and return link or static content depending on
+      # item/renderer conditions.
       def tag_for(item)
-        if item.url.nil? || suppress_link?
+        if suppress_link?(item)
           content_tag('span', item.name, link_options_for(item).except(:method))
         else
-          link_to(item.name, item.url, link_options_for(item))
+          link_to(item.name, item.url, options_for(item))
         end
+      end
+
+      # to allow overriding when link options should be special-cased
+      # (eg. links renderer uses item options for the a-tag rather
+      # than an li-tag).
+      def options_for(item)
+        link_options_for(item)
       end
 
       # Extracts the options relevant for the generated link
