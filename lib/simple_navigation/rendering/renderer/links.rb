@@ -17,6 +17,11 @@ module SimpleNavigation
         end.join
         content_tag(:div, div_content, {:id => item_container.dom_id, :class => item_container.dom_class})
       end
+
+      protected
+      def options_for(item)
+        {:method => item.method}.merge(item.html_options)
+      end
     end
   end
 end
