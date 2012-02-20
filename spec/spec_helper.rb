@@ -41,7 +41,7 @@ end
 
 def primary_items
   [
-    [:users, 'users', 'first_url', {:id => 'my_id'}],
+    [:users, 'users', 'first_url', {:id => 'my_id', :link => {:id => 'my_link_id'}}],
     [:invoices, 'invoices', 'second_url'],
     [:accounts, 'accounts', 'third_url', {:style => 'float:right', :link => {:style => 'float:left'}}],
     [:miscellany, 'miscellany']
@@ -77,10 +77,10 @@ def select_item(key)
   if(key == :subnav1)
     select_item(:invoices)
     primary_item(:invoices) do |item|
-      item.instance_variable_get(:@sub_navigation).items.find { |i| i.key == key}.stub!(:selected? => true)
+      item.instance_variable_get(:@sub_navigation).items.find { |i| i.key == key}.stub!(:selected? => true, :selected_by_condition? => true)
     end
   else
-    primary_item(key) {|item| item.stub!(:selected? => true, :selected_by_condition? => true) unless item.frozen?}
+    primary_item(key) {|item| item.stub!(:selected? => true) unless item.frozen?}
   end
 end
 
