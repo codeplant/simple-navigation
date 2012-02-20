@@ -32,14 +32,17 @@ module SimpleNavigation
         @join_with ||= options[:join_with] || " "
       end
 
-      def tag_for(item)
-        if item.url.nil?
-          content_tag('span', item.name, item.html_options.except(:class,:id))
-        else
-          link_to(item.name, item.url, {:method => item.method}.merge(item.html_options.except(:class,:id)))
-        end
+      def suppress_link?
+        (options[:static_leaf] && item.active_leaf_class)
+      end
+
+      # Extracts the options relevant for the generated link
+      #
+      def link_options_for(item)
+        opts = super
+        opts[:id] = "breadcrumb_#{opts[:id]}" if opts[:id]
+        opts
       end
     end
-
   end
 end

@@ -9,7 +9,6 @@ module SimpleNavigation
     # By default, the renderer sets the item's key as dom_id for the rendered <li> element unless the config option <tt>autogenerate_item_ids</tt> is set to false.
     # The id can also be explicitely specified by setting the id in the html-options of the 'item' method in the config/navigation.rb file.
     class List < SimpleNavigation::Renderer::Base
-
       def render(item_container)
         list_content = item_container.items.inject([]) do |list, item|
           li_options = item.html_options.reject {|k, v| k == :link}
@@ -25,31 +24,6 @@ module SimpleNavigation
           content_tag(:ul, list_content, {:id => item_container.dom_id, :class => item_container.dom_class}) 
         end
       end
-      
-      protected
-
-      def tag_for(item)
-        if item.url.nil?
-          content_tag('span', item.name, link_options_for(item).except(:method))
-        else
-          link_to(item.name, item.url, link_options_for(item))
-        end
-      end
-
-      # Extracts the options relevant for the generated link
-      #
-      def link_options_for(item)
-        special_options = {:method => item.method, :class => item.selected_class}.reject {|k, v| v.nil? }
-        link_options = item.html_options[:link]
-        return special_options unless link_options
-        opts = special_options.merge(link_options)
-        opts[:class] = [link_options[:class], item.selected_class].flatten.compact.join(' ')
-        opts.delete(:class) if opts[:class].nil? || opts[:class] == ''
-        opts
-      end
-      
-      
     end
-  
   end
 end

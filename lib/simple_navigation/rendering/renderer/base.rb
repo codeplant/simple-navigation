@@ -65,7 +65,30 @@ module SimpleNavigation
       def expand_sub_navigation?(item)
         expand_all? || item.selected?
       end
-            
+
+      def suppress_link?
+        false
+      end
+
+      def tag_for(item)
+        if item.url.nil? || suppress_link?
+          content_tag('span', item.name, link_options_for(item).except(:method))
+        else
+          link_to(item.name, item.url, link_options_for(item))
+        end
+      end
+
+      # Extracts the options relevant for the generated link
+      #
+      def link_options_for(item)
+        special_options = {:method => item.method, :class => item.selected_class}.reject {|k, v| v.nil? }
+        link_options = item.html_options[:link]
+        return special_options unless link_options
+        opts = special_options.merge(link_options)
+        opts[:class] = [link_options[:class], item.selected_class].flatten.compact.join(' ')
+        opts.delete(:class) if opts[:class].nil? || opts[:class] == ''
+        opts
+      end            
     end
   end
 end
