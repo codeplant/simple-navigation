@@ -59,7 +59,7 @@ module SimpleNavigation
     # Returns the configured active_leaf_class if the item is the selected leaf,
     # nil otherwise
     def active_leaf_class
-      selected_by_condition? ? SimpleNavigation.config.active_leaf_class : nil
+      !selected_by_subnav? && selected_by_condition? ? SimpleNavigation.config.active_leaf_class : nil
     end
 
     # Returns the configured selected_class if the item is selected,
