@@ -32,16 +32,20 @@ module SimpleNavigation
         @join_with ||= options[:join_with] || " "
       end
 
-      def suppress_link?
-        (options[:static_leaf] && item.active_leaf_class)
+      def suppress_link?(item)
+        super || (options[:static_leaf] && item.active_leaf_class)
       end
 
       # Extracts the options relevant for the generated link
       #
       def link_options_for(item)
-        opts = super
-        opts[:id] = "breadcrumb_#{opts[:id]}" if opts[:id]
-        opts
+        if options[:allow_classes_and_ids]
+          opts = super
+          opts[:id] = "breadcrumb_#{opts[:id]}" if opts[:id]
+          opts
+        else
+          {:method => item.method}.merge(item.html_options.except(:class,:id))
+        end
       end
     end
   end
