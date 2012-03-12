@@ -125,8 +125,8 @@ module SimpleNavigation
 
     private
     def setup_url_and_options(url_or_options, options_or_nil)
-      options = options_or_nil
-      url = url_or_options
+      options = options_or_nil.dup
+      url = url_or_options.dup
       case url_or_options
       when Hash
         # url_or_options is options (there is no url)

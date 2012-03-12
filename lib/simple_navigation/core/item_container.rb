@@ -128,6 +128,7 @@ module SimpleNavigation
 
     # partially borrowed from ActionSupport::Callbacks
     def should_add_item?(options) #:nodoc:
+      options = options.dup
       [options.delete(:if)].flatten.compact.all? { |m| evaluate_method(m) } &&
       ![options.delete(:unless)].flatten.compact.any? { |m| evaluate_method(m) }
     end
