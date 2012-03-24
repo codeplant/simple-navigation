@@ -43,11 +43,11 @@ module SimpleNavigation
       end
 
       def link_to(name, url, options={})
-        "<a href='#{url}' #{to_attributes(options)}>#{name}</a>"
+        "<a href='#{url}'#{to_attributes(options)}>#{name}</a>"
       end
 
       def content_tag(type, content, options={})
-        "<#{type} #{to_attributes(options)}>#{content}</#{type}>"
+        "<#{type}#{to_attributes(options)}>#{content}</#{type}>"
       end
 
       protected
@@ -61,7 +61,7 @@ module SimpleNavigation
       end
 
       def to_attributes(options)
-        options.map {|k, v| "#{k}='#{v}'"}.join(' ')
+        options.map {|k, v| v.nil? ? '' : " #{k}='#{v}'"}.join
       end
 
     end
