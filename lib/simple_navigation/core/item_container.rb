@@ -43,7 +43,9 @@ module SimpleNavigation
 
     def items=(items)
       items.each do |item|
-        item = SimpleNavigation::ItemAdapter.new(item.dup)
+        item = item.dup
+        item[:options] = item[:options].dup if item[:options]
+        item = SimpleNavigation::ItemAdapter.new(item)
         (@items << item.to_simple_navigation_item(self)) if should_add_item?(item.options)
       end
     end
