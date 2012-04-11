@@ -35,13 +35,15 @@ module SimpleNavigation
     #
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
     def item(key, name, url_or_options = {}, options_or_nil = {}, &block)
+      url_or_options = url_or_options.dup if url_or_options
+      options_or_nil = options_or_nil.dup if options_or_nil
       options = url_or_options.is_a?(Hash) ? url_or_options : options_or_nil
       (@items << SimpleNavigation::Item.new(self, key, name, url_or_options, options_or_nil, nil, &block)) if should_add_item?(options)
     end
 
     def items=(items)
       items.each do |item|
-        item = SimpleNavigation::ItemAdapter.new(item)
+        item = SimpleNavigation::ItemAdapter.new(item.dup)
         (@items << item.to_simple_navigation_item(self)) if should_add_item?(item.options)
       end
     end
@@ -128,7 +130,6 @@ module SimpleNavigation
 
     # partially borrowed from ActionSupport::Callbacks
     def should_add_item?(options) #:nodoc:
-      options = options.dup
       [options.delete(:if)].flatten.compact.all? { |m| evaluate_method(m) } &&
       ![options.delete(:unless)].flatten.compact.any? { |m| evaluate_method(m) }
     end
