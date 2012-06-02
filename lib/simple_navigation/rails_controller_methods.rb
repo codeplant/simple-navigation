@@ -16,8 +16,13 @@ module SimpleNavigation
     # the correct instance variable in the controller.
     def handle_explicit_navigation
       if SimpleNavigation.explicit_navigation_args
-        level, navigation = parse_explicit_navigation_args
-        self.adapter.controller.instance_variable_set(:"@sn_current_navigation_#{level}", navigation)
+        begin
+          level, navigation = parse_explicit_navigation_args
+          self.adapter.controller.instance_variable_set(:"@sn_current_navigation_#{level}", navigation)
+        rescue
+          #we do nothing here
+          #TODO: check if this is the right way to handle wrong explicit navigation
+        end
       end
     end
 
@@ -45,16 +50,16 @@ module SimpleNavigation
       raise ArgumentError, "Invalid level specified or item key not found" if level == 0
       [level, options[:"level_#{level}"]]
     end
-    
-  end  
-  
+
+  end
+
   # Adds methods for explicitely setting the current 'active' navigation to the controllers.
   # Since version 2.0.0 the simple_navigation plugin determines the active navigation based on the current url by default (auto highlighting),
   # so explicitely defining the active navigation in the controllers is only needed for edge cases where automatic highlighting does not work.
-  # 
+  #
   # On the controller class level, use the <tt>navigation</tt> method to set the active navigation for all actions in the controller.
   # Let's assume that we have a primary navigation item :account which in turn has a sub navigation item :settings.
-  # 
+  #
   # ==== Examples
   #   class AccountController << ActionController
   #     navigation :account
@@ -68,15 +73,15 @@ module SimpleNavigation
   #
   # The first example sets the current primary navigation to :account for all actions. No active sub_navigation.
   # The second example sets the current sub navigation to :settings and since it is a child of :account the current primary navigation is set to :account.
-  # 
-  # On the controller instance level, use the <tt>current_navigation</tt> method to define the active navigation for a specific action. 
+  #
+  # On the controller instance level, use the <tt>current_navigation</tt> method to define the active navigation for a specific action.
   # The navigation item that is set in <tt>current_navigation</tt> overrides the one defined on the controller class level (see <tt>navigation</tt> method).
   # Thus if you have an :account primary item with a :special sub navigation item:
   #
   # ==== Example
   #   class AccountController << ActionController
   #     navigation :account
-  #     
+  #
   #     def your_special_action
   #       ...
   #       current_navigation :special
@@ -95,11 +100,11 @@ module SimpleNavigation
         include InstanceMethods
       end
     end
-  
+
     module ClassMethods
       # Sets the active navigation for all actions in this controller.
       #
-      # The specified symbol must match the keys for your navigation items in your config/navigation.rb file.  
+      # The specified symbol must match the keys for your navigation items in your config/navigation.rb file.
       def navigation(*args)
         self.class_eval do
           define_method :sn_set_navigation do
@@ -110,7 +115,7 @@ module SimpleNavigation
         end
       end
     end
-  
+
     module InstanceMethods
       # Sets the active navigation. Call this method in any action to override the controller-wide active navigation
       # specified by navigation.
@@ -122,23 +127,23 @@ module SimpleNavigation
     end
 
   end
-  
+
   class Item
-    
+
     def selected_by_config?
       key == SimpleNavigation.current_navigation_for(@container.level)
     end
-    
+
   end
-  
+
   class ItemContainer
-    
+
     def selected_item
       self[SimpleNavigation.current_navigation_for(self.level)] || items.find {|i| i.selected?}
     end
-    
+
   end
-  
+
 end
-  
+
 ActionController::Base.send(:include, SimpleNavigation::ControllerMethods)
