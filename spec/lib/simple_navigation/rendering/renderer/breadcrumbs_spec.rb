@@ -23,7 +23,7 @@ describe SimpleNavigation::Renderer::Breadcrumbs do
         it "the rendered div-tag should have the specified class" do
           HTML::Selector.new('div.nav_dom_class').select(render).should have(1).entries
         end
-  
+
         context 'without current_navigation set' do
           it "should not render any a-tag in the div-tag" do
             HTML::Selector.new('div a').select(render).should have(0).entries
@@ -56,6 +56,18 @@ describe SimpleNavigation::Renderer::Breadcrumbs do
               tag["id"].should_not be_nil
               tag["class"].should_not be_nil
             end
+          end
+        end
+
+        context 'with preceding_text option' do
+          before(:each) do
+            @selection = HTML::Selector.new('div').select(render(:subnav1, :level => :all, :preceding_text => 'You are here: '))
+          end
+
+          it 'should render preceding text before breadcrumbs' do
+            raise unless @selection.count == 1
+            tag = @selection.first
+            tag.to_s.should =~ /^\<div.+\>You are here\: /
           end
         end
 
