@@ -60,14 +60,18 @@ describe SimpleNavigation::Renderer::Breadcrumbs do
         end
 
         context 'with preceding_text option' do
-          before(:each) do
-            @selection = HTML::Selector.new('div').select(render(:subnav1, :level => :all, :preceding_text => 'You are here: '))
+          it 'should render preceding text before breadcrumbs' do
+            selection = HTML::Selector.new('div').select(render(:subnav1, :level => :all, :preceding_text => 'You are here: '))
+            raise unless selection.count == 1
+            tag = selection.first
+            tag.to_s.should =~ /^\<div.+\>You are here\: /
           end
 
-          it 'should render preceding text before breadcrumbs' do
-            raise unless @selection.count == 1
-            tag = @selection.first
-            tag.to_s.should =~ /^\<div.+\>You are here\: /
+          it 'should not render preceding text if there is no available breadcrumb' do
+            allow_message_expectations_on_nil
+            selection = HTML::Selector.new('div').select(render('', :preceding_text => 'You are here: '))
+            tag = selection.first
+            tag.to_s.should =~ /^\<div.+\>\<\/div\>/
           end
         end
 
