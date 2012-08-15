@@ -51,6 +51,12 @@ describe SimpleNavigation::Renderer::Links do
           HTML::Selector.new('a.selected').select(render).should be_empty
         end
       end
+
+      context 'with a custom seperator specified' do
+        it "should separate the items with the separator" do
+          HTML::Selector.new('div').select_first(render(:subnav1, :join_with => " | ")).to_s.split(" | ").should have(4).entries
+        end
+      end
   
     end
     
