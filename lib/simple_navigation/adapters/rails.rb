@@ -72,11 +72,9 @@ module SimpleNavigation
       
       # Extracts a controller from the context.
       def extract_controller_from(context)
-        if context.respond_to? :controller
-          context.controller
-        else
+        context.respond_to?(:controller) ?
+          context.controller || context :
           context
-        end
       end
          
     end
