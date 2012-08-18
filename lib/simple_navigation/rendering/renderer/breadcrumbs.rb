@@ -13,7 +13,7 @@ module SimpleNavigation
       def render(item_container)
         content = a_tags(item_container).join(join_with)
         content_tag(:div,
-          preceding_text_for(content) + content,
+          prefix_for(content) + content,
           {:id => item_container.dom_id, :class => item_container.dom_class})
       end
 
@@ -39,8 +39,8 @@ module SimpleNavigation
         super || (options[:static_leaf] && item.active_leaf_class)
       end
 
-      def preceding_text_for(content)
-        content.empty? ? '' : options[:preceding_text] || ''
+      def prefix_for(content)
+        content.empty? ? '' : options[:prefix] || ''
       end
 
       # Extracts the options relevant for the generated link
