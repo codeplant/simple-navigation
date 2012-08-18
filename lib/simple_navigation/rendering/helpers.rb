@@ -31,8 +31,8 @@ module SimpleNavigation
     #   will be loaded and used for rendering the navigation.
     # * <tt>:items</tt> - you can specify the items directly (e.g. if items are dynamically generated from database). See SimpleNavigation::ItemsProvider for documentation on what to provide as items.
     # * <tt>:renderer</tt> - specify the renderer to be used for rendering the navigation. Either provide the Class or a symbol matching a registered renderer. Defaults to :list (html list renderer).
-    def render_navigation(options={})
-      active_navigation_item_container(options) { |container| container && container.render(options) }
+    def render_navigation(options={},&block)
+      active_navigation_item_container(options) { |container| container && container.render(options,&block) }
     end
 
     # Returns the name of the currently active navigation item belonging to the specified level.

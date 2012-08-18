@@ -11,7 +11,7 @@ module SimpleNavigation
     class List < SimpleNavigation::Renderer::Base
       def render(item_container)
         list_content = item_container.items.inject([]) do |list, item|
-          li_options = item.html_options.reject {|k, v| k == :link}
+          li_options = item.html_options.reject {|k, v| [:link,:section].include?(k) }
           li_content = tag_for(item)
           if include_sub_navigation?(item)
             li_content << render_sub_navigation_for(item)

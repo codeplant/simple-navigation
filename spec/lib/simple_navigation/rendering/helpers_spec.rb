@@ -248,18 +248,51 @@ describe SimpleNavigation::Helpers do
       end
     end
   
+    describe "should treat :level and :levels options the same" do
+      before(:each) do#      whitebox_setup
+        @selected_item_container = stub(:selected_container).as_null_object
+        SimpleNavigation.stub!(:active_item_container_for => @selected_item_container)
+      end
+      it  "should pass a valid levels options as level" do
+        @selected_item_container.should_receive(:render).with(:level => 2)
+        @controller.render_navigation(:levels => 2)
+      end
+    end
+
+    
+    
+    context "with dynamic options stored in instance variable" do
+      before :each do
+        
+        class ControllerMock
+          
+          attr_accessor :navigation_items
+          attr_accessor :test_lambda
+          def initialize
+            super
+            @test_lambda = lambda { true }
+            @navigation_items = [{ :key => "foo", :url => "/bar", :name => "foo", :options => { :if => @test_lambda }, :items => [:key => "bar", :url => "/boo", :name => "bar", :section => "bla", :options => { :test => true }]}]
+          end
+          
+        end
+        
+      end
+      
+      context "rendering twice" do
+      
+        subject { ControllerMock.new}
+        
+        it "should not change the configuration after the first rendering (specifically not removing the :if or :unless keys)" do
+          @navigation_items = [{ :key => "foo", :url => "/bar", :name => "foo", :options => { :if => subject.test_lambda }, :items => [:key => "bar", :url => "/boo", :name => "bar", :section => "bla", :options => { :test => true }]}]
+          subject.render_navigation(:items => subject.navigation_items)
+          subject.navigation_items.should == @navigation_items
+        end
+        
+      end
+      
+    end
+    
   end
   
-  describe "should treat :level and :levels options the same" do
-    before(:each) do
-      whitebox_setup
-      @selected_item_container = stub(:selected_container).as_null_object
-      SimpleNavigation.stub!(:active_item_container_for => @selected_item_container)
-    end
-    it  "should pass a valid levels options as level" do
-      @selected_item_container.should_receive(:render).with(:level => 2)
-      @controller.render_navigation(:levels => 2)
-    end
-  end
-
+  
 end
