@@ -11,7 +11,10 @@ module SimpleNavigation
     class Breadcrumbs < SimpleNavigation::Renderer::Base
 
       def render(item_container)
-        content_tag(:div, a_tags(item_container).join(join_with), {:id => item_container.dom_id, :class => item_container.dom_class})
+        content = a_tags(item_container).join(join_with)
+        content_tag(:div,
+          prefix_for(content) + content,
+          {:id => item_container.dom_id, :class => item_container.dom_class})
       end
 
       protected
@@ -34,6 +37,10 @@ module SimpleNavigation
 
       def suppress_link?(item)
         super || (options[:static_leaf] && item.active_leaf_class)
+      end
+
+      def prefix_for(content)
+        content.empty? ? '' : options[:prefix] || ''
       end
 
       # Extracts the options relevant for the generated link
