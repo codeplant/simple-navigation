@@ -14,11 +14,16 @@ module SimpleNavigation
       def render(item_container)
         div_content = item_container.items.inject([]) do |list, item|
           list << tag_for(item)
-        end.join
+        end.join(join_with)
         content_tag(:div, div_content, {:id => item_container.dom_id, :class => item_container.dom_class})
       end
 
       protected
+
+      def join_with
+        @join_with ||= options[:join_with] || ""
+      end
+
       def options_for(item)
         {:method => item.method}.merge(item.html_options)
       end
