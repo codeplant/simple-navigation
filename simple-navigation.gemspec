@@ -4,14 +4,14 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{simple-navigation}
-  s.version = "3.7.0"
+  s.name = "simple-navigation"
+  s.version = "3.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke", "Mark J. Titorenko"]
-  s.date = %q{2012-02-20}
-  s.description = %q{With the simple-navigation gem installed you can easily create multilevel navigations for your Rails, Sinatra or Padrino applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation through regular expressions.}
-  s.email = %q{andreas.schacke@gmail.com}
+  s.date = "2012-08-19"
+  s.description = "With the simple-navigation gem installed you can easily create multilevel navigations for your Rails, Sinatra or Padrino applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation through regular expressions."
+  s.email = "andreas.schacke@gmail.com"
   s.extra_rdoc_files = [
     "README"
   ]
@@ -66,15 +66,14 @@ Gem::Specification.new do |s|
     "spec/lib/simple_navigation_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/andi/simple-navigation}
+  s.homepage = "http://github.com/andi/simple-navigation"
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubyforge_project = %q{andi}
-  s.rubygems_version = %q{1.3.7}
-  s.summary = %q{simple-navigation is a ruby library for creating navigations (with multiple levels) for your Rails2, Rails3, Sinatra or Padrino application.}
+  s.rubyforge_project = "andi"
+  s.rubygems_version = "1.8.24"
+  s.summary = "simple-navigation is a ruby library for creating navigations (with multiple levels) for your Rails2, Rails3, Sinatra or Padrino application."
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
