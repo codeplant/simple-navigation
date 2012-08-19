@@ -1,5 +1,8 @@
 *3.8.0
 
+* Changed the way the context is fetched. Fixes incompatibility with Gretel. Thanks to Ivan Kasatenko.
+* Added :join_with option to links renderer. Thanks to Stefan Melmuk.
+* Added :prefix option to breadcrumb renderer. Credits to Rodrigo Manhães.
 * Added :ordered option for allowing list renderer to render an <ol> rather than a <ul>.
 * Sinatra adapter no longer renders attributes with nil values as attributes with empty strings in the output, instead electing not to render the attribute at all. Thanks to revdan for pointing this out.
 
