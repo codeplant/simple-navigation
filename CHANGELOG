@@ -1,3 +1,7 @@
+*master
+
+* Added ability to pass a block to render_navigation for configuring dynamic navigation items (instead of passing :items). Credits to Ronald Chan.
+
 *3.8.0
 
 * Changed the way the context is fetched. Fixes incompatibility with Gretel. Thanks to Ivan Kasatenko.
