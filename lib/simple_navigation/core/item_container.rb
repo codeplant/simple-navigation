@@ -6,11 +6,12 @@ module SimpleNavigation
     attr_reader :items, :level
     attr_accessor :renderer, :dom_id, :dom_class, :auto_highlight
 
-    def initialize(level=1) #:nodoc:
+    def initialize(level=1, &block) #:nodoc:
       @level = level
       @items = []
       @renderer = SimpleNavigation.config.renderer
       @auto_highlight = true
+      yield self if block_given?
     end
 
     # Creates a new navigation item.
