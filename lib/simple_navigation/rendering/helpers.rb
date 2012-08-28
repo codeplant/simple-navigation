@@ -31,8 +31,16 @@ module SimpleNavigation
     #   will be loaded and used for rendering the navigation.
     # * <tt>:items</tt> - you can specify the items directly (e.g. if items are dynamically generated from database). See SimpleNavigation::ItemsProvider for documentation on what to provide as items.
     # * <tt>:renderer</tt> - specify the renderer to be used for rendering the navigation. Either provide the Class or a symbol matching a registered renderer. Defaults to :list (html list renderer).
-    def render_navigation(options={})
-      active_navigation_item_container(options) { |container| container && container.render(options) }
+    #
+    # Instead of using the <tt>:items</tt> option, a block can be passed to specify the items dynamically
+    #
+    #   render_navigation do |menu|
+    #     menu.item :posts, "Posts", posts_path
+    #   end
+    #
+    def render_navigation(options={},&block)
+      container = active_navigation_item_container(options,&block)
+      container && container.render(options)
     end
 
     # Returns the name of the currently active navigation item belonging to the specified level.
@@ -68,12 +76,11 @@ module SimpleNavigation
     # options
     def active_navigation_item(options={},value_for_nil = nil)
       options[:level] = :leaves if options[:level].nil? || options[:level] == :all
-      active_navigation_item_container(options) do |container|
-        if container && (item = container.selected_item)
-          block_given? ? yield(item) : item
-        else
-          value_for_nil
-        end
+      container = active_navigation_item_container(options)
+      if container && (item = container.selected_item)
+        block_given? ? yield(item) : item
+      else
+        value_for_nil
       end
     end
 
@@ -88,20 +95,21 @@ module SimpleNavigation
     # * <tt>:items</tt> - you can specify the items directly (e.g. if items are dynamically generated from database). See SimpleNavigation::ItemsProvider for documentation on what to provide as items.
     #
     # Returns <tt>nil</tt> if no active item container can be found
-    def active_navigation_item_container(options={})
+    def active_navigation_item_container(options={},&block)
       options = SimpleNavigation::Helpers::apply_defaults(options)
-      SimpleNavigation::Helpers::load_config(options,self)
+      SimpleNavigation::Helpers::load_config(options,self,&block)
       container = SimpleNavigation.active_item_container_for(options[:level])
-      block_given? ? yield(container) : container
     end
 
     class << self
-      def load_config(options,includer)
+      def load_config(options,includer,&block)
         ctx = options.delete(:context)
         SimpleNavigation.init_adapter_from includer
         SimpleNavigation.load_config(ctx)
-        SimpleNavigation::Configuration.eval_config(ctx) 
-        SimpleNavigation.config.items(options[:items]) if options[:items]
+        SimpleNavigation::Configuration.eval_config(ctx)
+        if block_given? || options[:items]
+          SimpleNavigation.config.items(options[:items],&block)
+        end
         SimpleNavigation.handle_explicit_navigation if SimpleNavigation.respond_to?(:handle_explicit_navigation)
         raise "no primary navigation defined, either use a navigation config file or pass items directly to render_navigation" unless SimpleNavigation.primary_navigation
       end

@@ -170,6 +170,17 @@ describe SimpleNavigation::Helpers do
           @controller.render_navigation(:items => @items)
         end
       end
+      context 'block given' do
+        it 'should use block' do
+          block_executed = 0
+          expect do
+            @controller.render_navigation do |menu|
+              menu.class.should == SimpleNavigation::ItemContainer
+              block_executed += 1
+            end
+          end.to change{block_executed}.by(1)
+        end
+      end
     end
   
     describe 'no primary navigation defined' do
