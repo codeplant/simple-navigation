@@ -1,4 +1,4 @@
-*master
+*3.9.0
 
 * Added ability to pass a block to render_navigation for configuring dynamic navigation items (instead of passing :items). Credits to Ronald Chan.
 
