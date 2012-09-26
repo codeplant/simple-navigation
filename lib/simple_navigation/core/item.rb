@@ -88,7 +88,7 @@ module SimpleNavigation
         when Proc
           highlights_on.call
         when :subpath
-          !!(SimpleNavigation.request_uri =~ /^#{Regexp.escape url_without_anchor}/)
+          !!(SimpleNavigation.request_uri =~ /^#{Regexp.escape url_without_anchor}(\/|$|\?)/i)
         else
           raise ArgumentError, ':highlights_on must be a Regexp, Proc or :subpath'
         end
