@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SimpleNavigation::Item do
 
   before(:each) do
-    @item_container = stub(:item_container, :level => 1).as_null_object
+    @item_container = stub(:item_container, :level => 1, :selected_class => nil).as_null_object
     @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
     @adapter = stub(:adapter)
     SimpleNavigation.stub!(:adapter => @adapter)
@@ -215,6 +215,14 @@ describe SimpleNavigation::Item do
   end
 
   describe 'selected_class' do
+    context 'selected_class is defined in context' do
+      before(:each) do
+        @item_container = stub(:item_container, :level => 1, :selected_class => 'context_defined').as_null_object
+        @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
+        @item.stub!(:selected? => true)
+      end
+      it {@item.instance_eval {selected_class.should == 'context_defined'}}
+    end
     context 'item is selected' do
       before(:each) do
         @item.stub!(:selected? => true)
