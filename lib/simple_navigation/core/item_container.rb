@@ -4,7 +4,7 @@ module SimpleNavigation
   class ItemContainer
 
     attr_reader :items, :level
-    attr_accessor :renderer, :dom_id, :dom_class, :auto_highlight
+    attr_accessor :renderer, :dom_id, :dom_class, :auto_highlight, :selected_class
 
     def initialize(level=1) #:nodoc:
       @level = level

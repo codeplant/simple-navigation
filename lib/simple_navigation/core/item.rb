@@ -13,6 +13,7 @@ module SimpleNavigation
       options = setup_url_and_options(url_or_options, options_or_nil)
       @container.dom_class = options.delete(:container_class) if options[:container_class]
       @container.dom_id = options.delete(:container_id) if options[:container_id]
+      @container.selected_class = options.delete(:selected_class) if options[:selected_class]
       @key = key
       @method = options.delete(:method)
       @name = name
@@ -65,7 +66,7 @@ module SimpleNavigation
     # Returns the configured selected_class if the item is selected,
     # nil otherwise
     def selected_class
-      selected? ? SimpleNavigation.config.selected_class : nil
+      selected? ? (@container.selected_class || SimpleNavigation.config.selected_class) : nil
     end
 
     protected
