@@ -397,6 +397,12 @@ describe SimpleNavigation::Item do
           end
           it {@item.send(:selected_by_condition?).should be_true}
         end
+        context 'we are in a route that has a similar name' do
+          before(:each) do
+            SimpleNavigation.stub!(:request_uri => '/resources_group/id')
+          end
+          it {@item.send(:selected_by_condition?).should be_false}
+        end
         context 'we are in a route not beginning with this item path' do
           before(:each) do
             SimpleNavigation.stub!(:request_uri => '/another_resource/id')
