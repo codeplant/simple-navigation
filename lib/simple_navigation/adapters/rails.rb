@@ -49,15 +49,15 @@ module SimpleNavigation
       protected
       
       def self.rails_root
-        rails3? ? ::Rails.root : ::RAILS_ROOT
+        gte_rails3? ? ::Rails.root : ::RAILS_ROOT
       end
       
       def self.rails_env
-        rails3? ? ::Rails.env : ::RAILS_ENV
+        gte_rails3? ? ::Rails.env : ::RAILS_ENV
       end
       
-      def self.rails3?
-        ::Rails::VERSION::MAJOR == 3
+      def self.gte_rails3?
+        ::Rails::VERSION::MAJOR >= 3
       end
       
       def template_from(controller)
