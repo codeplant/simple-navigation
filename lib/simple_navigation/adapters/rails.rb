@@ -49,15 +49,15 @@ module SimpleNavigation
       protected
       
       def self.rails_root
-        rails3? ? ::Rails.root : ::RAILS_ROOT
+        gte_rails3? ? ::Rails.root : ::RAILS_ROOT
       end
       
       def self.rails_env
-        rails3? ? ::Rails.env : ::RAILS_ENV
+        gte_rails3? ? ::Rails.env : ::RAILS_ENV
       end
       
-      def self.rails3?
-        ::Rails::VERSION::MAJOR == 3
+      def self.gte_rails3?
+        ::Rails::VERSION::MAJOR >= 3
       end
       
       def template_from(controller)
@@ -82,7 +82,7 @@ module SimpleNavigation
 end
 
 # Initializer for Rails3
-if defined?(Rails) && Rails::VERSION::MAJOR == 3
+if defined?(Rails) && SimpleNavigation::Adapters::Rails.gte_rails3?
   module SimpleNavigation                                                                                                
     class Railtie < Rails::Railtie                                                                                       
       initializer "simple_navigation.register" do |app|                                                             
