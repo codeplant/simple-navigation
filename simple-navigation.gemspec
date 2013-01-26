@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "simple-navigation"
-  s.version = "3.9.0"
+  s.version = "3.10.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke", "Mark J. Titorenko"]
-  s.date = "2012-09-02"
+  s.date = "2013-01-26"
   s.description = "With the simple-navigation gem installed you can easily create multilevel navigations for your Rails, Sinatra or Padrino applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation through regular expressions."
   s.email = "andreas.schacke@gmail.com"
   s.extra_rdoc_files = [
@@ -81,17 +81,20 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rspec>, [">= 2.0.1"])
       s.add_development_dependency(%q<rake>, [">= 0"])
       s.add_development_dependency(%q<rdoc>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.3.2"])
       s.add_dependency(%q<rspec>, [">= 2.0.1"])
       s.add_dependency(%q<rake>, [">= 0"])
       s.add_dependency(%q<rdoc>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.3.2"])
     s.add_dependency(%q<rspec>, [">= 2.0.1"])
     s.add_dependency(%q<rake>, [">= 0"])
     s.add_dependency(%q<rdoc>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
   end
 end
 
