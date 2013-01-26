@@ -1,3 +1,9 @@
+*3.10.0
+
+* Added ability to set selected_class on container level. Credits to Joost Hietbrink.
+* do not highlight items that are only partial matches. Thanks to Troy Thompson.
+* adding support for rails 4. Credits to Samer Masry.
+
 *3.9.0
 
 * Added ability to pass a block to render_navigation for configuring dynamic navigation items (instead of passing :items). Credits to Ronald Chan.
