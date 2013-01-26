@@ -12,4 +12,5 @@ group :development do
   gem 'rspec', '>= 2.0.1'
   gem 'rake'
   gem 'rdoc'
+  gem 'jeweler'
 end
