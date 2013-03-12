@@ -53,7 +53,7 @@ describe 'explicit navigation in rails' do
         end
         it 'should create an instance-method "sn_set_navigation" when being called' do
           call_navigation(:key)
-          @controller.respond_to?(:sn_set_navigation).should be_true
+          @controller.respond_to?(:sn_set_navigation, true).should be_true
         end
         it "the created method should not be public" do
           call_navigation(:key)
