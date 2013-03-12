@@ -89,10 +89,10 @@ describe SimpleNavigation::Helpers do
         before(:each) do
           select_item(:subnav1)
         end
-        it {@controller.active_navigation_item(:level => 2).should == @subnav1_item}
-        it {@controller.active_navigation_item.should == @subnav1_item}
-        it {@controller.active_navigation_item(:level => 1).should == @invoices_item}
-        it {@controller.active_navigation_item(:level => :all).should == @subnav1_item}
+        it {@controller.active_navigation_item(:level => 2).should eq(@subnav1_item)}
+        it {@controller.active_navigation_item.should eq(@subnav1_item)}
+        it {@controller.active_navigation_item(:level => 1).should eq(@invoices_item)}
+        it {@controller.active_navigation_item(:level => :all).should eq(@subnav1_item)}
       end
       context 'container does not have selected item' do
         context 'return value defaults to nil' do
@@ -100,7 +100,7 @@ describe SimpleNavigation::Helpers do
         end
         context 'return value reflects passed in value' do
           it {@controller.active_navigation_item({},'none').should == 'none'}
-          it {@controller.active_navigation_item({},@invoices_item).should == @invoices_item}
+          it {@controller.active_navigation_item({},@invoices_item).should eq(@invoices_item)}
         end
       end
     end
