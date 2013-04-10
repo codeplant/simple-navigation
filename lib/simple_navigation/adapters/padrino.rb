@@ -8,11 +8,11 @@ module SimpleNavigation
       end
             
       def link_to(name, url, options={})
-        context.link_to name, url, options
+        context.link_to(name, url, options)
       end
       
       def content_tag(type, content, options={})
-        context.content_tag type, content, options
+        context.content_tag(type, content.html_safe, options)
       end
       
     end

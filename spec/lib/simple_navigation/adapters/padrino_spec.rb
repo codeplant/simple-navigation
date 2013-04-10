@@ -8,6 +8,7 @@ describe SimpleNavigation::Adapters::Padrino do
   
   before(:each) do
     @request = stub(:request)
+    @content = stub(:content)
     @context = stub(:context, :request => @request)
     @adapter = create_adapter
   end
@@ -21,8 +22,9 @@ describe SimpleNavigation::Adapters::Padrino do
   
   describe 'content_tag' do
     it "should delegate to context" do
+      @content.should_receive(:html_safe).and_return('content')
       @context.should_receive(:content_tag).with('type', 'content', :my_option => true)
-      @adapter.content_tag('type', 'content', :my_option => true)
+      @adapter.content_tag('type', @content, :my_option => true)
     end
   end
   

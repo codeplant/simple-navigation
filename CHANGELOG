@@ -1,3 +1,7 @@
+*3.10.1
+
+* Padrino adapter now returns "html_safe"d content_tag
+
 *3.10.0
 
 * Added ability to set selected_class on container level. Credits to Joost Hietbrink.
