@@ -32,11 +32,11 @@ describe SimpleNavigation::Item do
           end
           it "should create a new ItemContainer with a level+1" do
             SimpleNavigation::ItemContainer.should_receive(:new).with(2)
-            SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}, @items)
+            SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}, true, @items)
           end
           it "should set the items on the subnav_container" do
             @subnav_container.should_receive(:items=).with(@items)
-            SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}, @items)
+            SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {}, true, @items)
           end
         end
         context 'no items given' do

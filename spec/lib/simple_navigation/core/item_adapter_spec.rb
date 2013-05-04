@@ -94,7 +94,7 @@ describe SimpleNavigation::ItemAdapter, 'when item is an object' do
       @item.stub!(:url => 'url', :name => 'name', :key => 'key', :options => {}, :items => [])
     end
     it "should create a SimpleNavigation::Item" do
-      SimpleNavigation::Item.should_receive(:new).with(@container, 'key', 'name', 'url', {}, nil)
+      SimpleNavigation::Item.should_receive(:new).with(@container, 'key', 'name', 'url', {}, true, nil)
       @item_adapter.to_simple_navigation_item(@container)
     end
   end
@@ -201,7 +201,7 @@ describe SimpleNavigation::ItemAdapter, 'when item is a hash' do
       @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
     end
     it "should create a SimpleNavigation::Item" do
-      SimpleNavigation::Item.should_receive(:new).with(@container, 'key', 'name', 'url', {}, nil)
+      SimpleNavigation::Item.should_receive(:new).with(@container, 'key', 'name', 'url', {}, true, nil)
       @item_adapter.to_simple_navigation_item(@container)
     end
   end

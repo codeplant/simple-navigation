@@ -10,7 +10,7 @@ module SimpleNavigation
     # The id can also be explicitely specified by setting the id in the html-options of the 'item' method in the config/navigation.rb file.
     class List < SimpleNavigation::Renderer::Base
       def render(item_container)
-        list_content = item_container.items.inject([]) do |list, item|
+        list_content = item_container.visible_items.inject([]) do |list, item|
           li_options = item.html_options.reject {|k, v| k == :link}
           li_content = tag_for(item)
           if include_sub_navigation?(item)
