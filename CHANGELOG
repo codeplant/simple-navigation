@@ -1,3 +1,7 @@
+*3.11.0
+
+* Added Json renderer. Thanks to Alberto Avila.
+
 *3.10.1
 
 * Padrino adapter now returns "html_safe"d content_tag

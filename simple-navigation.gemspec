@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "simple-navigation"
-  s.version = "3.10.1"
+  s.version = "3.11.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke", "Mark J. Titorenko"]
-  s.date = "2013-06-04"
+  s.date = "2013-06-05"
   s.description = "With the simple-navigation gem installed you can easily create multilevel navigations for your Rails, Sinatra or Padrino applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation through regular expressions."
   s.email = "andreas.schacke@gmail.com"
   s.extra_rdoc_files = [
@@ -72,7 +72,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = "andi"
-  s.rubygems_version = "1.8.25"
+  s.rubygems_version = "1.8.24"
   s.summary = "simple-navigation is a ruby library for creating navigations (with multiple levels) for your Rails2, Rails3, Sinatra or Padrino application."
 
   if s.respond_to? :specification_version then
