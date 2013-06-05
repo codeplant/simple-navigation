@@ -25,7 +25,8 @@ module SimpleNavigation
     :list         => SimpleNavigation::Renderer::List,
     :links        => SimpleNavigation::Renderer::Links,
     :breadcrumbs  => SimpleNavigation::Renderer::Breadcrumbs,
-    :text         => SimpleNavigation::Renderer::Text
+    :text         => SimpleNavigation::Renderer::Text,
+    :json         => SimpleNavigation::Renderer::Json
   }
   
   class << self

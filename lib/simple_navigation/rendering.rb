@@ -7,5 +7,6 @@ module SimpleNavigation
     autoload :Links, 'simple_navigation/rendering/renderer/links'
     autoload :Breadcrumbs, 'simple_navigation/rendering/renderer/breadcrumbs'
     autoload :Text, 'simple_navigation/rendering/renderer/text'
+    autoload :Json, 'simple_navigation/rendering/renderer/json'
   end
 end
