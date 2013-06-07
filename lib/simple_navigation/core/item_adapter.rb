@@ -26,7 +26,7 @@ module SimpleNavigation
     attr_reader :item
 
     def initialize(item)
-      @item = item.instance_of?(Hash) ? to_object(item) : item
+      @item = item.is_a?(Hash) ? to_object(item) : item
     end
 
     # Returns the options for this item. If the wrapped item does not implement an options method, an empty hash is returned.
