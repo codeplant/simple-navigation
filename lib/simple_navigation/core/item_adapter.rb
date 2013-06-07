@@ -20,7 +20,7 @@ module SimpleNavigation
   # See SimpleNavigation::ItemContainer#item for the purpose of these methods.
   class ItemAdapter
     extend Forwardable
-    
+
     def_delegators :item, :key, :name, :url
 
     attr_reader :item
@@ -45,7 +45,7 @@ module SimpleNavigation
     end
 
     protected
-    
+
     # Converts the specified hash into an object. Each key will be added as method.
     #
     def to_object(hash)
