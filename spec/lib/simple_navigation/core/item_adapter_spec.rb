@@ -101,10 +101,13 @@ describe SimpleNavigation::ItemAdapter, 'when item is an object' do
 
 end
 
-describe SimpleNavigation::ItemAdapter, 'when item is a hash' do
+describe SimpleNavigation::ItemAdapter, 'when item is a kind of hash' do
+
+  class ModifiedHash < Hash
+  end
 
   before(:each) do
-    @item = {:key => 'key', :url => 'url', :name => 'name'}
+    @item = ModifiedHash[:key => 'key', :url => 'url', :name => 'name']
     @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
   end
 
