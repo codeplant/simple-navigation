@@ -60,7 +60,7 @@ SimpleNavigation::Configuration.run do |navigation|
     # You can also specify a condition-proc that needs to be fullfilled to display an item.
     # Conditions are part of the options. They are evaluated in the context of the views,
     # thus you can use all the methods and vars you have available in the views.
-    primary.item :key_3, 'Admin', url, :class => 'special', :if => Proc.new { current_user.admin? }
+    primary.item :key_3, 'Admin', url, :class => 'special', :if => Proc.new { current_user.admin? }
     primary.item :key_4, 'Account', url, :unless => Proc.new { logged_in? }
 
     # you can also specify a css id or class to attach to this particular level
