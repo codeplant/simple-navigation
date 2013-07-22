@@ -1,4 +1,4 @@
-source :rubygems
+source "https://rubygems.org"
 
 gem 'activesupport', '>= 2.3.2'
 
@@ -10,6 +10,7 @@ end
 
 group :development do
   gem 'rspec', '>= 2.0.1'
+  gem 'json_spec', '~> 1.1.1'
   gem 'rake'
   gem 'rdoc'
   gem 'jeweler'

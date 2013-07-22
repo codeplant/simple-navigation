@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "simple-navigation"
-  s.version = "3.10.1"
+  s.version = "3.11.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andi Schacke", "Mark J. Titorenko"]
-  s.date = "2013-04-10"
+  s.date = "2013-06-05"
   s.description = "With the simple-navigation gem installed you can easily create multilevel navigations for your Rails, Sinatra or Padrino applications. The navigation is defined in a single configuration file. It supports automatic as well as explicit highlighting of the currently active navigation through regular expressions."
   s.email = "andreas.schacke@gmail.com"
   s.extra_rdoc_files = [
@@ -44,6 +44,7 @@ Gem::Specification.new do |s|
     "lib/simple_navigation/rendering/helpers.rb",
     "lib/simple_navigation/rendering/renderer/base.rb",
     "lib/simple_navigation/rendering/renderer/breadcrumbs.rb",
+    "lib/simple_navigation/rendering/renderer/json.rb",
     "lib/simple_navigation/rendering/renderer/links.rb",
     "lib/simple_navigation/rendering/renderer/list.rb",
     "lib/simple_navigation/rendering/renderer/text.rb",
@@ -60,6 +61,7 @@ Gem::Specification.new do |s|
     "spec/lib/simple_navigation/rendering/helpers_spec.rb",
     "spec/lib/simple_navigation/rendering/renderer/base_spec.rb",
     "spec/lib/simple_navigation/rendering/renderer/breadcrumbs_spec.rb",
+    "spec/lib/simple_navigation/rendering/renderer/json_spec.rb",
     "spec/lib/simple_navigation/rendering/renderer/links_spec.rb",
     "spec/lib/simple_navigation/rendering/renderer/list_spec.rb",
     "spec/lib/simple_navigation/rendering/renderer/text_spec.rb",
@@ -79,12 +81,14 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2"])
       s.add_development_dependency(%q<rspec>, [">= 2.0.1"])
+      s.add_development_dependency(%q<json_spec>, ["~> 1.1.1"])
       s.add_development_dependency(%q<rake>, [">= 0"])
       s.add_development_dependency(%q<rdoc>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.3.2"])
       s.add_dependency(%q<rspec>, [">= 2.0.1"])
+      s.add_dependency(%q<json_spec>, ["~> 1.1.1"])
       s.add_dependency(%q<rake>, [">= 0"])
       s.add_dependency(%q<rdoc>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
@@ -92,6 +96,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<activesupport>, [">= 2.3.2"])
     s.add_dependency(%q<rspec>, [">= 2.0.1"])
+    s.add_dependency(%q<json_spec>, ["~> 1.1.1"])
     s.add_dependency(%q<rake>, [">= 0"])
     s.add_dependency(%q<rdoc>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])

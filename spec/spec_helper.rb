@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] = "test"
 require 'rubygems'
 require 'rspec'
+require 'json_spec'
 require 'action_controller'
 
 module Rails
@@ -28,7 +29,7 @@ RSpec.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
   config.mock_with :rspec
-
+  config.include JsonSpec::Helpers
 end
 
 # spec helper methods
