@@ -13,6 +13,7 @@ module SimpleNavigation
       options = setup_url_and_options(url_or_options, options_or_nil)
       @container.dom_class = options.delete(:container_class) if options[:container_class]
       @container.dom_id = options.delete(:container_id) if options[:container_id]
+      @container.dom_attributes = options[:container_attributes] ? options.delete(:container_attributes) : {}
       @container.selected_class = options.delete(:selected_class) if options[:selected_class]
       @key = key
       @method = options.delete(:method)

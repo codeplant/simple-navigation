@@ -70,10 +70,11 @@ describe SimpleNavigation::Item do
 
     context 'setting class and id on the container' do
       before(:each) do
-        @options = {:container_class => 'container_class', :container_id => 'container_id'}
+        @options = {:container_class => 'container_class', :container_id => 'container_id', :container_attributes => {'ng-show' => 'false'}}
       end
-      it {@item_container.should_receive(:dom_class=).with('container_class')}
-      it {@item_container.should_receive(:dom_id=).with('container_id')}
+      it "fills in #dom_attributes" do
+        @item_container.dom_attributes.should == {'id' => 'container_id', 'class' => 'container_class', 'ng-show' => 'false'}
+      end
       after(:each) do
         SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
       end
