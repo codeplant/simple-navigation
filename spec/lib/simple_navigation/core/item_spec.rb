@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SimpleNavigation::Item do
 
   before(:each) do
-    @item_container = stub(:item_container, :level => 1, :selected_class => nil).as_null_object
+    @item_container = SimpleNavigation::ItemContainer.new
     @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
     @adapter = stub(:adapter)
     SimpleNavigation.stub!(:adapter => @adapter)
@@ -71,12 +71,10 @@ describe SimpleNavigation::Item do
     context 'setting class and id on the container' do
       before(:each) do
         @options = {:container_class => 'container_class', :container_id => 'container_id', :container_attributes => {'ng-show' => 'false'}}
+        @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
       end
       it "fills in #dom_attributes" do
-        @item_container.dom_attributes.should == {'id' => 'container_id', 'class' => 'container_class', 'ng-show' => 'false'}
-      end
-      after(:each) do
-        SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
+        @item_container.dom_attributes.should == {:'id' => 'container_id', :'class' => 'container_class', 'ng-show' => 'false'}
       end
     end
 
