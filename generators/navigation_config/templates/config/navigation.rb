@@ -63,10 +63,9 @@ SimpleNavigation::Configuration.run do |navigation|
     primary.item :key_3, 'Admin', url, :class => 'special', :if => Proc.new { current_user.admin? }
     primary.item :key_4, 'Account', url, :unless => Proc.new { logged_in? }
 
-    # you can also specify a css id or class to attach to this particular level
+    # you can also specify html attributes to attach to this particular level
     # works for all levels of the menu
-    # primary.dom_id = 'menu-id'
-    # primary.dom_class = 'menu-class'
+    # primary.dom_attributes = {id: 'menu-id', class: 'menu-class'}
 
     # You can turn off auto highlighting for a specific level
     # primary.auto_highlight = false

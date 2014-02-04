@@ -8,14 +8,14 @@ module SimpleNavigation
     #
     # By default, the renderer sets the item's key as dom_id for the rendered <a> element unless the config option <tt>autogenerate_item_ids</tt> is set to false.
     # The id can also be explicitely specified by setting the id in the html-options of the 'item' method in the config/navigation.rb file.
-    # The ItemContainer's dom_class and dom_id are applied to the surrounding <div> element.
+    # The ItemContainer's dom_attributes are applied to the surrounding <div> element.
     #
     class Links < SimpleNavigation::Renderer::Base
       def render(item_container)
         div_content = item_container.items.inject([]) do |list, item|
           list << tag_for(item)
         end.join(join_with)
-        content_tag(:div, div_content, {:id => item_container.dom_id, :class => item_container.dom_class})
+        content_tag(:div, div_content, item_container.dom_attributes)
       end
 
       protected

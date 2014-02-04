@@ -4,13 +4,18 @@ module SimpleNavigation
   class ItemContainer
 
     attr_reader :items, :level
-    attr_accessor :renderer, :dom_id, :dom_class, :auto_highlight, :selected_class
+    attr_accessor :renderer, :dom_id, :dom_class, :dom_attributes, :auto_highlight, :selected_class
 
     def initialize(level=1) #:nodoc:
       @level = level
       @items = []
       @renderer = SimpleNavigation.config.renderer
       @auto_highlight = true
+    end
+
+    def dom_attributes
+      # backward compability for #dom_id and #dom_class
+      (@dom_attributes || {}).merge({id: dom_id, class: dom_class}.reject{|k, v| v.nil?})
     end
 
     # Creates a new navigation item.
