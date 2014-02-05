@@ -39,7 +39,7 @@ module SimpleNavigation
       end
       
       def link_to(name, url, options={})
-        template.link_to(html_safe(name), url, options) if template
+        template.link_to(link_title(name), url, options) if template
       end
       
       def content_tag(type, content, options={})
@@ -75,6 +75,10 @@ module SimpleNavigation
         context.respond_to?(:controller) ?
           context.controller || context :
           context
+      end
+
+      def link_title name
+        SimpleNavigation.config.consider_item_names_as_safe ? html_safe(name) : name
       end
          
     end

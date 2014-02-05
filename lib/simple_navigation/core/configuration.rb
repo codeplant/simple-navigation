@@ -6,7 +6,7 @@ module SimpleNavigation
   class Configuration
     include Singleton
 
-    attr_accessor :renderer, :selected_class, :active_leaf_class, :autogenerate_item_ids, :id_generator, :auto_highlight, :name_generator
+    attr_accessor :renderer, :selected_class, :active_leaf_class, :autogenerate_item_ids, :id_generator, :auto_highlight, :name_generator, :consider_item_names_as_safe
     attr_reader :primary_navigation
 
     class << self
@@ -32,6 +32,10 @@ module SimpleNavigation
       @id_generator = Proc.new {|id| id.to_s }
       @name_generator = Proc.new {|name| name}
       @auto_highlight = true
+      @consider_item_names_as_safe = true
+      if defined?(ActiveSupport::Deprecation)
+        ActiveSupport::Deprecation.warn "consider_item_names_as_safe will be set to false by default in 3.13.0 release", caller
+      end
     end
 
     # This is the main method for specifying the navigation items. It can be used in two ways:

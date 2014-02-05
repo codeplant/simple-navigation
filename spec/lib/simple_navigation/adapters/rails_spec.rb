@@ -14,7 +14,7 @@ describe SimpleNavigation::Adapters::Rails do
     @template = stub(:template, :request => @request)
     @adapter = create_adapter
   end
-  
+
   describe 'self.register' do
     before(:each) do
       ActionController::Base.stub!(:include)
@@ -268,7 +268,24 @@ describe SimpleNavigation::Adapters::Rails do
       it {@adapter.send(:html_safe, @input).should == @input}
     end
   end
-  
+
+  describe 'link_title' do
+    before(:each) do
+      @safe = double :safe
+      @name = double :name, html_safe: @safe
+    end
+    context 'consider item names are safe' do
+      it {@adapter.send(:link_title, @name) == @safe}
+    end
+    context 'consider item names are not safe' do
+      before do
+        SimpleNavigation.config.consider_item_names_as_safe = false
+        @adapter.stub template: @template
+      end
+      it {@adapter.send(:link_title, @name) == @name}
+    end
+  end
+
   describe 'template_from' do
     context 'Rails3' do 
       before(:each) do
@@ -283,5 +300,5 @@ describe SimpleNavigation::Adapters::Rails do
       it {@adapter.send(:template_from, @controller).should == 'view'}
     end
   end
-  
+
 end
