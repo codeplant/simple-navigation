@@ -182,6 +182,7 @@ describe 'explicit navigation in rails' do
   describe SimpleNavigation::Item do
     before(:each) do
       @item_container = stub(:item_container, :level => 1)
+      @item_container.stub! :dom_attributes=
       @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
       
     end
