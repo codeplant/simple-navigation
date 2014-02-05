@@ -198,7 +198,7 @@ describe SimpleNavigation::ItemContainer do
           end
         end
         it "should create a new Navigation-Item with the given params and the specified block" do
-          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, nil, &@proc)
+          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, true, nil, &@proc)
           @item_container.item('key', 'name', 'url', @options, &@proc)
         end
         it "should add the created item to the list of items" do
@@ -209,7 +209,7 @@ describe SimpleNavigation::ItemContainer do
 
       context 'no block given' do
         it "should create a new Navigation_item with the given params and nil as sub_navi" do
-          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, nil)
+          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, true, nil)
           @item_container.item('key', 'name', 'url', @options)
         end
         it "should add the created item to the list of items" do
@@ -241,12 +241,20 @@ describe SimpleNavigation::ItemContainer do
           end
         end
         context 'containing negative condition' do
-          it 'should not add the created item to the list of items' do
-            @item_container.items.should_not_receive(:<<)
+          it 'should create a new navigation item with visible set to false' do
+            SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', anything, anything, false, nil)
+            @item_container.item('key', 'name', {:if => lambda{false}, :option => true})
+          end
+          it 'should add the created item to the list of items' do
+            @item_container.items.should_receive(:<<)
             @item_container.item('key', 'name', {:if => lambda{false}, :option => true})
           end
         end
         context 'containing positive condition' do
+          it 'should create a new navigation item with visible set to false' do
+            SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', anything, anything, true, nil)
+            @item_container.item('key', 'name', {:if => lambda{true}, :option => true})
+          end
           it 'should add the created item to the list of items' do
             @item_container.items.should_receive(:<<)
             @item_container.item('key', 'name', {:if => lambda{true}, :option => true})
@@ -261,8 +269,8 @@ describe SimpleNavigation::ItemContainer do
           end
         end
         context 'containing negative condition' do
-          it 'should not add the created item to the list of items' do
-            @item_container.items.should_not_receive(:<<)
+          it 'should add the created item to the list of items' do
+            @item_container.items.should_receive(:<<)
             @item_container.item('key', 'name', 'url', {:if => lambda{false}, :option => true})
           end
         end
@@ -292,8 +300,8 @@ describe SimpleNavigation::ItemContainer do
           before(:each) do
             @condition = true
           end
-          it "should create a new Navigation-Item" do
-            SimpleNavigation::Item.should_receive(:new)
+          it "should create a new Navigation-Item with visible set true" do
+            SimpleNavigation::Item.should_receive(:new).with(anything, anything, anything, anything, anything, true, anything)
             @item_container.item('key', 'name', 'url', @options)
           end
         end
@@ -302,8 +310,8 @@ describe SimpleNavigation::ItemContainer do
           before(:each) do
             @condition = false
           end
-          it "should not create a new Navigation-Item" do
-            SimpleNavigation::Item.should_not_receive(:new)
+          it "should create a new Navigation-Item with visible set false" do
+            SimpleNavigation::Item.should_receive(:new).with(anything, anything, anything, anything, anything, false, anything)
             @item_container.item('key', 'name', 'url', @options)
           end
         end
@@ -340,8 +348,8 @@ describe SimpleNavigation::ItemContainer do
             before(:each) do
               @condition = true
             end
-            it "should not create a new Navigation-Item" do
-              SimpleNavigation::Item.should_not_receive(:new)
+            it "should create a new Navigation-Item with visible set false" do
+              SimpleNavigation::Item.should_receive(:new).with(anything, anything, anything, anything, anything, false, anything)
               @item_container.item('key', 'name', 'url', @options)
             end
           end

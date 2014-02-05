@@ -41,7 +41,7 @@ module SimpleNavigation
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
     def item(key, name, url_or_options = {}, options_or_nil = {}, &block)
       options = url_or_options.is_a?(Hash) ? url_or_options : options_or_nil
-      (@items << SimpleNavigation::Item.new(self, key, name, url_or_options, options_or_nil, nil, &block)) if should_add_item?(options)
+      (@items << SimpleNavigation::Item.new(self, key, name, url_or_options, options_or_nil, should_add_item?(options), nil, &block))
     end
 
     def items=(items)
@@ -49,6 +49,10 @@ module SimpleNavigation
         item = SimpleNavigation::ItemAdapter.new(item)
         (@items << item.to_simple_navigation_item(self)) if should_add_item?(item.options)
       end
+    end
+
+    def visible_items
+      items.select(&:visible?)
     end
 
     # Returns the Item with the specified key, nil otherwise.
