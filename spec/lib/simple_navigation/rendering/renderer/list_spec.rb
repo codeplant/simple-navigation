@@ -37,6 +37,7 @@ describe SimpleNavigation::Renderer::List do
         context 'with a custom name generator defined' do
           before(:each) do
             SimpleNavigation.config.stub!(:name_generator => Proc.new {|name| "<span>name</span>"})
+            SimpleNavigation.config.stub!(:consider_item_names_as_safe => true)
           end
           it "should apply the name generator" do
             HTML::Selector.new('li a span').select(render).should have(3).entries
