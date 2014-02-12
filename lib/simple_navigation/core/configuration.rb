@@ -34,7 +34,7 @@ module SimpleNavigation
       @auto_highlight = true
       @consider_item_names_as_safe = true
       if defined?(ActiveSupport::Deprecation)
-        ActiveSupport::Deprecation.warn "consider_item_names_as_safe will be set to false by default in 3.13.0 release", caller
+        ActiveSupport::Deprecation.warn "simple-navigation: consider_item_names_as_safe will be set to false by default in 3.13.0 release, hence item names will be considered unsafe by default", caller
       end
     end
 
