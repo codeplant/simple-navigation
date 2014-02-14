@@ -17,11 +17,11 @@ describe SimpleNavigation::ItemContainer do
 
   describe 'items=' do
     before(:each) do
-      @item = stub(:item)
+      @item = double(:item)
       @items = [@item]
-      @item_adapter = stub(:item_adapter).as_null_object
+      @item_adapter = double(:item_adapter).as_null_object
       SimpleNavigation::ItemAdapter.stub(:new => @item_adapter)
-      @item_container.stub!(:should_add_item? => true)
+      @item_container.stub(:should_add_item? => true)
     end
     it "should wrap each item in an ItemAdapter" do
       SimpleNavigation::ItemAdapter.should_receive(:new)
@@ -29,9 +29,9 @@ describe SimpleNavigation::ItemContainer do
     end
     context 'item should be added' do
       before(:each) do
-        @item_container.stub!(:should_add_item? => true)
-        @simple_navigation_item = stub(:simple_navigation_item)
-        @item_adapter.stub!(:to_simple_navigation_item => @simple_navigation_item)
+        @item_container.stub(:should_add_item? => true)
+        @simple_navigation_item = double(:simple_navigation_item)
+        @item_adapter.stub(:to_simple_navigation_item => @simple_navigation_item)
       end
       it "should convert the item to a SimpleNavigation::Item" do
         @item_adapter.should_receive(:to_simple_navigation_item).with(@item_container)
@@ -44,7 +44,7 @@ describe SimpleNavigation::ItemContainer do
     end
     context 'item should not be added' do
       before(:each) do
-        @item_container.stub!(:should_add_item? => false)
+        @item_container.stub(:should_add_item? => false)
       end
       it "should not convert the item to a SimpleNavigation::Item" do
         @item_adapter.should_not_receive(:to_simple_navigation_item)
@@ -59,25 +59,25 @@ describe SimpleNavigation::ItemContainer do
 
   describe 'selected?' do
     before(:each) do
-      @item_1 = stub(:item, :selected? => false)
-      @item_2 = stub(:item, :selected? => false)
+      @item_1 = double(:item, :selected? => false)
+      @item_2 = double(:item, :selected? => false)
       @item_container.instance_variable_set(:@items, [@item_1, @item_2])
     end
     it "should return nil if no item is selected" do
       @item_container.should_not be_selected
     end
     it "should return true if one item is selected" do
-      @item_1.stub!(:selected? => true)
+      @item_1.stub(:selected? => true)
       @item_container.should be_selected
     end
   end
 
   describe 'selected_item' do
     before(:each) do
-      SimpleNavigation.stub!(:current_navigation_for => :nav)
-      @item_container.stub!(:[] => nil)
-      @item_1 = stub(:item, :selected? => false)
-      @item_2 = stub(:item, :selected? => false)
+      SimpleNavigation.stub(:current_navigation_for => :nav)
+      @item_container.stub(:[] => nil)
+      @item_1 = double(:item, :selected? => false)
+      @item_2 = double(:item, :selected? => false)
       @item_container.instance_variable_set(:@items, [@item_1, @item_2])
     end
     context 'navigation not explicitely set' do
@@ -88,7 +88,7 @@ describe SimpleNavigation::ItemContainer do
       end
       context 'one item selected' do
         before(:each) do
-          @item_1.stub!(:selected? => true)
+          @item_1.stub(:selected? => true)
         end
         it "should return the selected item" do
           @item_container.selected_item.should == @item_1
@@ -100,26 +100,26 @@ describe SimpleNavigation::ItemContainer do
   describe 'selected_sub_navigation?' do
     context 'with an item selected' do
       before(:each) do
-        @selected_item = stub(:selected_item)
-        @item_container.stub!(:selected_item => @selected_item)
+        @selected_item = double(:selected_item)
+        @item_container.stub(:selected_item => @selected_item)
       end
       context 'selected item has sub_navigation' do
         before(:each) do
-          @sub_navigation = stub(:sub_navigation)
-          @selected_item.stub!(:sub_navigation => @sub_navigation)
+          @sub_navigation = double(:sub_navigation)
+          @selected_item.stub(:sub_navigation => @sub_navigation)
         end
         it {@item_container.send(:selected_sub_navigation?).should be_true}
       end
       context 'selected item does not have sub_navigation' do
         before(:each) do
-          @selected_item.stub!(:sub_navigation => nil)
+          @selected_item.stub(:sub_navigation => nil)
         end
         it {@item_container.send(:selected_sub_navigation?).should be_false}
       end
     end
     context 'without an item selected' do
       before(:each) do
-        @item_container.stub!(:selected_item => nil)
+        @item_container.stub(:selected_item => nil)
       end
       it {@item_container.send(:selected_sub_navigation?).should be_false}
     end
@@ -133,17 +133,17 @@ describe SimpleNavigation::ItemContainer do
     context "the desired level is different than the container's" do
       context 'with no selected subnavigation' do
         before(:each) do
-          @item_container.stub!(:selected_sub_navigation? => false)
+          @item_container.stub(:selected_sub_navigation? => false)
         end
         it {@item_container.active_item_container_for(2).should be_nil}
       end
       context 'with selected subnavigation' do
         before(:each) do
-          @item_container.stub!(:selected_sub_navigation? => true)
-          @sub_nav = stub(:sub_nav)
-          @selected_item = stub(:selected_item)
-          @item_container.stub!(:selected_item => @selected_item)
-          @selected_item.stub!(:sub_navigation => @sub_nav)
+          @item_container.stub(:selected_sub_navigation? => true)
+          @sub_nav = double(:sub_nav)
+          @selected_item = double(:selected_item)
+          @item_container.stub(:selected_item => @selected_item)
+          @selected_item.stub(:sub_navigation => @sub_nav)
         end
         it "should call recursively on the sub_navigation" do
           @sub_nav.should_receive(:active_item_container_for).with(2)
@@ -156,11 +156,11 @@ describe SimpleNavigation::ItemContainer do
   describe 'active_leaf_container' do
     context 'the current container has a selected subnavigation' do
       before(:each) do
-        @item_container.stub!(:selected_sub_navigation? => true)
-        @sub_nav = stub(:sub_nav)
-        @selected_item = stub(:selected_item)
-        @item_container.stub!(:selected_item => @selected_item)
-        @selected_item.stub!(:sub_navigation => @sub_nav)
+        @item_container.stub(:selected_sub_navigation? => true)
+        @sub_nav = double(:sub_nav)
+        @selected_item = double(:selected_item)
+        @item_container.stub(:selected_item => @selected_item)
+        @selected_item.stub(:sub_navigation => @sub_nav)
       end
       it "should call recursively on the sub_navigation" do
         @sub_nav.should_receive(:active_leaf_container)
@@ -169,7 +169,7 @@ describe SimpleNavigation::ItemContainer do
     end
     context 'the current container is the leaf already' do
       before(:each) do
-        @item_container.stub!(:selected_sub_navigation? => false)
+        @item_container.stub(:selected_sub_navigation? => false)
       end
       it "should return itsself" do
         @item_container.active_leaf_container.should == @item_container
@@ -182,14 +182,14 @@ describe SimpleNavigation::ItemContainer do
     context 'unconditional item' do
 
       before(:each) do
-        @item_container.stub!(:should_add_item?).and_return(true)
+        @item_container.stub(:should_add_item?).and_return(true)
         @options = {}
       end
 
       context 'block given' do
         before(:each) do
-          @sub_container = stub(:sub_container)
-          SimpleNavigation::ItemContainer.stub!(:new).and_return(@sub_container)
+          @sub_container = double(:sub_container)
+          SimpleNavigation::ItemContainer.stub(:new).and_return(@sub_container)
         end
 
         it "should should yield an new ItemContainer" do
@@ -369,8 +369,8 @@ describe SimpleNavigation::ItemContainer do
 
   describe 'render' do
     before(:each) do
-      @renderer_instance = stub(:renderer).as_null_object
-      @renderer_class = stub(:renderer_class, :new => @renderer_instance)
+      @renderer_instance = double(:renderer).as_null_object
+      @renderer_class = double(:renderer_class, :new => @renderer_instance)
     end
     context 'renderer specified as option' do
       context 'renderer-class specified' do
@@ -401,7 +401,7 @@ describe SimpleNavigation::ItemContainer do
     end
     context 'no renderer specified' do
       before(:each) do
-        @item_container.stub!(:renderer => @renderer_class)
+        @item_container.stub(:renderer => @renderer_class)
         @options = {}
       end
       it "should instantiate the container's renderer with the options" do
@@ -443,7 +443,7 @@ describe SimpleNavigation::ItemContainer do
       @item_container.should be_empty
     end
     it "should not be empty if there are some items" do
-      @item_container.instance_variable_set(:@items, [stub(:item)])
+      @item_container.instance_variable_set(:@items, [double(:item)])
       @item_container.should_not be_empty
     end
   end

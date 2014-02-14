@@ -7,15 +7,15 @@ describe SimpleNavigation::Adapters::Sinatra do
   end
 
   before(:each) do
-    @context = stub(:context)
-    @request = stub(:request, :fullpath => '/full?param=true', :path => '/full')
-    @context.stub!(:request => @request)
+    @context = double(:context)
+    @request = double(:request, :fullpath => '/full?param=true', :path => '/full')
+    @context.stub(:request => @request)
     @adapter = create_adapter
   end
 
   describe 'context_for_eval' do
     it "should raise error if no context" do
-      @adapter.stub!(:context => nil)
+      @adapter.stub(:context => nil)
       lambda {@adapter.context_for_eval}.should raise_error
     end
     it "should return the context" do
@@ -33,7 +33,7 @@ describe SimpleNavigation::Adapters::Sinatra do
 
   describe 'current_page?' do
     before(:each) do
-      @request.stub!(:scheme => 'http', :host_with_port => 'my_host:5000')
+      @request.stub(:scheme => 'http', :host_with_port => 'my_host:5000')
     end
 
     describe 'when URL is not encoded' do
@@ -50,7 +50,7 @@ describe SimpleNavigation::Adapters::Sinatra do
 
     describe 'when URL is encoded' do
       before(:each) do
-        @request.stub!(:fullpath => '/full%20with%20spaces?param=true', :path => '/full%20with%20spaces')
+        @request.stub(:fullpath => '/full%20with%20spaces?param=true', :path => '/full%20with%20spaces')
       end
 
       it {@adapter.current_page?('/full%20with%20spaces?param=true').should be_true}

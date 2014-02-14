@@ -10,7 +10,7 @@ describe 'explicit navigation in rails' do
   describe SimpleNavigation::ControllerMethods do
 
     def stub_loading_config
-      SimpleNavigation::Configuration.stub!(:load)
+      SimpleNavigation::Configuration.stub(:load)
     end
 
     before(:each) do
@@ -93,13 +93,13 @@ describe 'explicit navigation in rails' do
 
     describe 'handle_explicit_navigation' do
       def args(*args)
-        SimpleNavigation.stub!(:explicit_navigation_args => args.compact.empty? ? nil : args)
+        SimpleNavigation.stub(:explicit_navigation_args => args.compact.empty? ? nil : args)
       end
 
       before(:each) do
-        @controller = stub(:controller)
-        @adapter = stub(:adapter, :controller => @controller)
-        SimpleNavigation.stub!(:adapter => @adapter)
+        @controller = double(:controller)
+        @adapter = double(:adapter, :controller => @controller)
+        SimpleNavigation.stub(:adapter => @adapter)
       end
 
       context 'with explicit navigation set' do
@@ -115,8 +115,8 @@ describe 'explicit navigation in rails' do
         context 'single navigation' do
           context 'specified key is a valid navigation item' do
             before(:each) do
-              @primary = stub(:primary, :level_for_item => 2)
-              SimpleNavigation.stub!(:primary_navigation => @primary)
+              @primary = double(:primary, :level_for_item => 2)
+              SimpleNavigation.stub(:primary_navigation => @primary)
               args :key
             end
             it "should set the correct instance var in the controller" do
@@ -126,8 +126,8 @@ describe 'explicit navigation in rails' do
           end
           context 'specified key is an invalid navigation item' do
             before(:each) do
-              @primary = stub(:primary, :level_for_item => nil)
-              SimpleNavigation.stub!(:primary_navigation => @primary)
+              @primary = double(:primary, :level_for_item => nil)
+              SimpleNavigation.stub(:primary_navigation => @primary)
               args :key
             end
             it "should raise an ArgumentError" do
@@ -167,9 +167,9 @@ describe 'explicit navigation in rails' do
 
     describe 'current_navigation_for' do
       before(:each) do
-        @controller = stub(:controller)
-        @adapter = stub(:adapter, :controller => @controller)
-        SimpleNavigation.stub!(:adapter => @adapter)
+        @controller = double(:controller)
+        @adapter = double(:adapter, :controller => @controller)
+        SimpleNavigation.stub(:adapter => @adapter)
       end
       it "should access the correct instance_var in the controller" do
         @controller.should_receive(:instance_variable_get).with(:@sn_current_navigation_1)
@@ -181,25 +181,25 @@ describe 'explicit navigation in rails' do
 
   describe SimpleNavigation::Item do
     before(:each) do
-      @item_container = stub(:item_container, :level => 1)
-      @item_container.stub! :dom_attributes=
+      @item_container = double(:item_container, :level => 1)
+      @item_container.stub :dom_attributes=
       @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
       
     end
     describe 'selected_by_config?' do
       context 'navigation explicitly set' do
         it "should return true if current matches key" do
-          SimpleNavigation.stub!(:current_navigation_for => :my_key)
+          SimpleNavigation.stub(:current_navigation_for => :my_key)
           @item.should be_selected_by_config
         end
         it "should return false if current does not match key" do
-          SimpleNavigation.stub!(:current_navigation_for => :other_key)
+          SimpleNavigation.stub(:current_navigation_for => :other_key)
           @item.should_not be_selected_by_config
         end
       end
       context 'navigation not explicitly set' do
         before(:each) do
-          SimpleNavigation.stub!(:current_navigation_for => nil)
+          SimpleNavigation.stub(:current_navigation_for => nil)
         end
         it {@item.should_not be_selected_by_config}
       end
@@ -209,16 +209,16 @@ describe 'explicit navigation in rails' do
   describe SimpleNavigation::ItemContainer do
     describe 'selected_item' do
       before(:each) do
-        SimpleNavigation.stub!(:current_navigation_for)
+        SimpleNavigation.stub(:current_navigation_for)
         @item_container = SimpleNavigation::ItemContainer.new
         
-        @item_1 = stub(:item, :selected? => false)
-        @item_2 = stub(:item, :selected? => false)
+        @item_1 = double(:item, :selected? => false)
+        @item_2 = double(:item, :selected? => false)
         @item_container.instance_variable_set(:@items, [@item_1, @item_2])
       end
       context 'navigation explicitely set' do
         before(:each) do
-          @item_container.stub!(:[] => @item_1)
+          @item_container.stub(:[] => @item_1)
         end
         it "should return the explicitely selected item" do
           @item_container.selected_item.should == @item_1
@@ -226,7 +226,7 @@ describe 'explicit navigation in rails' do
       end
       context 'navigation not explicitely set' do
         before(:each) do
-          @item_container.stub!(:[] => nil)
+          @item_container.stub(:[] => nil)
         end
         context 'no item selected' do
           it "should return nil" do
@@ -235,7 +235,7 @@ describe 'explicit navigation in rails' do
         end
         context 'one item selected' do
           before(:each) do
-            @item_1.stub!(:selected? => true)
+            @item_1.stub(:selected? => true)
           end
           it "should return the selected item" do
             @item_container.selected_item.should == @item_1

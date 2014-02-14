@@ -36,8 +36,8 @@ describe SimpleNavigation::Renderer::List do
       context 'concerning item names' do
         context 'with a custom name generator defined' do
           before(:each) do
-            SimpleNavigation.config.stub!(:name_generator => Proc.new {|name| "<span>name</span>"})
-            SimpleNavigation.config.stub!(:consider_item_names_as_safe => true)
+            SimpleNavigation.config.stub(:name_generator => Proc.new {|name| "<span>name</span>"})
+            SimpleNavigation.config.stub(:consider_item_names_as_safe => true)
           end
           it "should apply the name generator" do
             HTML::Selector.new('li a span').select(render).should have(3).entries
@@ -45,7 +45,7 @@ describe SimpleNavigation::Renderer::List do
         end
         context 'no customer generator defined' do
           before(:each) do
-            SimpleNavigation.config.stub!(:name_generator => Proc.new {|name| "name"})
+            SimpleNavigation.config.stub(:name_generator => Proc.new {|name| "name"})
           end
           it "should apply the name generator" do
             HTML::Selector.new('li a span').select(render).should have(0).entries
@@ -174,13 +174,13 @@ describe SimpleNavigation::Renderer::List do
         context 'method specified' do
           context 'item selected' do
             before(:each) do
-              @item = stub(:item, :method => :delete, :selected_class => 'selected', :html_options => {})
+              @item = double(:item, :method => :delete, :selected_class => 'selected', :html_options => {})
             end
             it {@renderer.send(:link_options_for, @item).should == {:method => :delete, :class => 'selected'}}
           end
           context 'item not selected' do
             before(:each) do
-              @item = stub(:item, :method => :delete, :selected_class => nil, :html_options => {})
+              @item = double(:item, :method => :delete, :selected_class => nil, :html_options => {})
             end
             it {@renderer.send(:link_options_for, @item).should == {:method => :delete}}
           end
@@ -188,13 +188,13 @@ describe SimpleNavigation::Renderer::List do
         context 'method not specified' do
           context 'item selected' do
             before(:each) do
-              @item = stub(:item, :method => nil, :selected_class => 'selected', :html_options => {})
+              @item = double(:item, :method => nil, :selected_class => 'selected', :html_options => {})
             end
             it {@renderer.send(:link_options_for, @item).should == {:class => 'selected'}}
           end
           context 'item not selected' do
             before(:each) do
-              @item = stub(:item, :method => nil, :selected_class => nil, :html_options => {})
+              @item = double(:item, :method => nil, :selected_class => nil, :html_options => {})
             end
             it {@renderer.send(:link_options_for, @item).should == {}}
           end        
@@ -202,7 +202,7 @@ describe SimpleNavigation::Renderer::List do
       end
       context 'link options specified' do
         before(:each) do
-          @item = stub(:item, :method => :delete, :selected_class => 'selected', :html_options => {:link => {:class => 'link_class', :style => 'float:left'}})
+          @item = double(:item, :method => :delete, :selected_class => 'selected', :html_options => {:link => {:class => 'link_class', :style => 'float:left'}})
         end
         it {@renderer.send(:link_options_for, @item).should == {:method => :delete, :class => 'link_class selected', :style => 'float:left'}}
       end

@@ -5,15 +5,15 @@ describe SimpleNavigation::Item do
   before(:each) do
     @item_container = SimpleNavigation::ItemContainer.new
     @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
-    @adapter = stub(:adapter)
-    SimpleNavigation.stub!(:adapter => @adapter)
+    @adapter = double(:adapter)
+    SimpleNavigation.stub(:adapter => @adapter)
   end
 
   describe 'initialize' do
     context 'subnavigation' do
       before(:each) do
-        @subnav_container = stub(:subnav_container).as_null_object
-        SimpleNavigation::ItemContainer.stub!(:new => @subnav_container)
+        @subnav_container = double(:subnav_container).as_null_object
+        SimpleNavigation::ItemContainer.stub(:new => @subnav_container)
       end
       context 'block given' do
         it "should create a new ItemContainer with a level+1" do
@@ -28,7 +28,7 @@ describe SimpleNavigation::Item do
       context 'no block given' do
         context 'items given' do
           before(:each) do
-            @items = stub(:items)
+            @items = double(:items)
           end
           it "should create a new ItemContainer with a level+1" do
             SimpleNavigation::ItemContainer.should_receive(:new).with(2)
@@ -81,7 +81,7 @@ describe SimpleNavigation::Item do
     context ':highlights_on option' do
       context 'defined' do
         before(:each) do
-          @highlights_on = stub(:option)
+          @highlights_on = double(:option)
           @options = {:highlights_on => @highlights_on}
           @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', @options)
         end
@@ -161,7 +161,7 @@ describe SimpleNavigation::Item do
 
   describe 'name' do
     before(:each) do
-      SimpleNavigation.config.stub!(:name_generator => Proc.new {|name| "<span>#{name}</span>"})
+      SimpleNavigation.config.stub(:name_generator => Proc.new {|name| "<span>#{name}</span>"})
     end
     context 'default (generator is applied)' do
       it {@item.name.should == "<span>name</span>"}
@@ -174,7 +174,7 @@ describe SimpleNavigation::Item do
   describe 'selected?' do
     context 'explicitly selected' do
       before(:each) do
-        @item.stub!(:selected_by_config? => true)
+        @item.stub(:selected_by_config? => true)
       end
       it {@item.should be_selected}
       it "should not evaluate the subnav or urls" do
@@ -185,27 +185,27 @@ describe SimpleNavigation::Item do
     end
     context 'not explicitly selected' do
       before(:each) do
-        @item.stub!(:selected_by_config? => false)
+        @item.stub(:selected_by_config? => false)
       end
       context 'subnav is selected' do
         before(:each) do
-          @item.stub!(:selected_by_subnav? => true)
+          @item.stub(:selected_by_subnav? => true)
         end
         it {@item.should be_selected}
       end
       context 'subnav is not selected' do
         before(:each) do
-           @item.stub!(:selected_by_subnav? => false)
+           @item.stub(:selected_by_subnav? => false)
         end
         context 'selected by condition' do
           before(:each) do
-             @item.stub!(:selected_by_condition? => true)
+             @item.stub(:selected_by_condition? => true)
           end
           it {@item.should be_selected}
         end
         context 'not selected by condition' do
           before(:each) do
-            @item.stub!(:selected_by_condition? => false)
+            @item.stub(:selected_by_condition? => false)
           end
           it {@item.should_not be_selected}
         end
@@ -216,22 +216,22 @@ describe SimpleNavigation::Item do
   describe 'selected_class' do
     context 'selected_class is defined in context' do
       before(:each) do
-        @item_container = stub(:item_container, :level => 1, :selected_class => 'context_defined').as_null_object
+        @item_container = double(:item_container, :level => 1, :selected_class => 'context_defined').as_null_object
         @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
-        @item.stub!(:selected? => true)
+        @item.stub(:selected? => true)
       end
       it {@item.instance_eval {selected_class.should == 'context_defined'}}
     end
     context 'item is selected' do
       before(:each) do
-        @item.stub!(:selected? => true)
+        @item.stub(:selected? => true)
       end
       it {@item.instance_eval {selected_class.should == 'selected'}}
     end
 
     context 'item is not selected' do
       before(:each) do
-        @item.stub!(:selected? => false)
+        @item.stub(:selected? => false)
       end
       it {@item.instance_eval {selected_class.should == nil}}
     end
@@ -246,14 +246,14 @@ describe SimpleNavigation::Item do
         end
         context 'with item selected' do
           before(:each) do
-            @item.stub!(:selected? => true, :selected_by_condition? => true)
+            @item.stub(:selected? => true, :selected_by_condition? => true)
           end
           it {@item.html_options[:class].should == 'my_class selected simple-navigation-active-leaf'}
         end
 
         context 'with item not selected' do
           before(:each) do
-            @item.stub!(:selected? => false, :selected_by_condition? => false)
+            @item.stub(:selected? => false, :selected_by_condition? => false)
           end
           it {@item.html_options[:class].should == 'my_class'}
         end
@@ -266,14 +266,14 @@ describe SimpleNavigation::Item do
         end
         context 'with item selected' do
           before(:each) do
-            @item.stub!(:selected? => true, :selected_by_condition? => true)
+            @item.stub(:selected? => true, :selected_by_condition? => true)
           end
           it {@item.html_options[:class].should == 'selected simple-navigation-active-leaf'}
         end
 
         context 'with item not selected' do
           before(:each) do
-            @item.stub!(:selected? => false, :selected_by_condition? => false)
+            @item.stub(:selected? => false, :selected_by_condition? => false)
           end
           it {@item.html_options[:class].should be_blank}
         end
@@ -284,8 +284,8 @@ describe SimpleNavigation::Item do
     describe 'id' do
       context 'with autogenerate_item_ids == true' do
         before(:each) do
-          @item.stub!(:autogenerate_item_ids? => true)
-          @item.stub!(:selected? => false, :selected_by_condition? => false)
+          @item.stub(:autogenerate_item_ids? => true)
+          @item.stub(:selected? => false, :selected_by_condition? => false)
         end
         context 'with id defined in options' do
           before(:each) do
@@ -304,8 +304,8 @@ describe SimpleNavigation::Item do
 
       context 'with autogenerate_item_ids == false' do
         before(:each) do
-          @item.stub!(:autogenerate_item_ids? => false)
-          @item.stub!(:selected? => false, :selected_by_condition? => false)
+          @item.stub(:autogenerate_item_ids? => false)
+          @item.stub(:selected? => false, :selected_by_condition? => false)
         end
         context 'with id defined in options' do
           before(:each) do
@@ -330,21 +330,21 @@ describe SimpleNavigation::Item do
   describe 'selected_by_subnav?' do
     context 'item has subnav' do
       before(:each) do
-        @sub_navigation = stub(:sub_navigation)
-        @item.stub!(:sub_navigation => @sub_navigation)
+        @sub_navigation = double(:sub_navigation)
+        @item.stub(:sub_navigation => @sub_navigation)
       end
       it "should return true if subnav is selected" do
-        @sub_navigation.stub!(:selected? => true, :selected_by_condition? => true)
+        @sub_navigation.stub(:selected? => true, :selected_by_condition? => true)
         @item.should be_selected_by_subnav
       end
       it "should return false if subnav is not selected" do
-        @sub_navigation.stub!(:selected? => false, :selected_by_condition? => true)
+        @sub_navigation.stub(:selected? => false, :selected_by_condition? => true)
         @item.should_not be_selected_by_subnav
       end
     end
     context 'item does not have subnav' do
       before(:each) do
-        @item.stub!(:sub_navigation => @sub_navigation)
+        @item.stub(:sub_navigation => @sub_navigation)
       end
       it {@item.should_not be_selected_by_subnav}
     end
@@ -353,8 +353,8 @@ describe SimpleNavigation::Item do
   describe 'selected_by_condition?' do
     context ':highlights_on option is set' do
       before(:each) do
-        @item.stub!(:highlights_on => /^\/current/)
-        SimpleNavigation.stub!(:request_uri => '/current_url')
+        @item.stub(:highlights_on => /^\/current/)
+        SimpleNavigation.stub(:request_uri => '/current_url')
       end
       it "should not check for autohighlighting" do
         @item.should_not_receive(:auto_highlight?)
@@ -366,7 +366,7 @@ describe SimpleNavigation::Item do
         end
         context 'regexp does not match current_url' do
           before(:each) do
-            @item.stub!(:highlights_on => /^\/no_match/)
+            @item.stub(:highlights_on => /^\/no_match/)
           end
           it {@item.send(:selected_by_condition?).should be_false}
         end
@@ -374,44 +374,44 @@ describe SimpleNavigation::Item do
       context ':highlights_on is a lambda' do
         context 'truthy lambda results in selection' do
           before(:each) do
-            @item.stub!(:highlights_on => lambda{true})
+            @item.stub(:highlights_on => lambda{true})
           end
           it {@item.send(:selected_by_condition?).should be_true}
         end
         context 'falsey lambda results in no selection' do
           before(:each) do
-            @item.stub!(:highlights_on => lambda{false})
+            @item.stub(:highlights_on => lambda{false})
           end
           it {@item.send(:selected_by_condition?).should be_false}
         end
       end
       context ':highlights_on is :subpath' do
         before(:each) do
-          @item.stub!(:url => '/resources')
-          @item.stub!(:highlights_on => :subpath)
+          @item.stub(:url => '/resources')
+          @item.stub(:highlights_on => :subpath)
         end
         context 'we are in a route beginning with this item path' do
           before(:each) do
-            SimpleNavigation.stub!(:request_uri => '/resources/id')
+            SimpleNavigation.stub(:request_uri => '/resources/id')
           end
           it {@item.send(:selected_by_condition?).should be_true}
         end
         context 'we are in a route that has a similar name' do
           before(:each) do
-            SimpleNavigation.stub!(:request_uri => '/resources_group/id')
+            SimpleNavigation.stub(:request_uri => '/resources_group/id')
           end
           it {@item.send(:selected_by_condition?).should be_false}
         end
         context 'we are in a route not beginning with this item path' do
           before(:each) do
-            SimpleNavigation.stub!(:request_uri => '/another_resource/id')
+            SimpleNavigation.stub(:request_uri => '/another_resource/id')
           end
           it {@item.send(:selected_by_condition?).should be_false}
         end
       end
       context ':highlights_on is not a regexp or a proc' do
         before(:each) do
-          @item.stub!(:highlights_on => "not a regexp")
+          @item.stub(:highlights_on => "not a regexp")
         end
         it "should raise an error" do
           lambda {@item.send(:selected_by_condition?).should raise_error(ArgumentError)}
@@ -420,7 +420,7 @@ describe SimpleNavigation::Item do
     end
     context ':highlights_on option is not set' do
       before(:each) do
-        @item.stub!(:highlights_on => nil)
+        @item.stub(:highlights_on => nil)
       end
       it "should check for autohighlighting" do
         @item.should_receive(:auto_highlight?)
@@ -429,33 +429,33 @@ describe SimpleNavigation::Item do
     end
     context 'auto_highlight is turned on' do
       before(:each) do
-        @item.stub!(:auto_highlight? => true)
+        @item.stub(:auto_highlight? => true)
       end
       context 'root path matches' do
         before(:each) do
-          @item.stub!(:root_path_match? => true)
+          @item.stub(:root_path_match? => true)
         end
         it {@item.send(:selected_by_condition?).should be_true}
       end
       context 'root path does not match' do
         before(:each) do
-          @item.stub!(:root_path_match? => false)
+          @item.stub(:root_path_match? => false)
         end
         context 'current request url matches url' do
           before(:each) do
-            @adapter.stub!(:current_page? => true)
+            @adapter.stub(:current_page? => true)
           end
           it "should test with the item's url" do
             @adapter.should_receive(:current_page?).with('url')
             @item.send(:selected_by_condition?)
           end
           it "should remove anchors before testing the item's url" do
-            @item.stub!(:url => 'url#anchor')
+            @item.stub(:url => 'url#anchor')
             @adapter.should_receive(:current_page?).with('url')
             @item.send(:selected_by_condition?)
           end
           it "should not be queried when url is nil" do
-            @item.stub!(:url => nil)
+            @item.stub(:url => nil)
             @adapter.should_not_receive(:current_page?)
             @item.send(:selected_by_condition?)
           end
@@ -463,7 +463,7 @@ describe SimpleNavigation::Item do
         end
         context 'no match' do
           before(:each) do
-            @adapter.stub!(:current_page? => false)
+            @adapter.stub(:current_page? => false)
           end
           it {@item.send(:selected_by_condition?).should be_false}
         end
@@ -471,7 +471,7 @@ describe SimpleNavigation::Item do
     end
     context 'auto_highlight is turned off' do
       before(:each) do
-        @item.stub!(:auto_highlight? => false)
+        @item.stub(:auto_highlight? => false)
       end
       it {@item.send(:selected_by_condition?).should be_false}
     end
@@ -479,67 +479,67 @@ describe SimpleNavigation::Item do
 
   describe 'root_path_match?' do
     it "should match if both url == /" do
-      @adapter.stub!(:request_path => '/')
-      @item.stub!(:url => '/')
+      @adapter.stub(:request_path => '/')
+      @item.stub(:url => '/')
       @item.send(:root_path_match?).should be_true
     end
     it "should not match if item url is not /" do
       @adapter.stub(:request_path => '/')
-      @item.stub!(:url => '/bla')
+      @item.stub(:url => '/bla')
       @item.send(:root_path_match?).should be_false
     end
     it "should not match if request url is not /" do
       @adapter.stub(:request_path => '/bla')
-      @item.stub!(:url => '/')
+      @item.stub(:url => '/')
       @item.send(:root_path_match?).should be_false
     end
     it "should not match if urls do not match" do
       @adapter.stub(:request_path => 'bla')
-      @item.stub!(:url => '/bli')
+      @item.stub(:url => '/bli')
       @item.send(:root_path_match?).should be_false
     end
     it "should not match if url is nil" do
       @adapter.stub(:request_path => 'bla')
-      @item.stub!(:url => nil)
+      @item.stub(:url => nil)
       @item.send(:root_path_match?).should be_false
     end
   end
 
   describe 'auto_highlight?' do
     before(:each) do
-      @global = stub(:config)
-      SimpleNavigation.stub!(:config => @global)
+      @global = double(:config)
+      SimpleNavigation.stub(:config => @global)
     end
     context 'global auto_highlight on' do
       before(:each) do
-        @global.stub!(:auto_highlight => true)
+        @global.stub(:auto_highlight => true)
       end
       context 'container auto_highlight on' do
         before(:each) do
-          @item_container.stub!(:auto_highlight => true)
+          @item_container.stub(:auto_highlight => true)
         end
         it {@item.send(:auto_highlight?).should be_true}
       end
       context 'container auto_highlight off' do
         before(:each) do
-          @item_container.stub!(:auto_highlight => false)
+          @item_container.stub(:auto_highlight => false)
         end
         it {@item.send(:auto_highlight?).should be_false}
       end
     end
     context 'global auto_highlight off' do
       before(:each) do
-        @global.stub!(:auto_highlight => false)
+        @global.stub(:auto_highlight => false)
       end
       context 'container auto_highlight on' do
         before(:each) do
-          @item_container.stub!(:auto_highlight => true)
+          @item_container.stub(:auto_highlight => true)
         end
         it {@item.send(:auto_highlight?).should be_false}
       end
       context 'container auto_highlight off' do
         before(:each) do
-          @item_container.stub!(:auto_highlight => false)
+          @item_container.stub(:auto_highlight => false)
         end
         it {@item.send(:auto_highlight?).should be_false}
       end
@@ -549,8 +549,8 @@ describe SimpleNavigation::Item do
   describe 'autogenerated_item_id' do
     context 'calls' do
       before(:each) do
-        @id_generator = stub(:id_generator)
-        SimpleNavigation.config.stub!(:id_generator => @id_generator)
+        @id_generator = double(:id_generator)
+        SimpleNavigation.config.stub(:id_generator => @id_generator)
       end
       it "should call the configured generator with the key as param" do
         @id_generator.should_receive(:call).with(:my_key)

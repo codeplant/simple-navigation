@@ -7,9 +7,9 @@ describe SimpleNavigation::Adapters::Padrino do
   end
   
   before(:each) do
-    @request = stub(:request)
-    @content = stub(:content)
-    @context = stub(:context, :request => @request)
+    @request = double(:request)
+    @content = double(:content)
+    @context = double(:context, :request => @request)
     @adapter = create_adapter
   end
   

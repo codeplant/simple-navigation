@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SimpleNavigation::ItemAdapter, 'when item is an object' do
 
   before(:each) do
-    @item = stub(:item)
+    @item = double(:item)
     @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
   end
 
@@ -37,8 +37,8 @@ describe SimpleNavigation::ItemAdapter, 'when item is an object' do
   describe 'options' do
     context 'item does respond to options' do
       before(:each) do
-        @options = stub(:options)
-        @item.stub!(:options => @options)
+        @options = double(:options)
+        @item.stub(:options => @options)
       end
       it "should return the item's options'" do
         @item_adapter.options.should == @options
@@ -55,7 +55,7 @@ describe SimpleNavigation::ItemAdapter, 'when item is an object' do
     context 'item does respond to items' do
       context 'items is nil' do
         before(:each) do
-          @item.stub!(:items => nil)
+          @item.stub(:items => nil)
         end
         it "should return nil" do
           @item_adapter.items.should be_nil
@@ -64,7 +64,7 @@ describe SimpleNavigation::ItemAdapter, 'when item is an object' do
       context 'items is not nil' do
         context 'items is empty' do
           before(:each) do
-            @item.stub!(:items => [])
+            @item.stub(:items => [])
           end
           it "should return nil" do
             @item_adapter.items.should be_nil
@@ -72,8 +72,8 @@ describe SimpleNavigation::ItemAdapter, 'when item is an object' do
         end
         context 'items is not empty' do
           before(:each) do
-            @items = stub(:items, :empty? => false)
-            @item.stub!(:items => @items)
+            @items = double(:items, :empty? => false)
+            @item.stub(:items => @items)
           end
           it "should return the items" do
             @item_adapter.items.should == @items
@@ -90,8 +90,8 @@ describe SimpleNavigation::ItemAdapter, 'when item is an object' do
 
   describe 'to_simple_navigation_item' do
     before(:each) do
-      @container = stub(:container)
-      @item.stub!(:url => 'url', :name => 'name', :key => 'key', :options => {}, :items => [])
+      @container = double(:container)
+      @item.stub(:url => 'url', :name => 'name', :key => 'key', :options => {}, :items => [])
     end
     it "should create a SimpleNavigation::Item" do
       SimpleNavigation::Item.should_receive(:new).with(@container, 'key', 'name', 'url', {}, nil)
@@ -199,7 +199,7 @@ describe SimpleNavigation::ItemAdapter, 'when item is a kind of hash' do
 
   describe 'to_simple_navigation_item' do
     before(:each) do
-      @container = stub(:container)
+      @container = double(:container)
       @item = {:key => 'key', :url => 'url', :name => 'name', :items => [], :options => {}}
       @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
     end

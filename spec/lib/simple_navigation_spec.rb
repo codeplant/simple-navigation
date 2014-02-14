@@ -47,7 +47,7 @@ describe SimpleNavigation do
       end
       context 'requested config file does exist' do
         before(:each) do
-          File.stub!(:exists? => true)
+          File.stub(:exists? => true)
         end
         it "should return the path to the config_file" do
           SimpleNavigation.config_file.should == 'my_config_file_path/navigation.rb'
@@ -55,7 +55,7 @@ describe SimpleNavigation do
       end
       context 'requested config file does not exist' do
         before(:each) do
-          File.stub!(:exists? => false)
+          File.stub(:exists? => false)
         end
         it "should return nil" do
           SimpleNavigation.config_file.should be_nil        
@@ -68,7 +68,7 @@ describe SimpleNavigation do
       end
       context 'requested config file does exist' do
         before(:each) do
-          File.stub!(:exists? => true)
+          File.stub(:exists? => true)
         end
         it "should return the path to the first matching config_file" do
           SimpleNavigation.config_file.should == 'first_path/navigation.rb'
@@ -76,7 +76,7 @@ describe SimpleNavigation do
       end
       context 'requested config file does not exist' do
         before(:each) do
-          File.stub!(:exists? => false)
+          File.stub(:exists? => false)
         end
         it "should return nil" do
           SimpleNavigation.config_file.should be_nil        
@@ -88,13 +88,13 @@ describe SimpleNavigation do
   describe 'config_file?' do
     context 'config_file present' do
       before(:each) do
-        SimpleNavigation.stub!(:config_file => 'file')
+        SimpleNavigation.stub(:config_file => 'file')
       end
       it {SimpleNavigation.config_file?.should be_true}
     end
     context 'config_file not present' do
       before(:each) do
-        SimpleNavigation.stub!(:config_file => nil)
+        SimpleNavigation.stub(:config_file => nil)
       end
       it {SimpleNavigation.config_file?.should be_false}
     end
@@ -102,7 +102,7 @@ describe SimpleNavigation do
 
   describe 'self.default_config_file_path' do
     before(:each) do
-      SimpleNavigation.stub!(:root => 'root')
+      SimpleNavigation.stub(:root => 'root')
     end
     it {SimpleNavigation.default_config_file_path.should == 'root/config'}
   end
@@ -114,7 +114,7 @@ describe SimpleNavigation do
 
     describe 'register_renderer' do
       before(:each) do
-        @renderer = stub(:renderer)
+        @renderer = double(:renderer)
       end
       it "should add the specified renderer to the list of renderers" do
         SimpleNavigation.register_renderer(:my_renderer => @renderer)
@@ -127,7 +127,7 @@ describe SimpleNavigation do
   describe 'set_env' do
     before(:each) do
       SimpleNavigation.config_file_paths = []
-      SimpleNavigation.stub!(:default_config_file_path => 'default_path')
+      SimpleNavigation.stub(:default_config_file_path => 'default_path')
       SimpleNavigation.set_env('root', 'my_env')
     end
     it "should set the root" do
@@ -144,12 +144,12 @@ describe SimpleNavigation do
   describe 'load_config' do
     context 'config_file_path is set' do
       before(:each) do
-        SimpleNavigation.stub!(:config_file => 'path_to_config_file')
+        SimpleNavigation.stub(:config_file => 'path_to_config_file')
       end
       context 'config_file does exist' do
         before(:each) do
-          SimpleNavigation.stub!(:config_file? => true)
-          IO.stub!(:read => 'file_content')
+          SimpleNavigation.stub(:config_file? => true)
+          IO.stub(:read => 'file_content')
         end
         it "should not raise an error" do
           lambda{SimpleNavigation.load_config}.should_not raise_error
@@ -172,7 +172,7 @@ describe SimpleNavigation do
       
       context 'config_file does not exist' do
         before(:each) do
-          SimpleNavigation.stub!(:config_file? => false)
+          SimpleNavigation.stub(:config_file? => false)
         end
         it {lambda{SimpleNavigation.load_config}.should raise_error}
       end
@@ -187,13 +187,13 @@ describe SimpleNavigation do
     
     describe 'regarding caching of the config-files' do
       before(:each) do
-        IO.stub!(:read).and_return('file_content')
+        IO.stub(:read).and_return('file_content')
         SimpleNavigation.config_file_path = 'path_to_config'
-        File.stub!(:exists? => true)
+        File.stub(:exists? => true)
       end
       context "environment undefined" do
         before(:each) do
-          SimpleNavigation.stub!(:environment => nil)
+          SimpleNavigation.stub(:environment => nil)
         end
         it "should load the config file twice" do
           IO.should_receive(:read).twice
@@ -203,7 +203,7 @@ describe SimpleNavigation do
       end
       context "environment defined" do
         before(:each) do
-          SimpleNavigation.stub!(:environment => 'production')
+          SimpleNavigation.stub(:environment => 'production')
         end
         context "environment=production" do
           it "should load the config file only once" do
@@ -215,7 +215,7 @@ describe SimpleNavigation do
         
         context "environment=development" do
           before(:each) do
-            SimpleNavigation.stub!(:environment => 'development')
+            SimpleNavigation.stub(:environment => 'development')
           end
           it "should load the config file twice" do
             IO.should_receive(:read).twice
@@ -226,7 +226,7 @@ describe SimpleNavigation do
         
         context "environment=test" do
           before(:each) do
-            SimpleNavigation.stub!(:environment => 'test')
+            SimpleNavigation.stub(:environment => 'test')
           end
           it "should load the config file twice" do
             IO.should_receive(:read).twice
@@ -247,8 +247,8 @@ describe SimpleNavigation do
   
   describe 'active_item_container_for' do
     before(:each) do
-      @primary = stub(:primary)
-      SimpleNavigation.config.stub!(:primary_navigation => @primary)
+      @primary = double(:primary)
+      SimpleNavigation.config.stub(:primary_navigation => @primary)
     end
     context 'level is :all' do
       it "should return the primary_navigation" do
@@ -283,21 +283,21 @@ describe SimpleNavigation do
   describe 'load_adapter' do
     context 'Rails' do
       before(:each) do
-        SimpleNavigation.stub!(:framework => :rails)
+        SimpleNavigation.stub(:framework => :rails)
         SimpleNavigation.load_adapter
       end
       it {SimpleNavigation.adapter_class.should == SimpleNavigation::Adapters::Rails}
     end
     context 'Padrino' do
       before(:each) do
-        SimpleNavigation.stub!(:framework => :padrino)
+        SimpleNavigation.stub(:framework => :padrino)
         SimpleNavigation.load_adapter
       end
       it {SimpleNavigation.adapter_class.should == SimpleNavigation::Adapters::Padrino}
     end
     context 'Sinatra' do
       before(:each) do
-        SimpleNavigation.stub!(:framework => :sinatra)
+        SimpleNavigation.stub(:framework => :sinatra)
         SimpleNavigation.load_adapter
       end
       it {SimpleNavigation.adapter_class.should == SimpleNavigation::Adapters::Sinatra}

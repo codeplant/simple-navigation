@@ -16,11 +16,11 @@ describe SimpleNavigation::Configuration do
 
   describe 'self.eval_config' do
     before(:each) do
-      @context = mock(:context)
-      @context.stub!(:instance_eval)
-      SimpleNavigation.stub!(:context_for_eval => @context)
+      @context = double(:context)
+      @context.stub(:instance_eval)
+      SimpleNavigation.stub(:context_for_eval => @context)
       @config_files = {:default => 'default', :my_context => 'my_context'}
-      SimpleNavigation.stub!(:config_files).and_return(@config_files)
+      SimpleNavigation.stub(:config_files).and_return(@config_files)
     end
     context "with default navigation context" do
       it "should instance_eval the default config_file-string inside the context" do
@@ -61,12 +61,12 @@ describe SimpleNavigation::Configuration do
   end
   describe 'items' do
     before(:each) do
-      @container = stub(:items_container)
-      SimpleNavigation::ItemContainer.stub!(:new).and_return(@container)
+      @container = double(:items_container)
+      SimpleNavigation::ItemContainer.stub(:new).and_return(@container)
     end
     context 'block given' do
       context 'items_provider specified' do
-        it {lambda {@config.items(stub(:provider)) {}}.should raise_error}
+        it {lambda {@config.items(double(:provider)) {}}.should raise_error}
       end
       context 'no items_provider specified' do
         it "should should yield an new ItemContainer" do
@@ -87,11 +87,11 @@ describe SimpleNavigation::Configuration do
     context 'no block given' do
       context 'items_provider specified' do
         before(:each) do
-          @external_provider = stub(:external_provider)
-          @items = stub(:items)
-          @items_provider = stub(:items_provider, :items => @items)
-          SimpleNavigation::ItemsProvider.stub!(:new => @items_provider)
-          @container.stub!(:items=)
+          @external_provider = double(:external_provider)
+          @items = double(:items)
+          @items_provider = double(:items_provider, :items => @items)
+          SimpleNavigation::ItemsProvider.stub(:new => @items_provider)
+          @container.stub(:items=)
         end
         it "should create an new Provider object for the specified provider" do
           SimpleNavigation::ItemsProvider.should_receive(:new).with(@external_provider)

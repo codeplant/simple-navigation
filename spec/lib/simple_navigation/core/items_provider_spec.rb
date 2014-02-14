@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SimpleNavigation::ItemsProvider do
 
   before(:each) do
-    @provider = stub(:provider)
+    @provider = double(:provider)
     @items_provider = SimpleNavigation::ItemsProvider.new(@provider)
   end
 
@@ -15,13 +15,13 @@ describe SimpleNavigation::ItemsProvider do
 
   describe 'items' do
     before(:each) do
-      @items = stub(:items)
+      @items = double(:items)
     end
     context 'provider is symbol' do
       before(:each) do
         @items_provider.instance_variable_set(:@provider, :provider_method)
-        @context = stub(:context, :provider_method => @items)
-        SimpleNavigation.stub!(:context_for_eval => @context)
+        @context = double(:context, :provider_method => @items)
+        SimpleNavigation.stub(:context_for_eval => @context)
       end
       it "should call the method specified by symbol on the context" do
         @context.should_receive(:provider_method)
@@ -33,7 +33,7 @@ describe SimpleNavigation::ItemsProvider do
     end
     context 'provider responds to items' do
       before(:each) do
-        @provider.stub!(:items => @items)
+        @provider.stub(:items => @items)
       end
       it "should get the items from the items_provider" do
         @provider.should_receive(:items)
