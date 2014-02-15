@@ -1,250 +1,270 @@
 require 'spec_helper'
+require 'simple_navigation/rails_controller_methods'
 
-describe 'explicit navigation in rails' do
-  require 'simple_navigation/rails_controller_methods'
+class TestController
+  include SimpleNavigation::ControllerMethods
 
-  it 'should have enhanced the ActionController after loading the extensions' do
-    ActionController::Base.instance_methods.map {|m| m.to_s}.should include('current_navigation')
+  def self.helper_method(*args)
+    @helper_methods = args
   end
 
-  describe SimpleNavigation::ControllerMethods do
+  def self.before_filter(*args)
+    @before_filters = args
+  end
+end
 
-    def stub_loading_config
-      SimpleNavigation::Configuration.stub(:load)
+module SimpleNavigation
+  describe 'Explicit navigation in rails' do
+    it 'enhances ActionController after loading the extensions' do
+      methods = ActionController::Base.instance_methods.map(&:to_s)
+      expect(methods).to include 'current_navigation'
     end
+  end
 
-    before(:each) do
-      stub_loading_config
-      class TestController
-        class << self
-          def helper_method(*args)
-            @helper_methods = args
+  describe ControllerMethods do
+    let(:controller) { TestController.new }
+
+    before { SimpleNavigation::Configuration.stub(:load) }
+
+    describe 'when the module is included' do
+      it 'extends the ClassMethods module' do
+        expect(controller.class).to respond_to(:navigation)
+      end
+
+      it "includes the InstanceMethods module" do
+        expect(controller).to respond_to(:current_navigation)
+      end
+    end
+  end
+
+  module ControllerMethods
+    describe ClassMethods do
+      let(:controller) { TestController.new }
+
+      describe '#navigation' do
+        context 'when the navigation method is not called' do
+          it "doesn't have any instance method called 'sn_set_navigation'" do
+            has_method = controller.respond_to?(:sn_set_navigation, true)
+            expect(has_method).to be_false
           end
-          def before_filter(*args)
-            @before_filters = args
+        end
+
+        context 'when the navigation method is called' do
+          before do
+            controller.class_eval { navigation(:primary, :secondary) }
+          end
+
+          it 'creates an instance method called "sn_set_navigation"' do
+            has_method = controller.respond_to?(:sn_set_navigation, true)
+            expect(has_method).to be_true
+          end
+
+          it 'does not create a public method' do
+            methods = controller.public_methods.map(&:to_s)
+            expect(methods).not_to include 'sn_set_navigation'
+          end
+
+          it 'creates a protected method' do
+            methods = controller.protected_methods.map(&:to_s)
+            expect(methods).to include 'sn_set_navigation'
+          end
+
+          it 'creates a method that calls current_navigation with the specified keys' do
+            expect(controller).to receive(:current_navigation)
+                                 .with(:primary, :secondary)
+            controller.send(:sn_set_navigation)
           end
         end
       end
-      TestController.send(:include, SimpleNavigation::ControllerMethods)
-      @controller = TestController.new
     end
 
-    describe 'when being included' do
-      it "should extend the ClassMethods" do
-        @controller.class.should respond_to(:navigation)
-      end
-      it "should include the InstanceMethods" do
-        @controller.should respond_to(:current_navigation)
-      end
-    end
+    describe InstanceMethods do
+      let(:controller) { TestController.new }
 
-    describe 'class_methods' do
-
-      describe 'navigation' do
-
-        def call_navigation(key1, key2=nil)
-          @controller.class_eval do
-            navigation key1, key2
+      describe '#current_navigation' do
+        shared_examples 'setting the correct sn_current_navigation_args' do |args|
+          it 'sets the sn_current_navigation_args as specified' do
+            controller.current_navigation(*args)
+            args = controller.instance_variable_get(:@sn_current_navigation_args)
+            expect(args).to eq args
           end
         end
 
-        it "should not have an instance-method 'sn_set_navigation' if navigation-method has not been called" do
-          @controller.respond_to?(:sn_set_navigation).should be_false
-        end
-        it 'should create an instance-method "sn_set_navigation" when being called' do
-          call_navigation(:key)
-          @controller.respond_to?(:sn_set_navigation, true).should be_true
-        end
-        it "the created method should not be public" do
-          call_navigation(:key)
-          @controller.public_methods.map(&:to_sym).should_not include(:sn_set_navigation)
-        end
-        it "the created method should be protected" do
-          call_navigation(:key)
-          @controller.protected_methods.map(&:to_sym).should include(:sn_set_navigation)
-        end
-        it 'the created method should call current_navigation with the specified keys' do
-          call_navigation(:primary, :secondary)
-          @controller.should_receive(:current_navigation).with(:primary, :secondary)
-          @controller.send(:sn_set_navigation)
-        end
+        it_behaves_like 'setting the correct sn_current_navigation_args', [:first]
+        it_behaves_like 'setting the correct sn_current_navigation_args', [:first, :second]
       end
-
     end
-
-    describe 'instance_methods' do
-
-      describe 'current_navigation' do
-        it "should set the sn_current_navigation_args as specified" do
-          @controller.current_navigation(:first)
-          @controller.instance_variable_get(:@sn_current_navigation_args).should == [:first]
-        end
-        it "should set the sn_current_navigation_args as specified" do
-          @controller.current_navigation(:first, :second)
-          @controller.instance_variable_get(:@sn_current_navigation_args).should == [:first, :second]
-        end
-      end
-
-    end
-
   end
 
   describe 'SimpleNavigation module additions' do
+    let(:adapter) { double(:adapter, controller: controller) }
+    let(:controller) { double(:controller) }
+    let(:simple_navigation) { SimpleNavigation }
 
-    describe 'handle_explicit_navigation' do
+    before { simple_navigation.stub(adapter: adapter) }
+
+    describe '.handle_explicit_navigation' do
       def args(*args)
-        SimpleNavigation.stub(:explicit_navigation_args => args.compact.empty? ? nil : args)
+        keys = args.compact.empty? ? nil : args
+        simple_navigation.stub(explicit_navigation_args: keys)
       end
 
-      before(:each) do
-        @controller = double(:controller)
-        @adapter = double(:adapter, :controller => @controller)
-        SimpleNavigation.stub(:adapter => @adapter)
-      end
+      context 'when there is an explicit navigation set' do
+        context 'and it is a list of navigations' do
+          before { args :first, :second, :third }
 
-      context 'with explicit navigation set' do
-        context 'list of navigations' do
-          before(:each) do
-            args :first, :second, :third
-          end
-          it "should set the correct instance var in the controller" do
-            @controller.should_receive(:instance_variable_set).with(:@sn_current_navigation_3, :third)
-            SimpleNavigation.handle_explicit_navigation
+          it 'sets the correct instance var in the controller' do
+            expect(controller).to receive(:instance_variable_set)
+                                 .with(:@sn_current_navigation_3, :third)
+            simple_navigation.handle_explicit_navigation
           end
         end
-        context 'single navigation' do
-          context 'specified key is a valid navigation item' do
-            before(:each) do
-              @primary = double(:primary, :level_for_item => 2)
-              SimpleNavigation.stub(:primary_navigation => @primary)
+
+        context 'and it is a single navigation' do
+          context 'and the specified key is a valid navigation item' do
+            let(:primary) { double(:primary, level_for_item: 2) }
+
+            before do
+              simple_navigation.stub(primary_navigation: primary)
               args :key
             end
-            it "should set the correct instance var in the controller" do
-              @controller.should_receive(:instance_variable_set).with(:@sn_current_navigation_2, :key)
-              SimpleNavigation.handle_explicit_navigation
+
+            it 'sets the correct instance var in the controller' do
+              expect(controller).to receive(:instance_variable_set)
+                                    .with(:@sn_current_navigation_2, :key)
+              simple_navigation.handle_explicit_navigation
             end
           end
-          context 'specified key is an invalid navigation item' do
-            before(:each) do
-              @primary = double(:primary, :level_for_item => nil)
-              SimpleNavigation.stub(:primary_navigation => @primary)
+
+          context 'and the specified key is an invalid navigation item' do
+            let(:primary) { double(:primary, level_for_item: nil) }
+
+            before do
+              subject.stub(primary_navigation: primary)
               args :key
             end
-            it "should raise an ArgumentError" do
-              lambda {SimpleNavigation.handle_explicit_navigation}.should raise_error(ArgumentError)
+
+            it 'raises an exception' do
+              expect{ subject.handle_explicit_navigation }.to raise_error
             end
           end
         end
-        context 'hash with level' do
-          before(:each) do
-            args :level_2 => :key
-          end
-          it "should set the correct instance var in the controller" do
-            @controller.should_receive(:instance_variable_set).with(:@sn_current_navigation_2, :key)
-            SimpleNavigation.handle_explicit_navigation
+
+        context 'and the argument is a one-level hash' do
+          before { args level_2: :key }
+
+          it 'sets the correct instance var in the controller' do
+            expect(controller).to receive(:instance_variable_set)
+                                  .with(:@sn_current_navigation_2, :key)
+            simple_navigation.handle_explicit_navigation
           end
         end
-        context 'hash with multiple_levels' do
-          before(:each) do
-            args :level_2 => :key, :level_1 => :bla
-          end
-          it "should set the correct instance var in the controller" do
-            @controller.should_receive(:instance_variable_set).with(:@sn_current_navigation_2, :key)
-            SimpleNavigation.handle_explicit_navigation
+
+        context 'when the argument is a multiple levels hash' do
+          before { args level_2: :key, level_1: :bla }
+
+          it 'sets the correct instance var in the controller' do
+            expect(controller).to receive(:instance_variable_set)
+                                  .with(:@sn_current_navigation_2, :key)
+            simple_navigation.handle_explicit_navigation
           end
         end
       end
-      context 'without explicit navigation set' do
-        before(:each) do
-          args nil
-        end
-        it "should not set the current_navigation instance var in the controller" do
-          @controller.should_not_receive(:instance_variable_set)
-          SimpleNavigation.handle_explicit_navigation
+
+      context 'when no explicit navigation is set' do
+        before { args nil }
+
+        it "doesn't set the current_navigation instance var in the controller" do
+          expect(controller).not_to receive(:instance_variable_set)
+          simple_navigation.handle_explicit_navigation
         end
       end
     end
 
-    describe 'current_navigation_for' do
-      before(:each) do
-        @controller = double(:controller)
-        @adapter = double(:adapter, :controller => @controller)
-        SimpleNavigation.stub(:adapter => @adapter)
-      end
-      it "should access the correct instance_var in the controller" do
-        @controller.should_receive(:instance_variable_get).with(:@sn_current_navigation_1)
-        SimpleNavigation.current_navigation_for(1)
-      end
-    end
-
-  end  
-
-  describe SimpleNavigation::Item do
-    before(:each) do
-      @item_container = double(:item_container, :level => 1)
-      @item_container.stub :dom_attributes=
-      @item = SimpleNavigation::Item.new(@item_container, :my_key, 'name', 'url', {})
-      
-    end
-    describe 'selected_by_config?' do
-      context 'navigation explicitly set' do
-        it "should return true if current matches key" do
-          SimpleNavigation.stub(:current_navigation_for => :my_key)
-          @item.should be_selected_by_config
-        end
-        it "should return false if current does not match key" do
-          SimpleNavigation.stub(:current_navigation_for => :other_key)
-          @item.should_not be_selected_by_config
-        end
-      end
-      context 'navigation not explicitly set' do
-        before(:each) do
-          SimpleNavigation.stub(:current_navigation_for => nil)
-        end
-        it {@item.should_not be_selected_by_config}
+    describe '#current_navigation_for' do
+      it 'accesses the correct instance var in the controller' do
+        expect(controller).to receive(:instance_variable_get)
+                              .with(:@sn_current_navigation_1)
+        simple_navigation.current_navigation_for(1)
       end
     end
   end
-  
-  describe SimpleNavigation::ItemContainer do
-    describe 'selected_item' do
-      before(:each) do
+
+  describe Item do
+    let(:item) { Item.new(item_container, :my_key, 'name', 'url', {}) }
+    let(:item_container) { double(:item_container, level: 1) }
+    let(:simple_navigation) { SimpleNavigation }
+
+    before do
+      item_container.stub(:dom_attributes=)
+      simple_navigation.stub(current_navigation_for: navigation_key)
+    end
+
+    describe '#selected_by_config?' do
+      context 'when the navigation explicitly set' do
+        context 'when current matches the key' do
+          let(:navigation_key) { :my_key }
+
+          it 'selects the item' do
+            expect(item).to be_selected_by_config
+          end
+        end
+
+        context "when current doesn't match the key" do
+          let(:navigation_key) { :other_key }
+
+          it "doesn't select the item" do
+            expect(item).not_to be_selected_by_config
+          end
+        end
+      end
+
+      context 'when the navigation is not explicitly set' do
+        let(:navigation_key) { nil }
+
+        it "doesn't select the item" do
+          expect(item).not_to be_selected_by_config
+        end
+      end
+    end
+  end
+
+  describe ItemContainer do
+    describe '#selected_item' do
+      let(:item_container) { SimpleNavigation::ItemContainer.new }
+      let(:item_1) { double(:item, selected?: false) }
+      let(:item_2) { double(:item, selected?: false) }
+
+      before do
         SimpleNavigation.stub(:current_navigation_for)
-        @item_container = SimpleNavigation::ItemContainer.new
-        
-        @item_1 = double(:item, :selected? => false)
-        @item_2 = double(:item, :selected? => false)
-        @item_container.instance_variable_set(:@items, [@item_1, @item_2])
+        item_container.instance_variable_set(:@items, [item_1, item_2])
       end
-      context 'navigation explicitely set' do
-        before(:each) do
-          @item_container.stub(:[] => @item_1)
-        end
-        it "should return the explicitely selected item" do
-          @item_container.selected_item.should == @item_1
+
+      context 'when a navigation is explicitely set' do
+        before { item_container.stub(:[] => item_1) }
+
+        it 'returns the explicitely selected item' do
+          expect(item_container.selected_item).to be item_1
         end
       end
-      context 'navigation not explicitely set' do
-        before(:each) do
-          @item_container.stub(:[] => nil)
-        end
-        context 'no item selected' do
-          it "should return nil" do
-            @item_container.selected_item.should be_nil
+
+      context 'when no navigation is explicitely set' do
+        before { item_container.stub(:[] => nil) }
+
+        context 'and no item is selected' do
+          it 'returns nil' do
+            expect(item_container.selected_item).to be_nil
           end
         end
-        context 'one item selected' do
-          before(:each) do
-            @item_1.stub(:selected? => true)
-          end
-          it "should return the selected item" do
-            @item_container.selected_item.should == @item_1
+
+        context 'and one item is selected' do
+          before { item_1.stub(selected?: true) }
+
+          it 'returns the selected item' do
+            expect(item_container.selected_item).to be item_1
           end
         end
       end
     end
-    
   end
-  
 end
-
