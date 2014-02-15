@@ -1,212 +1,185 @@
 require 'spec_helper'
 
-describe SimpleNavigation::ItemAdapter, 'when item is an object' do
+module SimpleNavigation
+  describe ItemAdapter do
+    let(:item_adapter) { ItemAdapter.new(item) }
 
-  before(:each) do
-    @item = double(:item)
-    @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
-  end
+    context 'when item is an object' do
+      let(:item) { double(:item, key: 'key', name: 'name', url: 'url') }
 
-  describe 'key' do
-    it "should delegate key to item" do
-      @item.should_receive(:key)
-      @item_adapter.key
-    end
-  end
-
-  describe 'url' do
-    it "should delegate url to item" do
-      @item.should_receive(:url)
-      @item_adapter.url
-    end
-  end
-
-  describe 'name' do
-    it "should delegate name to item" do
-      @item.should_receive(:name)
-      @item_adapter.name
-    end
-  end
-
-  describe 'initialize' do
-    it "should set the item" do
-      @item_adapter.item.should == @item
-    end
-  end
-
-  describe 'options' do
-    context 'item does respond to options' do
-      before(:each) do
-        @options = double(:options)
-        @item.stub(:options => @options)
-      end
-      it "should return the item's options'" do
-        @item_adapter.options.should == @options
-      end
-    end
-    context 'item does not respond to options' do
-      it "should return an empty hash" do
-        @item_adapter.options.should == {}
-      end
-    end
-  end
-
-  describe 'items' do
-    context 'item does respond to items' do
-      context 'items is nil' do
-        before(:each) do
-          @item.stub(:items => nil)
-        end
-        it "should return nil" do
-          @item_adapter.items.should be_nil
+      shared_examples 'delegating to item' do |meth|
+        it "delegates #{meth} to item" do
+          expect(item).to receive(meth)
+          item_adapter.public_send(meth)
         end
       end
-      context 'items is not nil' do
-        context 'items is empty' do
-          before(:each) do
-            @item.stub(:items => [])
-          end
-          it "should return nil" do
-            @item_adapter.items.should be_nil
+
+      it_behaves_like 'delegating to item', :key
+      it_behaves_like 'delegating to item', :url
+      it_behaves_like 'delegating to item', :name
+
+      describe '#initialize' do
+        it 'sets the item' do
+          expect(item_adapter.item).to be item
+        end
+      end
+
+      describe '#options' do
+        context 'when item responds to options' do
+          let(:options) { double(:options) }
+
+          before { item.stub(options: options) }
+
+          it "returns the item's options" do
+            expect(item_adapter.options).to be options
           end
         end
-        context 'items is not empty' do
-          before(:each) do
-            @items = double(:items, :empty? => false)
-            @item.stub(:items => @items)
-          end
-          it "should return the items" do
-            @item_adapter.items.should == @items
+
+        context 'item does not respond to options' do
+          it 'returns an empty hash' do
+            expect(item_adapter.options).to eq({})
           end
         end
       end
-    end
-    context 'item does not respond to items' do
-      it "should return nil" do
-        @item_adapter.items.should be_nil
-      end
-    end
-  end
 
-  describe 'to_simple_navigation_item' do
-    before(:each) do
-      @container = double(:container)
-      @item.stub(:url => 'url', :name => 'name', :key => 'key', :options => {}, :items => [])
-    end
-    it "should create a SimpleNavigation::Item" do
-      SimpleNavigation::Item.should_receive(:new).with(@container, 'key', 'name', 'url', {}, nil)
-      @item_adapter.to_simple_navigation_item(@container)
-    end
-  end
+      describe '#items' do
+        context 'when item responds to items' do
+          context 'and items is nil' do
+            before { item.stub(items: nil) }
 
-end
-
-describe SimpleNavigation::ItemAdapter, 'when item is a kind of hash' do
-
-  class ModifiedHash < Hash
-  end
-
-  before(:each) do
-    @item = ModifiedHash[:key => 'key', :url => 'url', :name => 'name']
-    @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
-  end
-
-  describe 'key' do
-    it "should delegate key to item" do
-      @item_adapter.item.should_receive(:key)
-      @item_adapter.key
-    end
-  end
-
-  describe 'url' do
-    it "should delegate url to item" do
-      @item_adapter.item.should_receive(:url)
-      @item_adapter.url
-    end
-  end
-
-  describe 'name' do
-    it "should delegate name to item" do
-      @item_adapter.item.should_receive(:name)
-      @item_adapter.name
-    end
-  end
-
-  describe 'initialize' do
-    it "should set the item" do
-      @item_adapter.item.should_not be_nil
-    end
-    it "should have converted the item into an object" do
-      @item_adapter.item.should respond_to(:url)
-    end
-  end
-
-  describe 'options' do
-    context 'item does respond to options' do
-      before(:each) do
-        @item = {:key => 'key', :url => 'url', :name => 'name', :options => {:my => :options}}
-        @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
-      end
-      it "should return the item's options'" do
-        @item_adapter.options.should == {:my => :options}
-      end
-    end
-    context 'item does not respond to options' do
-      it "should return an empty hash" do
-        @item_adapter.options.should == {}
-      end
-    end
-  end
-
-  describe 'items' do
-    context 'item does respond to items' do
-      context 'items is nil' do
-        before(:each) do
-          @item = {:key => 'key', :url => 'url', :name => 'name', :items => nil}
-          @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
-        end
-        it "should return nil" do
-          @item_adapter.items.should be_nil
-        end
-      end
-      context 'items is not nil' do
-        context 'items is empty' do
-          before(:each) do
-            @item = {:key => 'key', :url => 'url', :name => 'name', :items => []}
-            @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
+            it 'returns nil' do
+              expect(item_adapter.items).to be_nil
+            end
           end
-          it "should return nil" do
-            @item_adapter.items.should be_nil
+
+          context 'when items is not nil' do
+            context 'and items is empty' do
+              before { item.stub(items: []) }
+
+              it 'returns nil' do
+                expect(item_adapter.items).to be_nil
+              end
+            end
+
+            context 'and items is not empty' do
+              let(:items) { double(:items, empty?: false) }
+
+              before { item.stub(items: items) }
+
+              it 'returns the items' do
+                expect(item_adapter.items).to eq items
+              end
+            end
           end
         end
-        context 'items is not empty' do
-          before(:each) do
-            @item = {:key => 'key', :url => 'url', :name => 'name', :items => ['not', 'empty']}
-            @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
-          end
-          it "should return the items" do
-            @item_adapter.items.should == ['not', 'empty']
+
+        context "when item doesn't respond to items" do
+          it 'returns nil' do
+            expect(item_adapter.items).to be_nil
           end
         end
       end
+
+      describe '#to_simple_navigation_item' do
+        let(:container) { double(:container) }
+
+        before { item.stub(items: [], options: {}) }
+
+        it 'creates an Item' do
+          expect(Item).to receive(:new)
+                          .with(container, 'key', 'name', 'url', {}, nil)
+          item_adapter.to_simple_navigation_item(container)
+        end
+      end
     end
-    context 'item does not respond to items' do
-      it "should return nil" do
-        @item_adapter.items.should be_nil
+
+    context 'when item is a kind of hash' do
+      class ModifiedHash < Hash; end
+
+      let(:item) { ModifiedHash[key: 'key', url: 'url', name: 'name'] }
+
+      shared_examples 'delegating to item' do |meth|
+        it "delegates #{meth} to item" do
+          expect(item_adapter.item).to receive(meth)
+          item_adapter.public_send(meth)
+        end
+      end
+
+      it_behaves_like 'delegating to item', :key
+      it_behaves_like 'delegating to item', :url
+      it_behaves_like 'delegating to item', :name
+
+      describe '#initialize' do
+        it 'sets the item' do
+          expect(item_adapter.item).not_to be_nil
+        end
+
+        it 'converts the item into an object' do
+          expect(item_adapter.item).to respond_to(:url)
+        end
+      end
+
+      describe '#options' do
+        context 'when item responds to options' do
+          before { item[:options] = { my: :options } }
+
+          it "returns the item's options" do
+            expect(item_adapter.options).to eq({ my: :options })
+          end
+        end
+
+        context 'when item does not respond to options' do
+          it 'returns an empty hash' do
+            expect(item_adapter.options).to eq({})
+          end
+        end
+      end
+
+      describe '#items' do
+        context 'when item responds to items' do
+          context 'and items is nil' do
+            before { item[:items] = nil }
+
+            it 'returns nil' do
+              expect(item_adapter.items).to be_nil
+            end
+          end
+
+          context 'when items is not nil' do
+            context 'and items is empty' do
+              it 'returns nil' do
+                expect(item_adapter.items).to be_nil
+              end
+            end
+
+            context 'and items is not empty' do
+              before { item[:items] = ['not', 'empty'] }
+
+              it 'returns the items' do
+                expect(item_adapter.items).to eq ['not', 'empty']
+              end
+            end
+          end
+        end
+
+        context 'when item does not respond to items' do
+          it 'returns nil' do
+            expect(item_adapter.items).to be_nil
+          end
+        end
+      end
+
+      describe '#to_simple_navigation_item' do
+        let(:container) { double(:container) }
+
+        before { item.merge(items: [], options: {}) }
+
+        it 'creates an Item' do
+          expect(Item).to receive(:new)
+                          .with(container, 'key', 'name', 'url', {}, nil)
+          item_adapter.to_simple_navigation_item(container)
+        end
       end
     end
   end
-
-  describe 'to_simple_navigation_item' do
-    before(:each) do
-      @container = double(:container)
-      @item = {:key => 'key', :url => 'url', :name => 'name', :items => [], :options => {}}
-      @item_adapter = SimpleNavigation::ItemAdapter.new(@item)
-    end
-    it "should create a SimpleNavigation::Item" do
-      SimpleNavigation::Item.should_receive(:new).with(@container, 'key', 'name', 'url', {}, nil)
-      @item_adapter.to_simple_navigation_item(@container)
-    end
-  end
-
 end
