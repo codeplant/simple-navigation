@@ -1,451 +1,474 @@
 require 'spec_helper'
 
-describe SimpleNavigation::ItemContainer do
-  before(:each) do
-    @item_container = SimpleNavigation::ItemContainer.new
-  end
-  describe 'initialize' do
-    it "should set the renderer to the globally-configured renderer per default" do
-      SimpleNavigation::Configuration.instance.should_receive(:renderer)
-      @item_container = SimpleNavigation::ItemContainer.new
-    end
-    it "should have an empty items-array" do
-      @item_container = SimpleNavigation::ItemContainer.new
-      @item_container.items.should be_empty
-    end
-  end
+module SimpleNavigation
+  describe ItemContainer do
+    let(:item_container) { ItemContainer.new }
 
-  describe 'items=' do
-    before(:each) do
-      @item = double(:item)
-      @items = [@item]
-      @item_adapter = double(:item_adapter).as_null_object
-      SimpleNavigation::ItemAdapter.stub(:new => @item_adapter)
-      @item_container.stub(:should_add_item? => true)
-    end
-    it "should wrap each item in an ItemAdapter" do
-      SimpleNavigation::ItemAdapter.should_receive(:new)
-      @item_container.items = @items
-    end
-    context 'item should be added' do
-      before(:each) do
-        @item_container.stub(:should_add_item? => true)
-        @simple_navigation_item = double(:simple_navigation_item)
-        @item_adapter.stub(:to_simple_navigation_item => @simple_navigation_item)
+    describe '#initialize' do
+      it 'sets the renderer to the globally-configured renderer per default' do
+        expect(Configuration.instance).to receive(:renderer)
+        ItemContainer.new
       end
-      it "should convert the item to a SimpleNavigation::Item" do
-        @item_adapter.should_receive(:to_simple_navigation_item).with(@item_container)
-        @item_container.items = @items
-      end
-      it "should add the item to the items-collection" do
-        @item_container.items.should_receive(:<<).with(@simple_navigation_item)
-        @item_container.items = @items
-      end
-    end
-    context 'item should not be added' do
-      before(:each) do
-        @item_container.stub(:should_add_item? => false)
-      end
-      it "should not convert the item to a SimpleNavigation::Item" do
-        @item_adapter.should_not_receive(:to_simple_navigation_item)
-        @item_container.items = @items
-      end
-      it "should not add the item to the items-collection" do
-        @item_container.items.should_not_receive(:<<)
-        @item_container.items = @items
-      end
-    end
-  end
 
-  describe 'selected?' do
-    before(:each) do
-      @item_1 = double(:item, :selected? => false)
-      @item_2 = double(:item, :selected? => false)
-      @item_container.instance_variable_set(:@items, [@item_1, @item_2])
+      it "sets an empty items array" do
+        expect(item_container.items).to be_empty
+      end
     end
-    it "should return nil if no item is selected" do
-      @item_container.should_not be_selected
-    end
-    it "should return true if one item is selected" do
-      @item_1.stub(:selected? => true)
-      @item_container.should be_selected
-    end
-  end
 
-  describe 'selected_item' do
-    before(:each) do
-      SimpleNavigation.stub(:current_navigation_for => :nav)
-      @item_container.stub(:[] => nil)
-      @item_1 = double(:item, :selected? => false)
-      @item_2 = double(:item, :selected? => false)
-      @item_container.instance_variable_set(:@items, [@item_1, @item_2])
-    end
-    context 'navigation not explicitely set' do
-      context 'no item selected' do
-        it "should return nil" do
-          @item_container.selected_item.should be_nil
+    describe '#items=' do
+      let(:item) { double(:item) }
+      let(:items) { [item] }
+      let(:item_adapter) { double(:item_adapter).as_null_object }
+
+      before do
+        ItemAdapter.stub(new: item_adapter)
+        item_container.stub(should_add_item?: true)
+      end
+
+      it 'wraps each item in an ItemAdapter' do
+        expect(ItemAdapter).to receive(:new)
+        item_container.items = items
+      end
+
+      context 'when item should be added' do
+        let(:simple_navigation_item) { double(:simple_navigation_item) }
+
+        before do
+          item_container.stub(should_add_item?: true)
+          item_adapter.stub(to_simple_navigation_item: simple_navigation_item)
+        end
+
+        it 'converts the item to an Item' do
+          expect(item_adapter).to receive(:to_simple_navigation_item)
+                                  .with(item_container)
+          item_container.items = items
+        end
+
+        it 'adds the item to the items-collection' do
+          expect(item_container.items).to receive(:<<)
+                                          .with(simple_navigation_item)
+          item_container.items = items
         end
       end
-      context 'one item selected' do
-        before(:each) do
-          @item_1.stub(:selected? => true)
+
+      context 'when item should not be added' do
+        before { item_container.stub(should_add_item?: false) }
+
+        it "doesn't convert the item to an Item" do
+          expect(item_adapter).not_to receive(:to_simple_navigation_item)
+          item_container.items = items
         end
-        it "should return the selected item" do
-          @item_container.selected_item.should == @item_1
+
+        it "doesn't add the item to the items-collection" do
+          expect(item_container.items).not_to receive(:<<)
+          item_container.items = items
         end
       end
     end
-  end
 
-  describe 'selected_sub_navigation?' do
-    context 'with an item selected' do
-      before(:each) do
-        @selected_item = double(:selected_item)
-        @item_container.stub(:selected_item => @selected_item)
-      end
-      context 'selected item has sub_navigation' do
-        before(:each) do
-          @sub_navigation = double(:sub_navigation)
-          @selected_item.stub(:sub_navigation => @sub_navigation)
-        end
-        it {@item_container.send(:selected_sub_navigation?).should be_true}
-      end
-      context 'selected item does not have sub_navigation' do
-        before(:each) do
-          @selected_item.stub(:sub_navigation => nil)
-        end
-        it {@item_container.send(:selected_sub_navigation?).should be_false}
-      end
-    end
-    context 'without an item selected' do
-      before(:each) do
-        @item_container.stub(:selected_item => nil)
-      end
-      it {@item_container.send(:selected_sub_navigation?).should be_false}
-    end
+    describe '#selected?' do
+      let(:item_1) { double(:item, selected?: false) }
+      let(:item_2) { double(:item, selected?: false) }
 
-  end
-
-  describe 'active_item_container_for' do
-    context "the desired level is the same as the container's" do
-      it {@item_container.active_item_container_for(1).should == @item_container}
-    end
-    context "the desired level is different than the container's" do
-      context 'with no selected subnavigation' do
-        before(:each) do
-          @item_container.stub(:selected_sub_navigation? => false)
-        end
-        it {@item_container.active_item_container_for(2).should be_nil}
+      before do
+        item_container.instance_variable_set(:@items, [item_1, item_2])
       end
-      context 'with selected subnavigation' do
-        before(:each) do
-          @item_container.stub(:selected_sub_navigation? => true)
-          @sub_nav = double(:sub_nav)
-          @selected_item = double(:selected_item)
-          @item_container.stub(:selected_item => @selected_item)
-          @selected_item.stub(:sub_navigation => @sub_nav)
+
+      context 'when no item is selected' do
+        it 'returns nil' do
+          expect(item_container).not_to be_selected
         end
-        it "should call recursively on the sub_navigation" do
-          @sub_nav.should_receive(:active_item_container_for).with(2)
-          @item_container.active_item_container_for(2)
+      end
+
+      context 'when an item is selected' do
+        it 'returns true' do
+          item_1.stub(selected?: true)
+          expect(item_container).to be_selected
         end
       end
     end
-  end
-  
-  describe 'active_leaf_container' do
-    context 'the current container has a selected subnavigation' do
-      before(:each) do
-        @item_container.stub(:selected_sub_navigation? => true)
-        @sub_nav = double(:sub_nav)
-        @selected_item = double(:selected_item)
-        @item_container.stub(:selected_item => @selected_item)
-        @selected_item.stub(:sub_navigation => @sub_nav)
-      end
-      it "should call recursively on the sub_navigation" do
-        @sub_nav.should_receive(:active_leaf_container)
-        @item_container.active_leaf_container
-      end
-    end
-    context 'the current container is the leaf already' do
-      before(:each) do
-        @item_container.stub(:selected_sub_navigation? => false)
-      end
-      it "should return itsself" do
-        @item_container.active_leaf_container.should == @item_container
-      end
-    end
-  end
 
-  describe 'item' do
-
-    context 'unconditional item' do
+    describe '#selected_item' do
+      let(:item_1) { double(:item, selected?: false) }
+      let(:item_2) { double(:item, selected?: false) }
 
       before(:each) do
-        @item_container.stub(:should_add_item?).and_return(true)
-        @options = {}
+        SimpleNavigation.stub(current_navigation_for: :nav)
+        item_container.stub(:[] => nil)
+        item_container.instance_variable_set(:@items, [item_1, item_2])
       end
 
-      context 'block given' do
-        before(:each) do
-          @sub_container = double(:sub_container)
-          SimpleNavigation::ItemContainer.stub(:new).and_return(@sub_container)
+      context "when navigation isn't explicitely set" do
+        context 'and no item is selected' do
+          it 'returns nil' do
+            expect(item_container.selected_item).to be_nil
+          end
         end
 
-        it "should should yield an new ItemContainer" do
-          @item_container.item('key', 'name', 'url', @options) do |container|
-            container.should == @sub_container
-          end
-        end
-        it "should create a new Navigation-Item with the given params and the specified block" do
-          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, nil, &@proc)
-          @item_container.item('key', 'name', 'url', @options, &@proc)
-        end
-        it "should add the created item to the list of items" do
-          @item_container.items.should_receive(:<<)
-          @item_container.item('key', 'name', 'url', @options) {}
-        end
-      end
+        context 'and an item selected' do
+          before { item_1.stub(selected?: true) }
 
-      context 'no block given' do
-        it "should create a new Navigation_item with the given params and nil as sub_navi" do
-          SimpleNavigation::Item.should_receive(:new).with(@item_container, 'key', 'name', 'url', @options, nil)
-          @item_container.item('key', 'name', 'url', @options)
-        end
-        it "should add the created item to the list of items" do
-          @item_container.items.should_receive(:<<)
-          @item_container.item('key', 'name', 'url', @options)
-        end
-      end
-
-    end
-
-    context 'optional url and optional options' do
-      context 'item specifed without url or options' do
-        it 'should add the create item to the list of items' do
-          @item_container.items.should_receive(:<<)
-          @item_container.item('key', 'name')
-        end
-      end
-      context 'item specified with only a url' do
-        it 'should add the item to the list' do
-          @item_container.items.should_receive(:<<)
-          @item_container.item('key', 'name', 'url')
-        end
-      end
-      context 'item specified with only options' do        
-        context 'containing no conditions' do
-          it 'should add the created item to the list of items' do
-            @item_container.items.should_receive(:<<)
-            @item_container.item('key', 'name', {:option => true})
-          end
-        end
-        context 'containing negative condition' do
-          it 'should not add the created item to the list of items' do
-            @item_container.items.should_not_receive(:<<)
-            @item_container.item('key', 'name', {:if => lambda{false}, :option => true})
-          end
-        end
-        context 'containing positive condition' do
-          it 'should add the created item to the list of items' do
-            @item_container.items.should_receive(:<<)
-            @item_container.item('key', 'name', {:if => lambda{true}, :option => true})
-          end
-        end
-      end
-      context 'item specified with a url and options' do
-        context 'containing no conditions' do
-          it 'should add the created item to the list of items' do
-            @item_container.items.should_receive(:<<)
-            @item_container.item('key', 'name', 'url', {:option => true})
-          end
-        end
-        context 'containing negative condition' do
-          it 'should not add the created item to the list of items' do
-            @item_container.items.should_not_receive(:<<)
-            @item_container.item('key', 'name', 'url', {:if => lambda{false}, :option => true})
-          end
-        end
-        context 'containing positive condition' do
-          it 'should add the created item to the list of items' do
-            @item_container.items.should_receive(:<<)
-            @item_container.item('key', 'name', 'url', {:if => lambda{true}, :option => true})
+          it 'returns the selected item' do
+            expect(item_container.selected_item).to be item_1
           end
         end
       end
     end
 
-    context 'conditions given for item' do
-
-      context '"if" given' do
-
-        before(:each) do
-          @options = {:if => Proc.new {@condition}}
+    describe '#active_item_container_for' do
+      context "when the desired level is the same as the container's" do
+        it 'returns the container itself' do
+          expect(item_container.active_item_container_for(1)).to be item_container
         end
+      end
 
-        it "should remove if from options" do
-          @item_container.item('key', 'name', 'url', @options)
-          @options[:if].should be_nil
-        end
+      context "when the desired level is different than the container's" do
+        context 'and no subnavigation is selected' do
+          before { item_container.stub(selected_sub_navigation?: false) }
 
-        context 'if evals to true' do
-          before(:each) do
-            @condition = true
-          end
-          it "should create a new Navigation-Item" do
-            SimpleNavigation::Item.should_receive(:new)
-            @item_container.item('key', 'name', 'url', @options)
+          it 'returns nil' do
+            expect(item_container.active_item_container_for(2)).to be_nil
           end
         end
 
-        context 'if evals to false' do
-          before(:each) do
-            @condition = false
+        context 'and a subnavigation is selected' do
+          let(:sub_navigation) { double(:sub_navigation) }
+          let(:selected_item) { double(:selected_item) }
+
+          before do
+            item_container.stub(selected_sub_navigation?: true,
+                                selected_item: selected_item)
+            selected_item.stub(sub_navigation: sub_navigation)
           end
-          it "should not create a new Navigation-Item" do
-            SimpleNavigation::Item.should_not_receive(:new)
-            @item_container.item('key', 'name', 'url', @options)
+
+          it 'calls recursively on the sub_navigation' do
+            expect(sub_navigation).to receive(:active_item_container_for)
+                                      .with(2)
+            item_container.active_item_container_for(2)
+          end
+        end
+      end
+    end
+
+    describe '#active_leaf_container' do
+      context 'when the current container has a selected subnavigation' do
+        let(:sub_navigation) { double(:sub_navigation) }
+        let(:selected_item) { double(:selected_item) }
+
+        before do
+          item_container.stub(selected_sub_navigation?: true,
+                              selected_item: selected_item)
+          selected_item.stub(sub_navigation: sub_navigation)
+        end
+
+        it 'calls recursively on the sub_navigation' do
+          expect(sub_navigation).to receive(:active_leaf_container)
+          item_container.active_leaf_container
+        end
+      end
+
+      context 'when the current container is the leaf already' do
+        before { item_container.stub(selected_sub_navigation?: false) }
+
+        it 'returns itsself' do
+          expect(item_container.active_leaf_container).to be item_container
+        end
+      end
+    end
+
+    describe '#item' do
+      # TODO: what ?
+      context 'unconditional item' do
+        let(:options) { Hash.new }
+
+        before { item_container.stub(:should_add_item?).and_return(true) }
+
+        context 'when a block is given' do
+          let(:sub_container) { double(:sub_container) }
+          let(:block) { proc{} }
+
+          before { ItemContainer.stub(:new).and_return(sub_container) }
+
+          it 'yields a new ItemContainer' do
+            expect{ |blk|
+              item_container.item('key', 'name', 'url', options, &blk)
+            }.to yield_with_args(sub_container)
+          end
+
+          it "creates a new Navigation-Item with the given params and block" do
+            expect(Item).to receive(:new)
+                            .with(item_container, 'key', 'name', 'url',
+                                  options, nil, &block)
+            item_container.item('key', 'name', 'url', options, &block)
+          end
+
+          it 'adds the created item to the list of items' do
+            expect(item_container.items).to receive(:<<)
+            item_container.item('key', 'name', 'url', options) {}
           end
         end
 
-        context 'if is not a proc or method' do
-          it "should raise an error" do
-            lambda {@item_container.item('key', 'name', 'url', {:if => 'text'})}.should raise_error
+        context 'when a block is given' do
+          it "creates a new Navigation_item with the given params and nil as sub_navigation" do
+            expect(Item).to receive(:new)
+                            .with(item_container, 'key', 'name', 'url', options, nil)
+            item_container.item('key', 'name', 'url', options)
+          end
+
+          it 'adds the created item to the list of items' do
+            expect(item_container.items).to receive(:<<)
+            item_container.item('key', 'name', 'url', options)
+          end
+        end
+      end
+
+      describe 'Optional url and optional options' do
+        shared_examples 'adding the item to the list' do
+          it 'adds the item to the list' do
+            expect(item_container.items).to receive(:<<)
+            item_container.item(*args)
           end
         end
 
-        context '"unless" given' do
-
-          before(:each) do
-            @options = {:unless => Proc.new {@condition}}
+        shared_examples "doesn't add the item to the list" do
+          it 'adds the item to the list' do
+            expect(item_container.items).not_to receive(:<<)
+            item_container.item(*args)
           end
+        end
 
-
-          it "should remove unless from options" do
-            @item_container.item('key', 'name', 'url', @options)
-            @options[:unless].should be_nil
+        context 'when item specifed without url or options' do
+          it_behaves_like 'adding the item to the list' do
+            let(:args) { ['key', 'name'] }
           end
+        end
 
-          context 'unless evals to false' do
-            before(:each) do
-              @condition = false
-            end
-            it "should create a new Navigation-Item" do
-              SimpleNavigation::Item.should_receive(:new)
-              @item_container.item('key', 'name', 'url', @options)
+        context 'when item is specified with only a url' do
+          it_behaves_like 'adding the item to the list' do
+            let(:args) { ['key', 'name', 'url'] }
+          end
+        end
+
+        context 'when item is specified with only options' do
+          context 'and options do not contain any condition' do
+            it_behaves_like 'adding the item to the list' do
+              let(:args) { ['key', 'name', { option: true }] }
             end
           end
 
-          context 'unless evals to true' do
-            before(:each) do
-              @condition = true
-            end
-            it "should not create a new Navigation-Item" do
-              SimpleNavigation::Item.should_not_receive(:new)
-              @item_container.item('key', 'name', 'url', @options)
+          context 'and options contains a negative condition' do
+            it_behaves_like "doesn't add the item to the list" do
+              let(:args) { ['key', 'name', { if: ->{ false }, option: true }] }
             end
           end
 
+          context 'and options contains a positive condition' do
+            it_behaves_like 'adding the item to the list' do
+              let(:args) { ['key', 'name', { if: ->{ true }, option: true }] }
+            end
+          end
+        end
+
+        context 'when item is specified with a url and options' do
+          context 'and options do not contain any condition' do
+            it_behaves_like 'adding the item to the list' do
+              let(:args) { ['key', 'name', 'url', { option: true }] }
+            end
+          end
+
+          context 'and options contains a negative condition' do
+            it_behaves_like "doesn't add the item to the list" do
+              let(:args) { ['key', 'name', 'url', { if: ->{ false }, option: true }] }
+            end
+          end
+
+          context 'and options contains a positive condition' do
+            it_behaves_like 'adding the item to the list' do
+              let(:args) { ['key', 'name', 'url', { if: ->{ true }, option: true }] }
+            end
+          end
+        end
+      end
+
+      describe 'Conditions' do
+        context 'when an :if option is given' do
+          let(:options) {{ if: proc{condition} }}
+          let(:condition) { nil }
+
+          it 'removes :if from the options' do
+            item_container.item('key', 'name', 'url', options)
+            expect(options).not_to have_key(:if)
+          end
+
+          context 'and it evals to true' do
+            let(:condition) { true }
+
+            it 'creates a new Navigation-Item' do
+              expect(Item).to receive(:new)
+              item_container.item('key', 'name', 'url', options)
+            end
+          end
+
+          context 'and it evals to false' do
+            let(:condition) { false }
+
+            it "doesn't create a new Navigation-Item" do
+              expect(Item).not_to receive(:new)
+              item_container.item('key', 'name', 'url', options)
+            end
+          end
+
+          context 'and it is not a proc or a method' do
+            it 'raises an error' do
+              expect{
+                item_container.item('key', 'name', 'url', { if: 'text' })
+              }.to raise_error
+            end
+          end
+        end
+
+        context 'when an :unless option is given' do
+          let(:options) {{ unless: proc{condition} }}
+          let(:condition) { nil }
+
+          it "removes :unless from the options" do
+            item_container.item('key', 'name', 'url', options)
+            expect(options).not_to have_key(:unless)
+          end
+
+          context 'and it evals to false' do
+            let(:condition) { false }
+
+            it 'creates a new Navigation-Item' do
+              expect(Item).to receive(:new)
+              item_container.item('key', 'name', 'url', options)
+            end
+          end
+
+          context 'and it evals to true' do
+            let(:condition) { true }
+
+            it "doesn't create a new Navigation-Item" do
+              expect(Item).not_to receive(:new)
+              item_container.item('key', 'name', 'url', options)
+            end
+          end
         end
       end
     end
-  end
 
-  describe '[]' do
-
-    before(:each) do
-      @item_container.item(:first, 'first', 'bla')
-      @item_container.item(:second, 'second', 'bla')
-      @item_container.item(:third, 'third', 'bla')
-    end
-
-    it "should return the item with the specified navi_key" do
-      @item_container[:second].name.should == 'second'
-    end
-    it "should return nil if no item exists for the specified navi_key" do
-      @item_container[:invalid].should be_nil
-    end
-  end
-
-  describe 'render' do
-    before(:each) do
-      @renderer_instance = double(:renderer).as_null_object
-      @renderer_class = double(:renderer_class, :new => @renderer_instance)
-    end
-    context 'renderer specified as option' do
-      context 'renderer-class specified' do
-        it "should instantiate the passed renderer_class with the options" do
-          @renderer_class.should_receive(:new).with(:renderer => @renderer_class)
-        end
-        it "should call render on the renderer and pass self" do
-          @renderer_instance.should_receive(:render).with(@item_container)
-        end
-        after(:each) do
-          @item_container.render(:renderer => @renderer_class)
-        end
+    describe '#[]' do
+      before do
+        item_container.item(:first, 'first', 'bla')
+        item_container.item(:second, 'second', 'bla')
+        item_container.item(:third, 'third', 'bla')
       end
-      context 'renderer-symbol specified' do
-        before(:each) do
-          SimpleNavigation.registered_renderers = {:my_renderer => @renderer_class}
-        end
-        it "should instantiate the passed renderer_class with the options" do
-          @renderer_class.should_receive(:new).with(:renderer => :my_renderer)
-        end
-        it "should call render on the renderer and pass self" do
-          @renderer_instance.should_receive(:render).with(@item_container)
-        end
-        after(:each) do
-          @item_container.render(:renderer => :my_renderer)
+
+      it 'returns the item with the specified navi_key' do
+        expect(item_container[:second].name).to eq 'second'
+      end
+
+      context 'when no item exists for the specified navi_key' do
+        it 'returns nil' do
+          expect(item_container[:invalid]).to be_nil
         end
       end
     end
-    context 'no renderer specified' do
+
+    describe '#render' do
+      # TODO
+      let(:renderer_instance) { double(:renderer).as_null_object }
+      let(:renderer_class) { double(:renderer_class, new: renderer_instance) }
+
+      context 'when renderer is specified as an option' do
+        context 'and is specified as a class' do
+          it 'instantiates the passed renderer_class with the options' do
+            expect(renderer_class).to receive(:new)
+                                      .with(renderer: renderer_class)
+            item_container.render(renderer: renderer_class)
+          end
+
+          it 'calls render on the renderer and passes self' do
+            expect(renderer_instance).to receive(:render).with(item_container)
+            item_container.render(renderer: renderer_class)
+          end
+        end
+
+        context 'and is specified as a symbol' do
+          before do
+            SimpleNavigation.registered_renderers = {
+              my_renderer: renderer_class
+            }
+          end
+
+          it "instantiates the passed renderer_class with the options" do
+            expect(renderer_class).to receive(:new).with(renderer: :my_renderer)
+            item_container.render(renderer: :my_renderer)
+          end
+
+          it 'calls render on the renderer and passes self' do
+            expect(renderer_instance).to receive(:render).with(item_container)
+            item_container.render(renderer: :my_renderer)
+          end
+        end
+      end
+
+      context 'when no renderer is specified' do
+        let(:options) { Hash.new }
+
+        before { item_container.stub(renderer: renderer_class) }
+
+        it "instantiates the container's renderer with the options" do
+          expect(renderer_class).to receive(:new).with(options)
+          item_container.render(options)
+        end
+
+        it 'calls render on the renderer and passes self' do
+          expect(renderer_instance).to receive(:render).with(item_container)
+          item_container.render(options)
+        end
+      end
+    end
+
+    describe '#level_for_item' do
       before(:each) do
-        @item_container.stub(:renderer => @renderer_class)
-        @options = {}
-      end
-      it "should instantiate the container's renderer with the options" do
-        @renderer_class.should_receive(:new).with(@options)
-      end
-      it "should call render on the renderer and pass self" do
-        @renderer_instance.should_receive(:render).with(@item_container)
-      end
-      after(:each) do
-        @item_container.render(@options)
-      end
-    end
-  end
-
-  describe 'level_for_item' do
-    before(:each) do
-      @item_container.item(:p1, 'p1', 'p1')
-      @item_container.item(:p2, 'p2', 'p2') do |p2|
-        p2.item(:s1, 's1', 's1')
-        p2.item(:s2, 's2', 's2') do |s2|
-          s2.item(:ss1, 'ss1', 'ss1')
-          s2.item(:ss2, 'ss2', 'ss2')
+        item_container.item(:p1, 'p1', 'p1')
+        item_container.item(:p2, 'p2', 'p2') do |p2|
+          p2.item(:s1, 's1', 's1')
+          p2.item(:s2, 's2', 's2') do |s2|
+            s2.item(:ss1, 'ss1', 'ss1')
+            s2.item(:ss2, 'ss2', 'ss2')
+          end
+          p2.item(:s3, 's3', 's3')
         end
-        p2.item(:s3, 's3', 's3')
+        item_container.item(:p3, 'p3', 'p3')
       end
-      @item_container.item(:p3, 'p3', 'p3')
-    end
-    it {@item_container.level_for_item(:p1).should == 1}
-    it {@item_container.level_for_item(:p3).should == 1}
-    it {@item_container.level_for_item(:s1).should == 2}
-    it {@item_container.level_for_item(:ss1).should == 3}
-    it {@item_container.level_for_item(:x).should be_nil}
 
+      shared_examples 'returning the level of an item' do |item, level|
+        specify{ expect(item_container.level_for_item(item)).to eq level }
+      end
+
+      it_behaves_like 'returning the level of an item', :p1, 1
+      it_behaves_like 'returning the level of an item', :p3, 1
+      it_behaves_like 'returning the level of an item', :s1, 2
+      it_behaves_like 'returning the level of an item', :ss1, 3
+      it_behaves_like 'returning the level of an item', :x, nil
+    end
+
+    describe '#empty?' do
+      context 'when there are no items' do
+        it 'returns true' do
+          item_container.instance_variable_set(:@items, [])
+          expect(item_container).to be_empty
+        end
+      end
+
+      context 'when there are some items' do
+        it 'returns false' do
+          item_container.instance_variable_set(:@items, [double(:item)])
+          expect(item_container).not_to be_empty
+        end
+      end
+    end
   end
-
-  describe 'empty?' do
-    it "should be empty if there are no items" do
-      @item_container.instance_variable_set(:@items, [])
-      @item_container.should be_empty
-    end
-    it "should not be empty if there are some items" do
-      @item_container.instance_variable_set(:@items, [double(:item)])
-      @item_container.should_not be_empty
-    end
-  end
-
 end
