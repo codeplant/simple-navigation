@@ -1,128 +1,150 @@
 require 'spec_helper'
 
-describe SimpleNavigation::Configuration do
+module SimpleNavigation
+  describe Configuration do
+    subject(:config) { Configuration.instance }
 
-  before(:each) do
-    @config = SimpleNavigation::Configuration.instance
-  end
-
-  describe 'self.run' do
-    it "should yield the singleton Configuration object" do
-      SimpleNavigation::Configuration.run do |c|
-        c.should == @config
+    describe '.run' do
+      it "yields the singleton Configuration object" do
+        expect{ |blk| Configuration.run(&blk) }.to yield_with_args(config)
       end
     end
-  end
 
-  describe 'self.eval_config' do
-    before(:each) do
-      @context = double(:context)
-      @context.stub(:instance_eval)
-      SimpleNavigation.stub(:context_for_eval => @context)
-      @config_files = {:default => 'default', :my_context => 'my_context'}
-      SimpleNavigation.stub(:config_files).and_return(@config_files)
-    end
-    context "with default navigation context" do
-      it "should instance_eval the default config_file-string inside the context" do
-        @context.should_receive(:instance_eval).with('default')
-        SimpleNavigation::Configuration.eval_config
-      end    
-    end
-    context 'with non default navigation context' do
-      it "should instance_eval the specified config_file-string inside the context" do
-        @context.should_receive(:instance_eval).with('my_context')
-        SimpleNavigation::Configuration.eval_config(:my_context)
+    describe '.eval_config' do
+      let(:config_files) {{ default: 'default', my_context: 'my_context' }}
+      let(:eval_context) { double(:eval_context) }
+
+      before do
+        eval_context.stub(:instance_eval)
+        SimpleNavigation.stub(context_for_eval: eval_context,
+                              config_files: config_files)
+      end
+
+      context "with default navigation context" do
+        it "should instance_eval the default config_file-string inside the context" do
+          expect(eval_context).to receive(:instance_eval).with('default')
+          Configuration.eval_config
+        end
+      end
+
+      context 'with non default navigation context' do
+        it "should instance_eval the specified config_file-string inside the context" do
+          expect(eval_context).to receive(:instance_eval).with('my_context')
+          Configuration.eval_config(:my_context)
+        end
       end
     end
-  end
 
-  describe 'initialize' do
-    it "should set the List-Renderer as default upon initialize" do
-      @config.renderer.should == SimpleNavigation::Renderer::List
-    end
-    it "should set the selected_class to 'selected' as default" do
-      @config.selected_class.should == 'selected'
-    end
-    it "should set the active_leaf_class to 'simple-navigation-active-leaf' as default" do
-      @config.active_leaf_class.should == 'simple-navigation-active-leaf'
-    end
-    it "should set autogenerate_item_ids to true as default" do
-      @config.autogenerate_item_ids.should be_true
-    end
-    it "should set auto_highlight to true as default" do
-      @config.auto_highlight.should be_true
-    end
-    it "should set the id_generator" do
-      @config.id_generator.should_not be_nil
-    end
-    it "should set the name_generator" do
-      @config.name_generator.should_not be_nil
-    end
-  end
-  describe 'items' do
-    before(:each) do
-      @container = double(:items_container)
-      SimpleNavigation::ItemContainer.stub(:new).and_return(@container)
-    end
-    context 'block given' do
-      context 'items_provider specified' do
-        it {lambda {@config.items(double(:provider)) {}}.should raise_error}
+    describe '#initialize' do
+      it 'sets the List-Renderer as default' do
+        expect(config.renderer).to be Renderer::List
       end
-      context 'no items_provider specified' do
-        it "should should yield an new ItemContainer" do
-          @config.items do |container|
-            container.should == @container
+
+      it 'sets the selected_class to "selected" as default' do
+        expect(config.selected_class).to eq 'selected'
+      end
+
+      it 'sets the active_leaf_class to "simple-navigation-active-leaf" as default' do
+        expect(config.active_leaf_class).to eq 'simple-navigation-active-leaf'
+      end
+
+      it 'sets autogenerate_item_ids to true as default' do
+        expect(config.autogenerate_item_ids).to be_true
+      end
+
+      it 'sets auto_highlight to true as default' do
+        expect(config.auto_highlight).to be_true
+      end
+
+      it 'should set the id_generator' do
+        expect(config.id_generator).not_to be_nil
+      end
+
+      it 'should set the name_generator' do
+        expect(config.name_generator).not_to be_nil
+      end
+    end
+
+    describe '#items' do
+      let(:container) { double(:items_container) }
+
+      before { ItemContainer.stub(:new).and_return(container) }
+
+      context 'when a block is given' do
+        context 'and items_provider is specified' do
+          let(:provider) { double(:provider) }
+
+          it 'raises an exception' do
+            expect{ config.items(provider) {} }.to raise_error
           end
         end
-        it "should assign the ItemContainer to an instance-var" do
-          @config.items {}
-          @config.primary_navigation.should == @container
-        end
-        it "should not set the items on the container" do
-          @container.should_not_receive(:items=)
-          @config.items {}
-        end
-      end
-    end
-    context 'no block given' do
-      context 'items_provider specified' do
-        before(:each) do
-          @external_provider = double(:external_provider)
-          @items = double(:items)
-          @items_provider = double(:items_provider, :items => @items)
-          SimpleNavigation::ItemsProvider.stub(:new => @items_provider)
-          @container.stub(:items=)
-        end
-        it "should create an new Provider object for the specified provider" do
-          SimpleNavigation::ItemsProvider.should_receive(:new).with(@external_provider)
-          @config.items(@external_provider)
-        end
-        it "should call items on the provider object" do
-          @items_provider.should_receive(:items)
-          @config.items(@external_provider)
-        end
-        it "should set the items on the container" do
-          @container.should_receive(:items=).with(@items)
-          @config.items(@external_provider)
-        end
-      end
-      context 'items_provider not specified' do
-        it {lambda {@config.items}.should raise_error}
-      end
-    end
-  end
 
-  describe 'loaded?' do
-    it "should return true if primary_nav is set" do
-      @config.instance_variable_set(:@primary_navigation, :bla)
-      @config.should be_loaded
+        context 'when no items_provider is specified' do
+          it 'yields an new ItemContainer' do
+            expect{ |blk| config.items(&blk) }.to yield_with_args(container)
+          end
+
+          it 'assigns the ItemContainer to an instance-var' do
+            config.items {}
+            expect(config.primary_navigation).to be container
+          end
+
+          it "doesn't set the items on the container" do
+            expect(container).not_to receive(:items=)
+            config.items {}
+          end
+        end
+      end
+
+      context 'when no block is given' do
+        context 'and items_provider is specified' do
+          let(:external_provider) { double(:external_provider) }
+          let(:items) { double(:items) }
+          let(:items_provider) { double(:items_provider, items: items) }
+
+          before do
+            SimpleNavigation::ItemsProvider.stub(new: items_provider)
+            container.stub(:items=)
+          end
+
+          it 'creates a new Provider object for the specified provider' do
+            expect(ItemsProvider).to receive(:new).with(external_provider)
+            config.items(external_provider)
+          end
+
+          it 'calls items on the provider object' do
+            expect(items_provider).to receive(:items)
+            config.items(external_provider)
+          end
+
+          it 'sets the items on the container' do
+            expect(container).to receive(:items=).with(items)
+            config.items(external_provider)
+          end
+        end
+
+        context 'when items_provider is not specified' do
+          it "raises an exception" do
+            expect{ config.items }.to raise_error
+          end
+        end
+      end
     end
-    it "should return false if no primary_nav is set" do
-      @config.instance_variable_set(:@primary_navigation, nil)
-      @config.should_not be_loaded
+
+    describe '#loaded?' do
+      context 'when primary_nav is set' do
+        it 'returns true' do
+          config.instance_variable_set(:@primary_navigation, :bla)
+          expect(config).to be_loaded
+        end
+      end
+
+      context 'when primary_nav is not set' do
+        it "should return false if no primary_nav is set" do
+          config.instance_variable_set(:@primary_navigation, nil)
+          expect(config).not_to be_loaded
+        end
+      end
     end
   end
-  
 end
-
-
