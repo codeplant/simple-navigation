@@ -1,199 +1,240 @@
 require 'spec_helper'
 
-describe SimpleNavigation::Renderer::Base do
-  before(:each) do
-    @options = double(:options).as_null_object
-    @adapter = double(:adapter)
-    SimpleNavigation.stub(:adapter => @adapter)
-    @base_renderer = SimpleNavigation::Renderer::Base.new(@options)
-  end
-  
-  describe 'delegated methods' do
-    it {@base_renderer.should respond_to(:link_to)}
-    it {@base_renderer.should respond_to(:content_tag)}
-  end
+module SimpleNavigation
+  module Renderer
+    describe Base do
+      subject(:base) { Base.new(options) }
 
-  describe 'initialize' do
-    it {@base_renderer.adapter.should == @adapter}
-    it {@base_renderer.options.should == @options}
-  end
-    
-  describe 'render' do
-    it "be subclass responsability" do
-      lambda {@base_renderer.render(:container)}.should raise_error('subclass responsibility')
-    end
-  end
-    
-  describe 'expand_all?' do
-    context 'option is set' do
-      context 'expand_all is true' do
-        before(:each) do
-          @base_renderer.stub(:options => {:expand_all => true})
-        end
-        it {@base_renderer.expand_all?.should be_true}
-      end
-      context 'expand_all is false' do
-        before(:each) do
-          @base_renderer.stub(:options => {:expand_all => false})
-        end
-        it {@base_renderer.expand_all?.should be_false}
-      end
-    end
-    context 'option is not set' do
-      before(:each) do
-        @base_renderer.stub(:options => {})
-      end
-      it {@base_renderer.expand_all?.should be_false}
-    end
-  end
+      let(:adapter) { double(:adapter) }
+      let(:options) { Hash.new }
 
-  describe 'skip_if_empty?' do
-    context 'option is set' do
-      context 'skip_if_empty is true' do
-        before(:each) do
-          @base_renderer.stub(:options => {:skip_if_empty => true})
-        end
-        it {@base_renderer.skip_if_empty?.should be_true}
-      end
-      context 'skip_if_empty is false' do
-        before(:each) do
-          @base_renderer.stub(:options => {:skip_if_empty => false})
-        end
-        it {@base_renderer.skip_if_empty?.should be_false}
-      end
-    end
-    context 'option is not set' do
-      before(:each) do
-        @base_renderer.stub(:options => {})
-      end
-      it {@base_renderer.skip_if_empty?.should be_false}
-    end
-  end
+      before { SimpleNavigation.stub(adapter: adapter) }
 
-  describe 'level' do
-    context 'options[level] is set' do
-      before(:each) do
-        @base_renderer.stub(:options => {:level => 1})
+      it 'delegates the :link_to method to adapter' do
+        adapter.stub(link_to: 'link_to')
+        expect(base.link_to).to eq 'link_to'
       end
-      it {@base_renderer.level.should == 1}
-    end
-    context 'options[level] is not set' do
-      before(:each) do
-        @base_renderer.stub(:options => {})
-      end
-      it {@base_renderer.level.should == :all}
-    end
-  end
 
-  describe 'consider_sub_navigation?' do
-    before(:each) do
-      @item = double(:item)
-    end
-    context 'item has no subnavigation' do
-      before(:each) do
-        @item.stub(:sub_navigation => nil)
+      it 'delegates the :content_tag method to adapter' do
+        adapter.stub(content_tag: 'content_tag')
+        expect(base.content_tag).to eq 'content_tag'
       end
-      it {@base_renderer.send(:consider_sub_navigation?, @item).should be_false}
-    end
-    context 'item has subnavigation' do
-      before(:each) do
-        @sub_navigation = double(:sub_navigation)
-        @item.stub(:sub_navigation => @sub_navigation)
-      end
-      context 'level is something unknown' do
-        before(:each) do
-          @base_renderer.stub(:level => 'unknown')
+
+      describe '#initialize' do
+        it "sets the renderer adapter to the SimpleNavigation one" do
+          expect(base.adapter).to be adapter
         end
-        it {@base_renderer.send(:consider_sub_navigation?, @item).should be_false}
       end
-      context 'level is :all' do
-        before(:each) do
-          @base_renderer.stub(:level => :all)
+
+      describe '#options' do
+        it "returns the renderer's options" do
+          expect(base.options).to be options
         end
-        it {@base_renderer.send(:consider_sub_navigation?, @item).should be_true}
       end
-      context 'level is an Integer' do
-        before(:each) do
-          @base_renderer.stub(:level => 2)
+
+      describe '#render' do
+        it "raise an exception to indicate it's a subclass responsibility" do
+          expect{ base.render(:container) }.to raise_error
         end
-        it {@base_renderer.send(:consider_sub_navigation?, @item).should be_false}
       end
-      context 'level is a Range' do
-        before(:each) do
-          @base_renderer.stub(:level => 2..3)
-        end
-        context 'subnavs level > range.max' do
-          before(:each) do
-            @sub_navigation.stub(:level => 4)
+
+      describe '#expand_all?' do
+        context 'when :options is set' do
+          context 'and the :expand_all option is true' do
+            let(:options) {{ expand_all: true }}
+
+            it 'returns true' do
+              expect(base.expand_all?).to be_true
+            end
           end
-          it {@base_renderer.send(:consider_sub_navigation?, @item).should be_false}
-        end
-        context 'subnavs level = range.max' do
-          before(:each) do
-            @sub_navigation.stub(:level => 3)
+
+          context 'and the :expand_all option is false' do
+            let(:options) {{ expand_all: false }}
+
+            it 'returns false' do
+              expect(base.expand_all?).to be_false
+            end
           end
-          it {@base_renderer.send(:consider_sub_navigation?, @item).should be_true}
-
         end
-        context 'subnavs level < range.max' do
-          before(:each) do
-            @sub_navigation.stub(:level => 2)
+
+        context "when :options isn't set" do
+          let(:options) { Hash.new }
+
+          it 'returns false' do
+            expect(base.expand_all?).to be_false
           end
-          it {@base_renderer.send(:consider_sub_navigation?, @item).should be_true}
+        end
+      end
+
+      describe '#skip_if_empty?' do
+        context 'when :options is set' do
+          context 'and the :skip_if_empty option is true' do
+            let(:options) {{ skip_if_empty: true }}
+
+            it 'returns true' do
+              expect(base.skip_if_empty?).to be_true
+            end
+          end
+
+          context 'and the :skip_if_empty option is false' do
+            let(:options) {{ skip_if_empty: false }}
+
+            it 'returns true' do
+              expect(base.skip_if_empty?).to be_false
+            end
+          end
+        end
+
+        context "when :options isn't set" do
+          let(:options) { Hash.new }
+
+          it 'returns true' do
+            expect(base.skip_if_empty?).to be_false
+          end
+        end
+      end
+
+      describe '#level' do
+        context 'and the :level option is set' do
+          let(:options) {{ level: 1 }}
+
+          it 'returns the specified level' do
+            expect(base.level).to eq 1
+          end
+        end
+
+        context "and the :level option isn't set" do
+          let(:options) { Hash.new }
+
+          it 'returns :all' do
+            expect(base.level).to eq :all
+          end
+        end
+      end
+
+      describe '#consider_sub_navigation?' do
+        let(:item) { double(:item) }
+
+        before { item.stub(sub_navigation: sub_navigation) }
+
+        context 'when the item has no sub navigation' do
+          let(:sub_navigation) { nil }
+
+          it 'returns false' do
+            expect(base.send(:consider_sub_navigation?, item)).to be_false
+          end
+        end
+
+        context 'when the item has sub navigation' do
+          let(:sub_navigation) { double(:sub_navigation) }
+
+          context 'and the renderer has an unknown level' do
+            before { base.stub(level: 'unknown') }
+
+            it 'returns false' do
+              expect(base.send(:consider_sub_navigation?, item)).to be_false
+            end
+          end
+
+          context 'and the renderer has a level set to :all' do
+            before { base.stub(level: :all) }
+
+            it 'returns false' do
+              expect(base.send(:consider_sub_navigation?, item)).to be_true
+            end
+          end
+
+          context "when the renderer's level is a number" do
+            before { base.stub(level: 2) }
+
+            it 'returns false' do
+              expect(base.send(:consider_sub_navigation?, item)).to be_false
+            end
+          end
+
+          context "when the renderer's level is a Range" do
+            before { base.stub(level: 2..3) }
+
+            context "and sub navigation's level is greater than range.max" do
+              before { sub_navigation.stub(level: 4) }
+
+              it 'returns false' do
+                expect(base.send(:consider_sub_navigation?, item)).to be_false
+              end
+            end
+
+            context "and sub navigation's level is equal to range.max" do
+              before { sub_navigation.stub(level: 3) }
+
+              it 'returns true' do
+                expect(base.send(:consider_sub_navigation?, item)).to be_true
+              end
+            end
+
+            context "and sub navigation's level is equal to range.min" do
+              before { sub_navigation.stub(level: 2) }
+
+              it 'returns true' do
+                expect(base.send(:consider_sub_navigation?, item)).to be_true
+              end
+            end
+          end
+        end
+      end
+
+      describe '#include_sub_navigation?' do
+        let(:item) { double(:item) }
+
+        context 'when consider_sub_navigation? is true' do
+          before { base.stub(consider_sub_navigation?: true) }
+
+          context 'and expand_sub_navigation? is true' do
+            before { base.stub(expand_sub_navigation?: true) }
+
+            it 'returns true' do
+              expect(base.include_sub_navigation?(item)).to be_true
+            end
+          end
+
+          context 'and expand_sub_navigation? is false' do
+            before { base.stub(expand_sub_navigation?: false) }
+
+            it 'returns false' do
+              expect(base.include_sub_navigation?(item)).to be_false
+            end
+          end
+        end
+
+        context 'consider_sub_navigation? is false' do
+          before { base.stub(consider_sub_navigation?: false) }
+
+          context 'and expand_sub_navigation? is true' do
+            before { base.stub(expand_sub_navigation?: true) }
+
+            it 'returns false' do
+              expect(base.include_sub_navigation?(item)).to be_false
+            end
+          end
+
+          context 'and expand_sub_navigation? is false' do
+            before { base.stub(expand_sub_navigation?: false) }
+
+            it 'returns false' do
+              expect(base.include_sub_navigation?(item)).to be_false
+            end
+          end
+        end
+      end
+
+      describe '#render_sub_navigation_for' do
+        let(:item) { double(:item, sub_navigation: sub_navigation) }
+        let(:sub_navigation) { double(:sub_navigation) }
+
+        it 'renders the sub navigation passing it the options' do
+          expect(sub_navigation).to receive(:render).with(options)
+          base.render_sub_navigation_for(item)
         end
       end
     end
   end
-
-  describe 'include_sub_navigation?' do
-    before(:each) do
-      @item = double(:item)
-    end
-    context 'consider_sub_navigation? is true' do
-      before(:each) do
-        @base_renderer.stub(:consider_sub_navigation? => true)
-      end
-      context 'expand_sub_navigation? is true' do
-        before(:each) do
-          @base_renderer.stub(:expand_sub_navigation? => true)
-        end
-        it {@base_renderer.include_sub_navigation?(@item).should be_true}
-      end
-      context 'expand_sub_navigation? is false' do
-        before(:each) do
-          @base_renderer.stub(:expand_sub_navigation? => false)
-        end
-        it {@base_renderer.include_sub_navigation?(@item).should be_false}
-      end
-    end
-    context 'consider_sub_navigation is false' do
-      before(:each) do
-        @base_renderer.stub(:consider_sub_navigation? => false)
-      end
-      context 'expand_sub_navigation? is true' do
-        before(:each) do
-          @base_renderer.stub(:expand_sub_navigation? => true)
-        end
-        it {@base_renderer.include_sub_navigation?(@item).should be_false}
-      end
-      context 'expand_sub_navigation? is false' do
-        before(:each) do
-          @base_renderer.stub(:expand_sub_navigation? => false)
-        end
-        it {@base_renderer.include_sub_navigation?(@item).should be_false}
-      end
-    end
-  end
-
-  describe 'render_sub_navigation_for' do
-    before(:each) do
-      @sub_navigation = double(:sub_navigation)
-      @item = double(:item, :sub_navigation => @sub_navigation)
-    end
-    it "should call render on the sub_navigation (passing the options)" do
-      @sub_navigation.should_receive(:render).with(@options)
-      @base_renderer.render_sub_navigation_for(@item)
-    end
-  end
-
 end
