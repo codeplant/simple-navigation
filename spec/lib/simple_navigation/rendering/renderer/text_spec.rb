@@ -1,39 +1,52 @@
 require 'spec_helper'
 
-describe SimpleNavigation::Renderer::Text do
+module SimpleNavigation
+  module Renderer
+    describe Text do
+      let!(:navigation) { setup_navigation('nav_id', 'nav_class') }
 
-  describe 'render' do
+      let(:item) { nil }
+      let(:options) {{ level: :all }}
+      let(:output) { renderer.render(navigation) }
+      let(:renderer) { setup_renderer(Text, options) }
 
-    def render(current_nav=nil, options={:level => :all})
-      primary_navigation = primary_container
-      select_item(current_nav)
-      setup_renderer_for SimpleNavigation::Renderer::Text, :rails, options
-      @renderer.render(primary_navigation)
-    end
-    context 'regarding result' do
+      before { select_an_item(navigation[item]) if item }
 
-      it "should render the selected page" do
-        render(:invoices).should == "invoices"
-      end
-
-      context 'nested sub_navigation' do
-        it "should add an entry for each selected item" do
-          render(:subnav1).should == "invoices subnav1"
+      describe '#render' do
+        context 'when no item is selected' do
+          it 'renders an empty string' do
+            expect(output).to eq ''
+          end
         end
-      end
 
-      context 'with a custom seperator specified' do
-        it "should separate the items with the separator" do
-          render(:subnav1, :join_with => " | ").should == "invoices | subnav1" 
+        context 'when an item is selected' do
+          let(:item) { :invoices }
+
+          it "renders the selected item's name" do
+            expect(output).to eq 'Invoices'
+          end
         end
-      end
-      
-      context 'custom name generator is set' do
-        before(:each) do
-          SimpleNavigation.config.stub(:name_generator => Proc.new {|name| "<span>name</span>"})
-        end
-        it "should not apply the name generator (since it is text only)" do
-          render(:subnav1, :join_with => " | ").should == "invoices | subnav1" 
+
+        context 'when a sub navigation item is selected' do
+          before do
+            navigation[:invoices].stub(selected?: true)
+
+            navigation[:invoices]
+              .sub_navigation[:unpaid]
+              .stub(selected?: true, selected_by_condition?: true)
+          end
+
+          it 'separates the items with a space' do
+            expect(output).to eq 'Invoices Unpaid'
+          end
+
+          context "and the :join_with option is set" do
+            let(:options) {{ level: :all, join_with: ' | ' }}
+
+            it 'separates the items with the specified separator' do
+              expect(output).to eq 'Invoices | Unpaid'
+            end
+          end
         end
       end
     end
