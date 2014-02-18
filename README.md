@@ -1,5 +1,6 @@
 # Simple Navigation
 
+[![Gem Version](https://badge.fury.io/rb/simple-navigation.png)](http://badge.fury.io/rb/simple-navigation)
 [![Code Climate](https://codeclimate.com/github/andi/simple-navigation.png)](https://codeclimate.com/github/andi/simple-navigation)
 
 Simple Navigation is a Ruby library for creating navigations (with multiple levels) for your Rails 2-4, Sinatra or Padrino applications.
