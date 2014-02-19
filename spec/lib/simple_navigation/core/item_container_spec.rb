@@ -186,7 +186,7 @@ module SimpleNavigation
           let(:sub_container) { double(:sub_container) }
           let(:block) { proc{} }
 
-          before { ItemContainer.stub(:new).and_return(sub_container) }
+          before { ItemContainer.stub(:new).with(2).and_return(sub_container) }
 
           it 'yields a new ItemContainer' do
             expect{ |blk|
