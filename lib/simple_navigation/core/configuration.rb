@@ -1,47 +1,65 @@
 require 'singleton'
 
 module SimpleNavigation
-
   # Responsible for evaluating and handling the config/navigation.rb file.
   class Configuration
     include Singleton
 
-    attr_accessor :renderer, :selected_class, :active_leaf_class, :autogenerate_item_ids, :id_generator, :auto_highlight, :name_generator, :consider_item_names_as_safe
+    attr_accessor :autogenerate_item_ids,
+                  :auto_highlight,
+                  :consider_item_names_as_safe
+
     attr_reader :primary_navigation
 
-    class << self
+    attr_writer :active_leaf_class,
+                :id_generator,
+                :name_generator,
+                :renderer,
+                :selected_class
 
-      # Evals the config_file for the given navigation_context
-      def eval_config(navigation_context = :default)
-        SimpleNavigation.context_for_eval.instance_eval(SimpleNavigation.config_files[navigation_context])
-      end
+    # Evals the config_file for the given navigation_context
+    def self.eval_config(navigation_context = :default)
+      context = SimpleNavigation.config_files[navigation_context]
+      SimpleNavigation.context_for_eval.instance_eval(context)
+    end
 
-      # Starts processing the configuration
-      def run(&block)
-        block.call Configuration.instance
-      end
-
-    end #class << self
+    # Starts processing the configuration
+    def self.run(&block)
+      block.call Configuration.instance
+    end
 
     # Sets the config's default-settings
     def initialize
-      @renderer = SimpleNavigation.default_renderer || SimpleNavigation::Renderer::List
-      @selected_class = 'selected'
-      @active_leaf_class = 'simple-navigation-active-leaf'
       @autogenerate_item_ids = true
-      @id_generator = Proc.new {|id| id.to_s }
-      @name_generator = Proc.new {|name| name}
       @auto_highlight = true
       @consider_item_names_as_safe = true
+
       if defined?(ActiveSupport::Deprecation)
-        ActiveSupport::Deprecation.warn "simple-navigation: consider_item_names_as_safe will be set to false by default in 3.13.0 release, hence item names will be considered unsafe by default. See https://github.com/codeplant/simple-navigation/wiki", caller
+        ActiveSupport::Deprecation.warn 'simple-navigation: ' \
+          'consider_item_names_as_safe will be set to false ' \
+          'by default in 3.13.0 release, hence item names '   \
+          'will be considered unsafe by default. '            \
+          'See https://github.com/codeplant/simple-navigation/wiki',
+          caller
       end
     end
 
-    # This is the main method for specifying the navigation items. It can be used in two ways:
+    def active_leaf_class
+      @active_leaf_class ||= 'simple-navigation-active-leaf'
+    end
+
+    def id_generator
+      @id_generator ||= :to_s.to_proc
+    end
+
+    # This is the main method for specifying the navigation items.
+    # It can be used in two ways:
     #
-    # 1. Declaratively specify your items in the config/navigation.rb file using a block. It then yields an SimpleNavigation::ItemContainer for adding navigation items.
-    # 1. Directly provide your items to the method (e.g. when loading your items from the database).
+    # 1. Declaratively specify your items in the config/navigation.rb file
+    #    using a block. It then yields an SimpleNavigation::ItemContainer
+    #    for adding navigation items.
+    # 2. Directly provide your items to the method (e.g. when loading your
+    #    items from the database).
     #
     # ==== Example for block style (configuration file)
     #   config.items do |primary|
@@ -51,26 +69,47 @@ module SimpleNavigation
     #
     # ==== To consider when directly providing items
     # items_provider should be:
-    # * a methodname (as symbol) that returns your items. The method needs to be available in the view (i.e. a helper method)
+    # * a methodname (as symbol) that returns your items. The method needs to
+    #   be available in the view (i.e. a helper method)
     # * an object that responds to :items
     # * an enumerable containing your items
-    # The items you specify have to fullfill certain requirements. See SimpleNavigation::ItemAdapter for more details.
+    # The items you specify have to fullfill certain requirements.
+    # See SimpleNavigation::ItemAdapter for more details.
     #
-    def items(items_provider=nil, &block)
-      raise 'please specify either items_provider or block, but not both' if (items_provider && block) || (items_provider.nil? && block.nil?)
-      @primary_navigation = ItemContainer.new
+    def items(items_provider = nil, &block)
+      if (items_provider && block) || (items_provider.nil? && block.nil?)
+        fail('please specify either items_provider or block, but not both')
+      end
+
+      self.primary_navigation = ItemContainer.new
+
       if block
-        block.call @primary_navigation
+        block.call primary_navigation
       else
-        @primary_navigation.items = SimpleNavigation::ItemsProvider.new(items_provider).items
+        primary_navigation.items = ItemsProvider.new(items_provider).items
       end
     end
 
     # Returns true if the config_file has already been evaluated.
     def loaded?
-      !@primary_navigation.nil?
-    end    
-        
-  end  
-  
+      !primary_navigation.nil?
+    end
+
+    def name_generator
+      @name_generator ||= proc { |name| name }
+    end
+
+    def renderer
+      @renderer ||= SimpleNavigation.default_renderer ||
+                    SimpleNavigation::Renderer::List
+    end
+
+    def selected_class
+      @selected_class ||= 'selected'
+    end
+
+    private
+
+    attr_writer :primary_navigation
+  end
 end
