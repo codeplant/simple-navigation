@@ -62,7 +62,7 @@ module SimpleNavigation
             end
 
             context 'and items is not empty' do
-              let(:items) { double(:items, empty?: false) }
+              let(:items) { [true] }
 
               before { item.stub(items: items) }
 
