@@ -177,8 +177,7 @@ module SimpleNavigation
     end
 
     describe '#item' do
-      # TODO: what ?
-      context 'unconditional item' do
+      context 'when the item has no :if or :unless option' do
         let(:options) { Hash.new }
 
         before { item_container.stub(:should_add_item?).and_return(true) }
