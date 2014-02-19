@@ -2,16 +2,69 @@ require 'spec_helper'
 
 module SimpleNavigation
   describe ItemContainer do
-    let(:item_container) { ItemContainer.new }
+    subject(:item_container) { ItemContainer.new }
+
+    shared_examples 'adding the item to the list' do
+      it 'adds the item to the list' do
+        Item.stub(:new).and_return(item)
+        item_container.item(*args)
+        expect(item_container.items).to include(item)
+      end
+    end
+
+    shared_examples 'not adding the item to the list' do
+      it "doesn't add the item to the list" do
+        Item.stub(:new).and_return(item)
+        item_container.item(*args)
+        expect(item_container.items).not_to include(item)
+      end
+    end
 
     describe '#initialize' do
-      it 'sets the renderer to the globally-configured renderer per default' do
-        expect(Configuration.instance).to receive(:renderer)
-        ItemContainer.new
+      it 'sets an empty items array' do
+        expect(item_container.items).to be_empty
+      end
+    end
+
+    describe '#dom_attributes' do
+      let(:dom_attributes) {{ id: 'test_id', class: 'test_class' }}
+
+      before { item_container.dom_attributes = dom_attributes }
+
+      it "returns the container's dom_attributes" do
+        expect(item_container.dom_attributes).to eq dom_attributes
       end
 
-      it "sets an empty items array" do
-        expect(item_container.items).to be_empty
+      context 'when the dom_attributes do not contain any id or class' do
+        let(:dom_attributes) {{ test: 'test' }}
+
+        context "and the container hasn't any dom_id" do
+          it "returns the contaier's dom_attributes without any id" do
+            expect(item_container.dom_attributes).not_to include(:id)
+          end
+        end
+
+        context 'and the container has a dom_id' do
+          before { item_container.dom_id = 'test_id' }
+
+          it "returns the contaier's dom_attributes including the #dom_id" do
+            expect(item_container.dom_attributes).to include(id: 'test_id')
+          end
+        end
+
+        context "and the container hasn't any dom_class" do
+          it "returns the contaier's dom_attributes without any class" do
+            expect(item_container.dom_attributes).not_to include(:class)
+          end
+        end
+
+        context 'and the container has a dom_class' do
+          before { item_container.dom_class = 'test_class' }
+
+          it "returns the contaier's dom_attributes including the #dom_class" do
+            expect(item_container.dom_attributes).to include(class: 'test_class')
+          end
+        end
       end
     end
 
@@ -31,23 +84,13 @@ module SimpleNavigation
       end
 
       context 'when item should be added' do
-        let(:simple_navigation_item) { double(:simple_navigation_item) }
+        let(:wrapped_item) { double(:wrapped_item).as_null_object }
 
-        before do
-          item_container.stub(should_add_item?: true)
-          item_adapter.stub(to_simple_navigation_item: simple_navigation_item)
-        end
+        before { ItemAdapter.stub(:new).with(item).and_return(wrapped_item) }
 
-        it 'converts the item to an Item' do
-          expect(item_adapter).to receive(:to_simple_navigation_item)
-                                  .with(item_container)
+        it 'converts item to an Item and adds it to the items collection' do
           item_container.items = items
-        end
-
-        it 'adds the item to the items-collection' do
-          expect(item_container.items).to receive(:<<)
-                                          .with(simple_navigation_item)
-          item_container.items = items
+          expect(item_container.items).to include(wrapped_item)
         end
       end
 
@@ -177,65 +220,54 @@ module SimpleNavigation
     end
 
     describe '#item' do
-      context 'when the item has no :if or :unless option' do
-        let(:options) { Hash.new }
+      let(:options) { Hash.new }
+      let(:item) { double(:item) }
 
-        before { item_container.stub(:should_add_item?).and_return(true) }
+      context 'when a block is given' do
+        let(:block) { proc{} }
+        let(:sub_container) { double(:sub_container) }
 
-        context 'when a block is given' do
-          let(:sub_container) { double(:sub_container) }
-          let(:block) { proc{} }
+        it 'yields a new ItemContainer' do
+          Item.any_instance
+              .stub(:sub_navigation)
+              .and_return(sub_container)
 
-          before { ItemContainer.stub(:new).with(2).and_return(sub_container) }
-
-          it 'yields a new ItemContainer' do
-            expect{ |blk|
-              item_container.item('key', 'name', 'url', options, &blk)
-            }.to yield_with_args(sub_container)
-          end
-
-          it "creates a new Navigation-Item with the given params and block" do
-            expect(Item).to receive(:new)
-                            .with(item_container, 'key', 'name', 'url',
-                                  options, nil, &block)
-            item_container.item('key', 'name', 'url', options, &block)
-          end
-
-          it 'adds the created item to the list of items' do
-            expect(item_container.items).to receive(:<<)
-            item_container.item('key', 'name', 'url', options) {}
-          end
+          expect{ |blk|
+            item_container.item('key', 'name', 'url', options, &blk)
+          }.to yield_with_args(sub_container)
         end
 
-        context 'when no block is given' do
-          it "creates a new Navigation_item with the given params and nil as sub_navigation" do
-            expect(Item).to receive(:new)
-                            .with(item_container, 'key', 'name', 'url', options, nil)
-            item_container.item('key', 'name', 'url', options)
-          end
+        it "creates a new Item with the given params and block" do
+          Item.stub(:new)
+              .with(item_container, 'key', 'name', 'url', options, nil, &block)
+              .and_return(item)
+          item_container.item('key', 'name', 'url', options, &block)
+          expect(item_container.items).to include(item)
+        end
 
-          it 'adds the created item to the list of items' do
-            expect(item_container.items).to receive(:<<)
-            item_container.item('key', 'name', 'url', options)
-          end
+        it 'adds the created item to the list of items' do
+          item_container.item('key', 'name', 'url', options) {}
+          expect(item_container.items).not_to include(item)
+        end
+      end
+
+      context 'when no block is given' do
+        it 'creates a new Item with the given params and no sub navigation' do
+          Item.stub(:new)
+              .with(item_container, 'key', 'name', 'url', options, nil)
+              .and_return(item)
+          item_container.item('key', 'name', 'url', options)
+          expect(item_container.items).to include(item)
+        end
+
+        it 'adds the created item to the list of items' do
+          Item.stub(:new).and_return(item)
+          item_container.item('key', 'name', 'url', options) {}
+          expect(item_container.items).to include(item)
         end
       end
 
       describe 'Optional url and optional options' do
-        shared_examples 'adding the item to the list' do
-          it 'adds the item to the list' do
-            expect(item_container.items).to receive(:<<)
-            item_container.item(*args)
-          end
-        end
-
-        shared_examples 'not adding the item to the list' do
-          it "doesn't add the item to the list" do
-            expect(item_container.items).not_to receive(:<<)
-            item_container.item(*args)
-          end
-        end
-
         context 'when item specifed without url or options' do
           it_behaves_like 'adding the item to the list' do
             let(:args) { ['key', 'name'] }
@@ -302,7 +334,7 @@ module SimpleNavigation
           context 'and it evals to true' do
             let(:condition) { true }
 
-            it 'creates a new Navigation-Item' do
+            it 'creates a new Item' do
               expect(Item).to receive(:new)
               item_container.item('key', 'name', 'url', options)
             end
@@ -311,7 +343,7 @@ module SimpleNavigation
           context 'and it evals to false' do
             let(:condition) { false }
 
-            it "doesn't create a new Navigation-Item" do
+            it "doesn't create a new Item" do
               expect(Item).not_to receive(:new)
               item_container.item('key', 'name', 'url', options)
             end
@@ -425,6 +457,24 @@ module SimpleNavigation
         it 'calls render on the renderer and passes self' do
           expect(renderer_instance).to receive(:render).with(item_container)
           item_container.render(options)
+        end
+      end
+    end
+
+    describe '#renderer' do
+      context 'when no renderer is set explicitly' do
+        it 'returns globally-configured renderer' do
+          expect(item_container.renderer).to be Configuration.instance.renderer
+        end
+      end
+
+      context 'when a renderer is set explicitly' do
+        let(:renderer) { double(:renderer) }
+
+        before { item_container.renderer = renderer }
+
+        it 'returns the specified renderer' do
+          expect(item_container.renderer).to be renderer
         end
       end
     end
