@@ -45,7 +45,7 @@ describe SimpleNavigation do
       before { subject.config_file_paths = ['my_config_file_path'] }
 
       context 'and the requested config file exists' do
-        before { File.stub(exists?: true) }
+        before { File.stub(exist?: true) }
 
         it 'returns the path to the config_file' do
           expect(subject.config_file).to eq 'my_config_file_path/navigation.rb'
@@ -53,7 +53,7 @@ describe SimpleNavigation do
       end
 
       context 'and the requested config file does not exist' do
-        before { File.stub(exists?: false) }
+        before { File.stub(exist?: false) }
 
         it 'returns nil' do
           expect(subject.config_file).to be_nil
@@ -65,7 +65,7 @@ describe SimpleNavigation do
       before { subject.config_file_paths = ['first_path', 'second_path'] }
 
       context 'and the requested config file exists' do
-        before { File.stub(exists?: true) }
+        before { File.stub(exist?: true) }
 
         it 'returns the path to the first matching config_file' do
           expect(subject.config_file).to eq 'first_path/navigation.rb'
@@ -73,7 +73,7 @@ describe SimpleNavigation do
       end
 
       context 'and the requested config file does not exist' do
-        before { File.stub(exists?: false) }
+        before { File.stub(exist?: false) }
 
         it 'returns nil' do
           expect(subject.config_file).to be_nil
@@ -196,7 +196,7 @@ describe SimpleNavigation do
       before do
         subject.config_file_path = 'path_to_config'
         IO.stub(:read).and_return('file_content')
-        File.stub(exists?: true)
+        File.stub(exist?: true)
       end
 
       after { subject.config_files = {} }
@@ -285,5 +285,16 @@ describe SimpleNavigation do
     it_behaves_like 'loading the right adapter', :rails,   :Rails
     it_behaves_like 'loading the right adapter', :padrino, :Padrino
     it_behaves_like 'loading the right adapter', :sinatra, :Sinatra
+  end
+
+  describe '.init_adapter_from' do
+    let(:adapter) { double(:adapter) }
+    let(:adapter_class) { double(:adapter_class, new: adapter) }
+
+    it 'sets the adapter to a new instance of adapter_class' do
+      subject.adapter_class = adapter_class
+      subject.init_adapter_from(:default)
+      expect(subject.adapter).to be adapter
+    end
   end
 end
