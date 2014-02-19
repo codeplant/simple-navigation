@@ -208,7 +208,7 @@ module SimpleNavigation
           end
         end
 
-        context 'when a block is given' do
+        context 'when no block is given' do
           it "creates a new Navigation_item with the given params and nil as sub_navigation" do
             expect(Item).to receive(:new)
                             .with(item_container, 'key', 'name', 'url', options, nil)
