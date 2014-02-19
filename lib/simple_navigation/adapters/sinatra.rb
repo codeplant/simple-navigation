@@ -3,7 +3,6 @@ require 'cgi'
 module SimpleNavigation
   module Adapters
     class Sinatra < Base
-
       def self.register
         SimpleNavigation.set_env(sinatra_root, sinatra_environment)
         ::Sinatra::Application.send(:helpers, SimpleNavigation::Helpers)
@@ -15,8 +14,7 @@ module SimpleNavigation
       end
 
       def context_for_eval
-        raise 'no context set for evaluation the config file' unless context
-        context
+        context || fail('no context set for evaluation the config file')
       end
 
       def request_uri
@@ -29,24 +27,24 @@ module SimpleNavigation
 
       def current_page?(url)
         url_string = CGI.unescape(url)
-        if url_string.index("?")
-          uri = request_uri
-        else
-          uri = request_uri.split('?').first
+        uri = if url_string.index('?')
+                request_uri
+              else
+                request_uri.split('?').first
+              end
+
+        if url_string =~ %r(^\w+://)
+          uri = "#{request.scheme}://#{request.host_with_port}#{uri}"
         end
-        uri = CGI.unescape(uri)
-        if url_string =~ /^\w+:\/\//
-          url_string == "#{request.scheme}://#{request.host_with_port}#{uri}"
-        else
-          url_string == uri
-        end
+
+        url_string == CGI.unescape(uri)
       end
 
-      def link_to(name, url, options={})
+      def link_to(name, url, options = {})
         "<a href='#{url}'#{to_attributes(options)}>#{name}</a>"
       end
 
-      def content_tag(type, content, options={})
+      def content_tag(type, content, options = {})
         "<#{type}#{to_attributes(options)}>#{content}</#{type}>"
       end
 
@@ -61,9 +59,8 @@ module SimpleNavigation
       end
 
       def to_attributes(options)
-        options.map {|k, v| v.nil? ? '' : " #{k}='#{v}'"}.join
+        options.map { |k, v| v.nil? ? '' : " #{k}='#{v}'" }.join
       end
-
     end
   end
 end
