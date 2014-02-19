@@ -229,8 +229,8 @@ module SimpleNavigation
           end
         end
 
-        shared_examples "doesn't add the item to the list" do
-          it 'adds the item to the list' do
+        shared_examples 'not adding the item to the list' do
+          it "doesn't add the item to the list" do
             expect(item_container.items).not_to receive(:<<)
             item_container.item(*args)
           end
@@ -256,7 +256,7 @@ module SimpleNavigation
           end
 
           context 'and options contains a negative condition' do
-            it_behaves_like "doesn't add the item to the list" do
+            it_behaves_like 'not adding the item to the list' do
               let(:args) { ['key', 'name', { if: ->{ false }, option: true }] }
             end
           end
@@ -276,7 +276,7 @@ module SimpleNavigation
           end
 
           context 'and options contains a negative condition' do
-            it_behaves_like "doesn't add the item to the list" do
+            it_behaves_like 'not adding the item to the list' do
               let(:args) { ['key', 'name', 'url', { if: ->{ false }, option: true }] }
             end
           end
