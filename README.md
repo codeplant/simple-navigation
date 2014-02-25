@@ -33,4 +33,4 @@ Don't hesitate to come talk on the [project's group](http://groups.google.com/gr
 
 ## License
 
-Copyright (c) 2014 Andi Schacke, released under the MIT license
+Copyright (c) 2014 codeplant GmbH, released under the MIT license
