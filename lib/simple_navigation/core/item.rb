@@ -31,7 +31,7 @@ module SimpleNavigation
     def name(options = {})
       options.reverse_merge!(:apply_generator => true)
       if (options[:apply_generator])
-        SimpleNavigation.config.name_generator.call(@name)
+        SimpleNavigation.config.name_generator.call(@name, self)
       else
         @name
       end
