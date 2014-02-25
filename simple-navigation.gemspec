@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
                           "as explicit highlighting of the currently active "        \
                           "navigation through regular expressions."
   spec.summary          = "simple-navigation is a ruby library for creating navigations "\
-                          "(with multiple levels) for your Rails2, Rails3, Sinatra or "  \
+                          "(with multiple levels) for your Rails2, Rails3, Rails4, Sinatra or "  \
                           "Padrino application."
   spec.homepage         = 'http://github.com/andi/simple-navigation'
   spec.license          = 'MIT'
