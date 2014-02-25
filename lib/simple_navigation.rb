@@ -3,6 +3,7 @@ require 'active_support/core_ext/array'
 require 'active_support/core_ext/hash'
 require 'active_support/core_ext/module/attribute_accessors'
 
+require 'simple_navigation/version'
 require 'simple_navigation/core'
 require 'simple_navigation/rendering'
 require 'simple_navigation/adapters'

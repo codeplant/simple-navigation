@@ -1,307 +1,289 @@
 require 'spec_helper'
 
 describe SimpleNavigation do
-
-  before(:each) do
-    SimpleNavigation.config_file_path = 'path_to_config'
-  end
+  before { subject.config_file_path = 'path_to_config' }
 
   describe 'config_file_name' do
-    context 'for :default navigation_context' do
-      it "should return the name of the default config file" do
-        SimpleNavigation.config_file_name.should == 'navigation.rb'
+    context 'when the navigation_context is :default' do
+      it 'returns the name of the default config file' do
+        expect(subject.config_file_name).to eq 'navigation.rb'
       end
     end
-    context 'for other navigation_context' do
-      it "should return the name of the config file matching the specified context" do
-        SimpleNavigation.config_file_name(:my_other_context).should == 'my_other_context_navigation.rb'
+
+    context 'when the navigation_context is NOT :default' do
+      it 'returns the name of the config file matching the specified context' do
+        file_name = subject.config_file_name(:my_other_context)
+        expect(file_name).to eq 'my_other_context_navigation.rb'
       end
-      it "should convert camelcase-contexts to underscore" do
-        SimpleNavigation.config_file_name(:WhyWouldYouDoThis).should == 'why_would_you_do_this_navigation.rb'
+
+      it 'converts camelcase-contexts to underscore' do
+        file_name = subject.config_file_name(:WhyWouldYouDoThis)
+        expect(file_name).to eq 'why_would_you_do_this_navigation.rb'
       end
     end
   end
-  
+
   describe 'config_file_path=' do
-    before(:each) do
-      SimpleNavigation.config_file_paths = ['existing_path']
-    end
-    it "should override the config_file_paths" do
-      SimpleNavigation.config_file_path = 'new_path'
-      SimpleNavigation.config_file_paths.should == ['new_path']
+    before { subject.config_file_paths = ['existing_path'] }
+
+    it 'overrides the config_file_paths' do
+      subject.config_file_path = 'new_path'
+      expect(subject.config_file_paths).to eq ['new_path']
     end
   end
-  
+
   describe 'config_file' do
-    context 'no config_file_paths are set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = []
-      end
-      it "should return nil" do
-        SimpleNavigation.config_file.should be_nil
+    context 'when no config_file_paths are set' do
+      before { subject.config_file_paths = [] }
+
+      it 'returns nil' do
+        expect(subject.config_file).to be_nil
       end
     end
-    context 'one config_file_path is set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = ['my_config_file_path']
+
+    context 'when one config_file_path is set' do
+      before { subject.config_file_paths = ['my_config_file_path'] }
+
+      context 'and the requested config file exists' do
+        before { File.stub(exists?: true) }
+
+        it 'returns the path to the config_file' do
+          expect(subject.config_file).to eq 'my_config_file_path/navigation.rb'
+        end
       end
-      context 'requested config file does exist' do
-        before(:each) do
-          File.stub!(:exists? => true)
-        end
-        it "should return the path to the config_file" do
-          SimpleNavigation.config_file.should == 'my_config_file_path/navigation.rb'
-        end
-      end
-      context 'requested config file does not exist' do
-        before(:each) do
-          File.stub!(:exists? => false)
-        end
-        it "should return nil" do
-          SimpleNavigation.config_file.should be_nil        
+
+      context 'and the requested config file does not exist' do
+        before { File.stub(exists?: false) }
+
+        it 'returns nil' do
+          expect(subject.config_file).to be_nil
         end
       end
     end
-    context 'multiple config_file_paths are set' do
-      before(:each) do
-        SimpleNavigation.config_file_paths = ['first_path', 'second_path']
+
+    context 'when multiple config_file_paths are set' do
+      before { subject.config_file_paths = ['first_path', 'second_path'] }
+
+      context 'and the requested config file exists' do
+        before { File.stub(exists?: true) }
+
+        it 'returns the path to the first matching config_file' do
+          expect(subject.config_file).to eq 'first_path/navigation.rb'
+        end
       end
-      context 'requested config file does exist' do
-        before(:each) do
-          File.stub!(:exists? => true)
-        end
-        it "should return the path to the first matching config_file" do
-          SimpleNavigation.config_file.should == 'first_path/navigation.rb'
-        end
-      end
-      context 'requested config file does not exist' do
-        before(:each) do
-          File.stub!(:exists? => false)
-        end
-        it "should return nil" do
-          SimpleNavigation.config_file.should be_nil        
+
+      context 'and the requested config file does not exist' do
+        before { File.stub(exists?: false) }
+
+        it 'returns nil' do
+          expect(subject.config_file).to be_nil
         end
       end
     end
   end
-  
-  describe 'config_file?' do
-    context 'config_file present' do
-      before(:each) do
-        SimpleNavigation.stub!(:config_file => 'file')
+
+  describe '.config_file?' do
+    context 'when config_file is present' do
+      before { subject.stub(config_file: 'file') }
+
+      it 'returns true' do
+        expect(subject.config_file?).to be_true
       end
-      it {SimpleNavigation.config_file?.should be_true}
     end
-    context 'config_file not present' do
-      before(:each) do
-        SimpleNavigation.stub!(:config_file => nil)
+
+    context 'when config_file is not present' do
+      before { subject.stub(config_file: nil) }
+
+      it 'returns false' do
+        expect(subject.config_file?).to be_false
       end
-      it {SimpleNavigation.config_file?.should be_false}
     end
   end
 
-  describe 'self.default_config_file_path' do
-    before(:each) do
-      SimpleNavigation.stub!(:root => 'root')
-    end
-    it {SimpleNavigation.default_config_file_path.should == 'root/config'}
-  end
-  
-  describe 'regarding renderers' do
-    it "should have registered the builtin renderers by default" do
-      SimpleNavigation.registered_renderers.should_not be_empty
-    end
+  describe '.default_config_file_path' do
+    before { subject.stub(root: 'root') }
 
-    describe 'register_renderer' do
-      before(:each) do
-        @renderer = stub(:renderer)
-      end
-      it "should add the specified renderer to the list of renderers" do
-        SimpleNavigation.register_renderer(:my_renderer => @renderer)
-        SimpleNavigation.registered_renderers[:my_renderer].should == @renderer
-      end
-    end
-
-  end
-
-  describe 'set_env' do
-    before(:each) do
-      SimpleNavigation.config_file_paths = []
-      SimpleNavigation.stub!(:default_config_file_path => 'default_path')
-      SimpleNavigation.set_env('root', 'my_env')
-    end
-    it "should set the root" do
-      SimpleNavigation.root.should == 'root'
-    end
-    it "should set the environment" do
-      SimpleNavigation.environment.should == 'my_env'
-    end
-    it "should add the default-config path to the list of config_file_paths" do
-      SimpleNavigation.config_file_paths.should == ['default_path']
+    it 'returns the config file path according to :root setting' do
+      expect(subject.default_config_file_path).to eq 'root/config'
     end
   end
 
-  describe 'load_config' do
-    context 'config_file_path is set' do
-      before(:each) do
-        SimpleNavigation.stub!(:config_file => 'path_to_config_file')
-      end
-      context 'config_file does exist' do
-        before(:each) do
-          SimpleNavigation.stub!(:config_file? => true)
-          IO.stub!(:read => 'file_content')
-        end
-        it "should not raise an error" do
-          lambda{SimpleNavigation.load_config}.should_not raise_error
-        end
-        it "should read the specified config file from disc" do
-          IO.should_receive(:read).with('path_to_config_file')
-          SimpleNavigation.load_config
-        end
-        it "should store the read content in the module (default context)" do
-          SimpleNavigation.should_receive(:config_file).with(:default)
-          SimpleNavigation.load_config
-          SimpleNavigation.config_files[:default].should == 'file_content'
-        end
-        it "should store the content in the module (non default context)" do
-          SimpleNavigation.should_receive(:config_file).with(:my_context)
-          SimpleNavigation.load_config(:my_context)
-          SimpleNavigation.config_files[:my_context].should == 'file_content'
-        end
-      end
-      
-      context 'config_file does not exist' do
-        before(:each) do
-          SimpleNavigation.stub!(:config_file? => false)
-        end
-        it {lambda{SimpleNavigation.load_config}.should raise_error}
+  describe 'Regarding renderers' do
+    it 'registers the builtin renderers by default' do
+      expect(subject.registered_renderers).not_to be_empty
+    end
+
+    describe '.register_renderer' do
+      let(:renderer) { double(:renderer) }
+
+      it 'adds the specified renderer to the list of renderers' do
+        subject.register_renderer(my_renderer: renderer)
+        expect(subject.registered_renderers[:my_renderer]).to be renderer
       end
     end
-    
-    context 'config_file_path is not set' do
-      before(:each) do
-        SimpleNavigation.config_file_path = nil
-      end
-      it {lambda{SimpleNavigation.load_config}.should raise_error}
+  end
+
+  describe '.set_env' do
+    before do
+      subject.config_file_paths = []
+      subject.stub(default_config_file_path: 'default_path')
+      subject.set_env('root', 'my_env')
     end
-    
-    describe 'regarding caching of the config-files' do
-      before(:each) do
-        IO.stub!(:read).and_return('file_content')
-        SimpleNavigation.config_file_path = 'path_to_config'
-        File.stub!(:exists? => true)
+
+    it 'sets the root' do
+      expect(subject.root).to eq 'root'
+    end
+
+    it 'sets the environment' do
+      expect(subject.environment).to eq 'my_env'
+    end
+
+    it 'adds the default-config path to the list of config_file_paths' do
+      expect(subject.config_file_paths).to eq ['default_path']
+    end
+  end
+
+  describe '.load_config' do
+    context 'when config_file_path is set' do
+      before { subject.stub(config_file: 'path_to_config_file') }
+
+      context 'and config_file exists' do
+        before do
+          subject.stub(config_file?: true)
+          IO.stub(read: 'file_content')
+        end
+
+        it "doesn't raise any error" do
+          expect{ subject.load_config }.not_to raise_error
+        end
+
+        it 'reads the specified config file from disc' do
+          expect(IO).to receive(:read).with('path_to_config_file')
+          subject.load_config
+        end
+
+        it 'stores the read content in the module (default context)' do
+          expect(subject).to receive(:config_file).with(:default)
+          subject.load_config
+          expect(subject.config_files[:default]).to eq 'file_content'
+        end
+
+        it 'stores the content in the module (non default context)' do
+          expect(subject).to receive(:config_file).with(:my_context)
+          subject.load_config(:my_context)
+          expect(subject.config_files[:my_context]).to eq 'file_content'
+        end
       end
-      context "environment undefined" do
-        before(:each) do
-          SimpleNavigation.stub!(:environment => nil)
-        end
-        it "should load the config file twice" do
-          IO.should_receive(:read).twice
-          SimpleNavigation.load_config
-          SimpleNavigation.load_config
+
+      context 'and config_file does not exist' do
+        before { subject.stub(config_file?: false) }
+
+        it 'raises an exception' do
+        expect{ subject.load_config }.to raise_error
         end
       end
-      context "environment defined" do
-        before(:each) do
-          SimpleNavigation.stub!(:environment => 'production')
-        end
-        context "environment=production" do
-          it "should load the config file only once" do
-            IO.should_receive(:read).once
-            SimpleNavigation.load_config
-            SimpleNavigation.load_config   
-          end
-        end
-        
-        context "environment=development" do
-          before(:each) do
-            SimpleNavigation.stub!(:environment => 'development')
-          end
-          it "should load the config file twice" do
-            IO.should_receive(:read).twice
-            SimpleNavigation.load_config
-            SimpleNavigation.load_config
-          end
-        end
-        
-        context "environment=test" do
-          before(:each) do
-            SimpleNavigation.stub!(:environment => 'test')
-          end
-          it "should load the config file twice" do
-            IO.should_receive(:read).twice
-            SimpleNavigation.load_config
-            SimpleNavigation.load_config
+    end
+
+    context 'when config_file_path is not set' do
+      before { subject.config_file_path = nil }
+
+      it 'raises an exception' do
+        expect{ subject.load_config }.to raise_error
+      end
+    end
+
+    describe 'Regarding caching of the config-files' do
+      before do
+        subject.config_file_path = 'path_to_config'
+        IO.stub(:read).and_return('file_content')
+        File.stub(exists?: true)
+      end
+
+      after { subject.config_files = {} }
+
+      shared_examples 'loading config file' do |env, count|
+        context "when environment is '#{env}'" do
+          before { subject.stub(environment: env) }
+
+          it "loads the config file #{count}" do
+            expect(IO).to receive(:read).exactly(count)
+            2.times { subject.load_config }
           end
         end
       end
-      after(:each) do
-        SimpleNavigation.config_files = {}
-      end
+
+      it_behaves_like 'loading config file', nil,           :twice
+      it_behaves_like 'loading config file', 'production',  :once
+      it_behaves_like 'loading config file', 'development', :twice
+      it_behaves_like 'loading config file', 'test',        :twice
     end
   end
-  
-  describe 'config' do
-    it {SimpleNavigation.config.should == SimpleNavigation::Configuration.instance}
+
+  describe '.config' do
+    it 'returns the Configuration singleton instance' do
+      expect(subject.config).to be SimpleNavigation::Configuration.instance
+    end
   end
-  
-  describe 'active_item_container_for' do
-    before(:each) do
-      @primary = stub(:primary)
-      SimpleNavigation.config.stub!(:primary_navigation => @primary)
-    end
-    context 'level is :all' do
-      it "should return the primary_navigation" do
-        SimpleNavigation.active_item_container_for(:all).should == @primary
+
+  describe '.active_item_container_for' do
+    let(:primary) { double(:primary) }
+
+    before { subject.config.stub(primary_navigation: primary) }
+
+    context 'when level is :all' do
+      it 'returns the primary_navigation' do
+        nav = subject.active_item_container_for(:all)
+        expect(nav).to be primary
       end
     end
-    context 'level is :leaves' do
-      it "should return the currently active leaf-container" do
-        @primary.should_receive(:active_leaf_container)
-        SimpleNavigation.active_item_container_for(:leaves)
+
+    context 'when level is :leaves' do
+      it 'returns the currently active leaf-container' do
+        expect(primary).to receive(:active_leaf_container)
+        subject.active_item_container_for(:leaves)
       end
     end
-    context 'level is a Range' do
-      it "should take the min of the range to lookup the active container" do
-        @primary.should_receive(:active_item_container_for).with(2)
-        SimpleNavigation.active_item_container_for(2..3)
+
+    context 'when level is a Range' do
+      it 'takes the min of the range to lookup the active container' do
+        expect(primary).to receive(:active_item_container_for).with(2)
+        subject.active_item_container_for(2..3)
       end
     end
-    context 'level is an Integer' do
-      it "should consider the Integer to lookup the active container" do
-        @primary.should_receive(:active_item_container_for).with(1)
-        SimpleNavigation.active_item_container_for(1)
+
+    context 'when level is an Integer' do
+      it 'considers the Integer to lookup the active container' do
+        expect(primary).to receive(:active_item_container_for).with(1)
+        subject.active_item_container_for(1)
       end
     end
-    context 'level is something else' do
-      it "should raise an ArgumentError" do
-        lambda {SimpleNavigation.active_item_container_for('something else')}.should raise_error(ArgumentError)
+
+    context 'when level is something else' do
+      it 'raises an exception' do
+        expect{
+          subject.active_item_container_for('something else')
+        }.to raise_error
       end
     end
   end
 
-  describe 'load_adapter' do
-    context 'Rails' do
-      before(:each) do
-        SimpleNavigation.stub!(:framework => :rails)
-        SimpleNavigation.load_adapter
+  describe '.load_adapter' do
+    shared_examples 'loading the right adapter' do |framework, adapter|
+      context "when the context is #{framework}" do
+        before do
+          subject.stub(framework: framework)
+          subject.load_adapter
+        end
+
+        it "returns the #{framework} adapter" do
+          adapter_class = SimpleNavigation::Adapters.const_get(adapter)
+          expect(subject.adapter_class).to be adapter_class
+        end
       end
-      it {SimpleNavigation.adapter_class.should == SimpleNavigation::Adapters::Rails}
     end
-    context 'Padrino' do
-      before(:each) do
-        SimpleNavigation.stub!(:framework => :padrino)
-        SimpleNavigation.load_adapter
-      end
-      it {SimpleNavigation.adapter_class.should == SimpleNavigation::Adapters::Padrino}
-    end
-    context 'Sinatra' do
-      before(:each) do
-        SimpleNavigation.stub!(:framework => :sinatra)
-        SimpleNavigation.load_adapter
-      end
-      it {SimpleNavigation.adapter_class.should == SimpleNavigation::Adapters::Sinatra}
-    end
+
+    it_behaves_like 'loading the right adapter', :rails,   :Rails
+    it_behaves_like 'loading the right adapter', :padrino, :Padrino
+    it_behaves_like 'loading the right adapter', :sinatra, :Sinatra
   end
-  
 end

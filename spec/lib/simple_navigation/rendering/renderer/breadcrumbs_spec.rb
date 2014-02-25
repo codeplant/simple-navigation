@@ -1,99 +1,119 @@
 require 'spec_helper'
-require 'html/document'# unless defined? HTML::Document
 
-describe SimpleNavigation::Renderer::Breadcrumbs do
+module SimpleNavigation
+  module Renderer
+    describe Breadcrumbs do
+      let!(:navigation) { setup_navigation('nav_id', 'nav_class') }
 
-  describe 'render' do
+      let(:item) { nil }
+      let(:options) {{ level: :all }}
+      let(:output) { HTML::Document.new(raw_output).root }
+      let(:raw_output) { renderer.render(navigation) }
+      let(:renderer) { setup_renderer(Breadcrumbs, options) }
 
-    def render(current_nav=nil, options={:level => :all})
-      primary_navigation = primary_container
-      select_item(current_nav) if current_nav
-      setup_renderer_for SimpleNavigation::Renderer::Breadcrumbs, :rails, options
-      HTML::Document.new(@renderer.render(primary_navigation)).root
-    end
+      before { select_an_item(navigation[item]) if item }
 
-    context 'regarding result' do
-
-      it "should render a div-tag around the items" do
-          HTML::Selector.new('div').select(render).should have(1).entries
-        end
-        it "the rendered div-tag should have the specified dom_id" do
-          HTML::Selector.new('div#nav_dom_id').select(render).should have(1).entries
-        end
-        it "the rendered div-tag should have the specified class" do
-          HTML::Selector.new('div.nav_dom_class').select(render).should have(1).entries
+      describe '#render' do
+        it "renders a 'div' tag for the navigation" do
+          expect(output).to have_css('div')
         end
 
-        context 'without current_navigation set' do
-          it "should not render any a-tag in the div-tag" do
-            HTML::Selector.new('div a').select(render).should have(0).entries
+        it "sets the right html id on the rendered 'div' tag" do
+          expect(output).to have_css('div#nav_id')
+        end
+
+        it "sets the right html classes on the rendered 'div' tag" do
+          expect(output).to have_css('div.nav_class')
+        end
+
+        context 'when no item is selected' do
+          it "doesn't render any 'a' tag in the 'div' tag" do
+            expect(output).not_to have_css('div a')
           end
         end
 
-      context 'with current_navigation set' do
-        before(:each) do
-          @selection = HTML::Selector.new('div a').select(render(:invoices))
-        end
-        it "should render the selected a tags" do
-          @selection.should have(1).entries
-        end
+        context 'when an item is selected' do
+          let(:item) { :invoices }
 
-        it "should not render class or id" do
-          @selection.each do |tag|
-            raise unless tag.name == "a"
-            tag["id"].should be_nil
-            tag["class"].should be_nil
+          it "renders the selected 'a' tag" do
+            expect(output).to have_css('div a')
           end
-        end
 
-        context 'with allow_classes_and_ids option' do
-          before(:each) do
-            @selection = HTML::Selector.new('div a').select(render(:users, :level => :all, :allow_classes_and_ids => true))
+          it "remders the 'a' tag without any html id" do
+            expect(output).not_to have_css('div a[id]')
           end
-          it "should render class and id" do
-            @selection.each do |tag|
-              raise unless tag.name == "a"
-              tag["id"].should_not be_nil
-              tag["class"].should_not be_nil
+
+          it "renders the 'a' tag without any html class" do
+            expect(output).not_to have_css('div a[class]')
+          end
+
+          context 'and the :allow_classes_and_ids option is true' do
+            let(:options) {{ level: :all, allow_classes_and_ids: true }}
+
+            it "renders the 'a' tag with the selected class" do
+              expect(output).to have_css('div a.selected')
+            end
+
+            context "and the item hasn't any id explicitly set" do
+              it "renders the 'a' tag without any html id" do
+                expect(output).not_to have_css('div a[id]')
+              end
+            end
+
+            context 'and the item has an explicitly set id' do
+              let(:item) { :users }
+
+              it "renders the 'a' tag with an html id" do
+                expect(output).to have_css('div a#breadcrumb_users_link_id')
+              end
             end
           end
         end
 
-        context 'with prefix option' do
-          it 'should render prefix before breadcrumbs' do
-            selection = HTML::Selector.new('div').select(render(:subnav1, :level => :all, :prefix => 'You are here: '))
-            raise unless selection.count == 1
-            tag = selection.first
-            tag.to_s.should =~ /^\<div.+\>You are here\: /
-          end
+        context 'and the :prefix option is set' do
+          let(:options) {{ prefix: 'You are here: ' }}
 
-          it 'should not render prefix if there is no available breadcrumb' do
-            allow_message_expectations_on_nil
-            selection = HTML::Selector.new('div').select(render('', :prefix => 'You are here: '))
-            tag = selection.first
-            tag.to_s.should =~ /^\<div.+\>\<\/div\>/
-          end
-        end
+          context 'and there are no items to render' do
+            let(:item) { nil }
 
-        context 'with static_leaf option' do
-          before(:each) do
-            @selection = HTML::Selector.new('div *').select(render(:subnav1, :level => :all, :static_leaf => true))
-          end
-          it "should render link for non-leaes" do
-            @selection[0..-2].each do |tag|
-              tag.name.should == 'a'
+            it "doesn't render the prefix before the breadcrumbs" do
+              expect(raw_output).not_to match(/^<div.+>You are here: /)
             end
           end
-          it "should not render link for leaf" do
-            @selection.last.name.should == 'span'
+
+          context 'and there are items to render' do
+            let(:item) { :invoices }
+
+            it 'renders the prefix before the breadcrumbs' do
+              expect(raw_output).to match(/^<div.+>You are here: /)
+            end
           end
         end
-      end
 
+        context 'when a sub navigation item is selected' do
+          before do
+            navigation[:invoices].stub(selected?: true)
 
-      context 'nested sub_navigation' do
-        it "should add an a tag for each selected item" do
-          HTML::Selector.new('div a').select(render(:subnav1)).should have(2).entries
+            navigation[:invoices]
+              .sub_navigation[:unpaid]
+              .stub(selected?: true, selected_by_condition?: true)
+          end
+
+          it 'renders all items as links' do
+            expect(output).to have_css('div a', 2)
+          end
+
+          context 'when the :static_leaf option is true' do
+            let(:options) {{ level: :all, static_leaf: true }}
+
+            it 'renders the items as links' do
+              expect(output).to have_css('div a')
+            end
+
+            it 'renders the last item as simple text' do
+              expect(output).to have_css('div span')
+            end
+          end
         end
       end
     end

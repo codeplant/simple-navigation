@@ -1,64 +1,91 @@
 require 'spec_helper'
-require 'html/document' unless defined? HTML::Document
 
-describe SimpleNavigation::Renderer::Links do
+module SimpleNavigation
+  module Renderer
+    describe Links do
+      describe '#render' do
+        let!(:navigation) { setup_navigation('nav_id', 'nav_class') }
 
-    
-  describe 'render' do
+        let(:item) { nil }
+        let(:options) {{ level: :all }}
+        let(:output) { HTML::Document.new(raw_output).root }
+        let(:raw_output) { renderer.render(navigation) }
+        let(:renderer) { setup_renderer(Links, options) }
 
-    def render(current_nav=nil, options={:level => :all})
-      primary_navigation = primary_container
-      select_item(current_nav) if current_nav
-      setup_renderer_for SimpleNavigation::Renderer::Links, :rails, options
-      HTML::Document.new(@renderer.render(primary_navigation)).root
+        before { select_an_item(navigation[item]) if item }
+
+        it "renders a 'div' tag for the navigation" do
+          expect(output).to have_css('div')
+        end
+
+        it "sets the right html id on the rendered 'div' tag" do
+          expect(output).to have_css('div#nav_id')
+        end
+
+        it "sets the right html classes on the rendered 'div' tag" do
+          expect(output).to have_css('div.nav_class')
+        end
+
+        it "renders an 'a' tag for each item" do
+          expect(output).to have_css('a', 3)
+        end
+
+        it "renders the 'a' tags with the corresponding item's :html_options" do
+          expect(output).to have_css('a[style=float:right]')
+        end
+
+        context 'when an item has a specified id' do
+          it "renders the 'a' tags with the specified id" do
+            expect(output).to have_css('a#users_id')
+          end
+        end
+
+        context 'when an item has no specified id' do
+          it "uses a default id by stringifying the item's key" do
+            expect(output).to have_css('a#invoices')
+          end
+        end
+
+        context 'when no item is selected' do
+          it "renders items without the 'selected' class" do
+            expect(output).not_to have_css('a.selected')
+          end
+        end
+
+        context 'when an item is selected' do
+          let(:item) { :invoices }
+
+          it "renders the selected item with the 'selected' class" do
+            expect(output).to have_css('a#invoices.selected')
+          end
+        end
+
+        context "when the :join_with option is set" do
+          let(:options) {{ level: :all, join_with: ' | ' }}
+
+          it 'separates the items with the specified separator' do
+            expect(raw_output.scan(' | ')).to have(3).items
+          end
+        end
+
+        context 'when a sub navigation item is selected' do
+          before do
+            navigation[:invoices].stub(selected?: true)
+
+            navigation[:invoices]
+              .sub_navigation[:unpaid]
+              .stub(selected?: true, selected_by_condition?: true)
+          end
+
+          it 'renders the main parent as selected' do
+            expect(output).to have_css('a#invoices.selected')
+          end
+
+          it "doesn't render the nested item's link" do
+            expect(output).not_to have_css('a#unpaid')
+          end
+        end
+      end
     end
-
-    context 'regarding result' do
-
-      it "should render a div-tag around the items" do
-        HTML::Selector.new('div').select(render).should have(1).entries
-      end
-      it "the rendered div-tag should have the specified dom_id" do
-        HTML::Selector.new('div#nav_dom_id').select(render).should have(1).entries
-      end
-      it "the rendered div-tag should have the specified class" do
-        HTML::Selector.new('div.nav_dom_class').select(render).should have(1).entries
-      end
-      it "should render an a-tag for each item" do
-        HTML::Selector.new('a').select(render).should have(3).entries
-      end
-      it "should pass the specified html_options to the a element" do
-        HTML::Selector.new('a[style=float:right]').select(render).should have(1).entries
-      end
-      it "should give the a-tag the id specified in the html_options" do
-        HTML::Selector.new('a#my_id').select(render).should have(1).entries
-      end
-      it "should give the a-tag the default id (stringified key) if no id is specified in the html_options" do
-        HTML::Selector.new('a#invoices').select(render).should have(1).entries
-      end
-      it "should not apply the the default id where there is an id specified in the html_options" do
-        HTML::Selector.new('a#users').select(render).should be_empty
-      end
-
-      context 'with current_navigation set' do
-        it "should mark the matching a-item as selected (with the css_class specified in configuration)" do
-          HTML::Selector.new('a.selected').select(render(:invoices)).should have(1).entries
-        end
-      end
-
-      context 'without current_navigation set' do
-        it "should not mark any of the items as selected" do
-          HTML::Selector.new('a.selected').select(render).should be_empty
-        end
-      end
-
-      context 'with a custom seperator specified' do
-        it "should separate the items with the separator" do
-          HTML::Selector.new('div').select_first(render(:subnav1, :join_with => " | ")).to_s.split(" | ").should have(4).entries
-        end
-      end
-  
-    end
-    
   end
 end

@@ -1,108 +1,76 @@
-ENV["RAILS_ENV"] = "test"
-require 'rubygems'
-require 'rspec'
-require 'json_spec'
+require 'initializers/have_css_matcher'
 require 'action_controller'
+require 'html/document'
 
-module Rails
-  module VERSION
-    MAJOR = 2
+# FIXME: actualize to make it 4 by default
+unless defined? Rails
+  module Rails
+    module VERSION
+      MAJOR = 2
+    end
   end
-end unless defined? Rails
+end
 
-$:.unshift File.dirname(__FILE__)
-$:.unshift File.join(File.dirname(__FILE__), '../lib')
-
-require 'simple_navigation'
-
-# SimpleNavigation.root = './'
 RAILS_ROOT = './' unless defined?(RAILS_ROOT)
 RAILS_ENV = 'test' unless defined?(RAILS_ENV)
 
-
-RSpec.configure do |config|
-  # == Mock Framework
-  #
-  # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
-  #
-  # config.mock_with :mocha
-  # config.mock_with :flexmock
-  # config.mock_with :rr
-  config.mock_with :rspec
-  config.include JsonSpec::Helpers
-end
-
-# spec helper methods
-def sub_items
-  [
-    [:subnav1, 'subnav1', 'subnav1_url'],
-    [:subnav2, 'subnav2', 'subnav2_url']
-  ]
-end
-
-def primary_items
-  [
-    [:users, 'users', 'first_url', {:id => 'my_id', :link => {:id => 'my_link_id'}}],
-    [:invoices, 'invoices', 'second_url'],
-    [:accounts, 'accounts', 'third_url', {:style => 'float:right', :link => {:style => 'float:left'}}],
-    [:miscellany, 'miscellany']
-  ]
-end
-
-def primary_container
-  containers.first
-end
-
-def containers
-  container = SimpleNavigation::ItemContainer.new(1)
-  container.dom_id = 'nav_dom_id'
-  container.dom_class = 'nav_dom_class'
-  @items = primary_items.map {|params| SimpleNavigation::Item.new(container, *params)}
-  @items.each {|i| i.stub!(:selected? => false, :selected_by_condition? => false)}
-  container.instance_variable_set(:@items, @items)
-  sub_container = subnav_container
-  primary_item(:invoices) {|item| item.instance_variable_set(:@sub_navigation, sub_container)}
-  [container,sub_container]
-end
-
-def primary_item(key)
-  item = @items.find {|i| i.key == key}
-  block_given? ? yield(item) : item
-end
-
-def sub_item(key)
-  primary_item(:invoices).instance_variable_get(:@sub_navigation).items.find { |i| i.key == key}
-end
-
-def select_item(key)
-  if(key == :subnav1)
-    select_item(:invoices)
-    primary_item(:invoices) do |item|
-      item.instance_variable_get(:@sub_navigation).items.find { |i| i.key == key}.stub!(:selected? => true, :selected_by_condition? => true)
-    end
-  else
-    primary_item(key) {|item| item.stub!(:selected? => true) unless item.frozen?}
-  end
-end
-
-def subnav_container
-  container = SimpleNavigation::ItemContainer.new(2)
-  items = sub_items.map {|params| SimpleNavigation::Item.new(container, *params)}
-  items.each {|i| i.stub!(:selected? => false, :selected_by_condition? => false)}
-  container.instance_variable_set(:@items, items)
-  container
-end
-
-def setup_renderer_for(renderer_class, framework, options)
-  setup_adapter_for framework
-  @renderer = renderer_class.new(options)
-end
+require 'simple_navigation'
 
 def setup_adapter_for(framework)
   adapter = case framework
-  when :rails
-    SimpleNavigation::Adapters::Rails.new(stub(:context, :view_context => ActionView::Base.new))
-  end
-  SimpleNavigation.stub!(:adapter => adapter)
+            when :rails
+              context = double(:context, view_context: ActionView::Base.new)
+              SimpleNavigation::Adapters::Rails.new(context)
+            end
+  SimpleNavigation.stub(adapter: adapter)
   adapter
+end
+
+def setup_renderer(renderer_class, options)
+  renderer_class.new(options)
+end
+
+def primary_navigation
+  # TODO
+  primary_container
+end
+
+def select_an_item(item)
+  item.stub(selected?: true)
+end
+
+def setup_container(dom_id, dom_class)
+  container = SimpleNavigation::ItemContainer.new(1)
+  container.dom_id = dom_id
+  container.dom_class = dom_class
+  container
+end
+
+def setup_navigation(dom_id, dom_class)
+  setup_adapter_for :rails
+  container = setup_container(dom_id, dom_class)
+  setup_items(container)
+  container
+end
+
+# FIXME: adding the :link option for the list renderer messes up the other
+#        renderers
+def setup_items(container)
+  container.item :users, 'Users', '/users', id: 'users_id', link: { id: 'users_link_id' }
+  container.item :invoices, 'Invoices', '/invoices' do |invoices|
+    invoices.item :paid, 'Paid', '/invoices/paid'
+    invoices.item :unpaid, 'Unpaid', '/invoices/unpaid'
+  end
+  container.item :accounts, 'Accounts', '/accounts', style: 'float:right', link: { style: 'float:left' }
+  container.item :miscellany, 'Miscellany'
+
+  container.items.each do |item|
+    item.stub(selected?: false, selected_by_condition?: false)
+
+    if item.sub_navigation
+      item.sub_navigation.items.each do |item|
+        item.stub(selected?: false, selected_by_condition?: false)
+      end
+    end
+  end
 end
