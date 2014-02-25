@@ -6,7 +6,8 @@
 * Added license to gemspec. Thanks to Troy Thompson.
 * Allow defining other html attributes than :id and :class on menu container. Credits to Jacek Tomaszewski.
 * Added new config option "consider_item_names_as_safe". Thanks to Alexey Naumov.
-* Big cleanup of specs, removed jeweler in favor of the "bundler" way. Big thanks to Simon Courtois.
+* Big cleanup of specs, removed jeweler in favor of the "bundler" way. Huge thank you to Simon Courtois.
+* Added more powerful name generator which yields the item itself in addition to the item's name. Credits to Simon Curtois.
 
 *3.11.0
 
