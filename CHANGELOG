@@ -1,4 +1,4 @@
-*master
+*3.12.0
 
 * Relax hash constraint on item_adapter. Thanks to Ramon Tayag.
 * Fixed hidden special character in navigation template. Credits to Stef Lewandowski
