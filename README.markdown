@@ -1,4 +1,3 @@
-
 == Simple Navigation
 
 Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Rails 2, Rails 3, Rails4, Sinatra or Padrino applications.
