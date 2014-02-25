@@ -4,31 +4,31 @@ h2. Simple Navigation
 
 Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Rails 2, Rails 3, Rails4, Sinatra or Padrino applications. It runs with all ruby versions (including ruby 2.0)
 
-h3. Source code
+h4. Source code
 
 http://github.com/codeplant/simple-navigation
 
-h3. Documentation
+h4. Documentation
 
 http://wiki.github.com/codeplant/simple-navigation
 
-h3. RDoc
+h4. RDoc
 
 Please checkout the repository and execute 'rake rdoc'.
 
-h3. Online Demo
+h4. Online Demo
 
 http://simple-navigation-demo.codeplant.ch
 
-h3. Source Code for Demo
+h4. Source Code for Demo
 
 http://github.com/codeplant/simple-navigation-demo
 
-h3. Discussion Group for Feedback and Questions
+h4. Discussion Group for Feedback and Questions
   
 http://groups.google.com/group/simple-navigation
 
-h3. Legal
+h4. Legal
 
 Copyright (c) 2014 codeplant GmbH, released under the MIT license
 
