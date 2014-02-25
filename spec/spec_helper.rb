@@ -1,6 +1,9 @@
 require 'initializers/have_css_matcher'
 require 'action_controller'
+require 'coveralls'
 require 'html/document'
+
+Coveralls.wear!
 
 # FIXME: actualize to make it 4 by default
 unless defined? Rails
