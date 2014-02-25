@@ -25,7 +25,6 @@ Gem::Specification.new do |spec|
   spec.test_files       = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths    = ['lib']
 
-  spec.extra_rdoc_files = ['README']
   spec.rdoc_options     = ['--inline-source', '--charset=UTF-8']
 
   spec.add_runtime_dependency 'activesupport', '>= 2.3.2'
