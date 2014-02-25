@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name             = 'simple-navigation'
   spec.version          = SimpleNavigation::VERSION
   spec.authors          = ['Andi Schacke', 'Mark J. Titorenko']
-  spec.email            = ['andreas.schacke@gmail.com']
+  spec.email            = ['andi@codeplant.ch']
   spec.description      = "With the simple-navigation gem installed you can easily " \
                           "create multilevel navigations for your Rails, Sinatra or "\
                           "Padrino applications. The navigation is defined in a "    \
