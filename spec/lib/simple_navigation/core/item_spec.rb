@@ -196,9 +196,22 @@ module SimpleNavigation
           name_generator: proc{ |name| "<span>#{name}</span>" })
       end
 
-      context "when no option is given" do
-        it "uses the default name_generator" do
-          expect(item.name).to eq '<span>name</span>'
+      context 'when no option is given' do
+        context 'and the name_generator uses only the name' do
+          it 'uses the default name_generator' do
+            expect(item.name).to eq '<span>name</span>'
+          end
+        end
+
+        context 'and the name_generator uses only the item itself' do
+          before do
+            SimpleNavigation.config.stub(
+              name_generator: proc{ |name, item| "<span>#{item.key}</span>" })
+          end
+
+          it 'uses the default name_generator' do
+            expect(item.name).to eq '<span>my_key</span>'
+          end
         end
       end
 
