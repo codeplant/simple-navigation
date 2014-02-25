@@ -7,7 +7,7 @@ Simple Navigation is a ruby library for creating navigations (with multiple leve
 
 ## Documentation
 
-For the complete documentation, take a look at the [project's wiki](http://wiki.github.com/codeplant/simple-navigation)
+For the complete documentation, take a look at the [project's wiki](http://wiki.github.com/codeplant/simple-navigation).
 
 ## RDoc
 
@@ -18,6 +18,8 @@ If you need to generate the RDoc files locally, check out the repository and sim
 ## Online Demo
 
 You can try simple-navigation with the [online demo](http://simple-navigation-demo.andischacke.com).
+
+The source code of this online demo is [available on Github](http://github.com/codeplant/simple-navigation-demo).
 
 ## Feedback and Questions
 
