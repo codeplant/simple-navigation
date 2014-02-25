@@ -2,17 +2,17 @@ require 'forwardable'
 
 module SimpleNavigation
   module Renderer
-
     # This is the base class for all renderers.
     #
-    # A renderer is responsible for rendering an ItemContainer and its containing items to HTML.
+    # A renderer is responsible for rendering an ItemContainer and its
+    # containing items to HTML.
     class Base
       extend Forwardable
-            
-      attr_reader :options, :adapter
-      
+
+      attr_reader :adapter, :options
+
       def_delegators :adapter, :link_to, :content_tag
-            
+
       def initialize(options) #:nodoc:
         @options = options
         @adapter = SimpleNavigation.adapter
@@ -35,31 +35,28 @@ module SimpleNavigation
       end
 
       def render_sub_navigation_for(item)
-        item.sub_navigation.render(self.options)
+        item.sub_navigation.render(options)
       end
-                  
+
       # Renders the specified ItemContainer to HTML.
       #
-      # When implementing a renderer, please consider to call include_sub_navigation? to determin
-      # whether an item's sub_navigation should be rendered or not.
-      #
+      # When implementing a renderer, please consider to call
+      # include_sub_navigation? to determine whether an item's sub_navigation
+      # should be rendered or not.
       def render(item_container)
-        raise 'subclass responsibility'
+        fail NotImplementedError, 'subclass responsibility'
       end
 
       protected
 
       def consider_sub_navigation?(item)
-        return false if item.sub_navigation.nil?
+        return false unless item.sub_navigation
+
         case level
-        when :all
-          return true
-        when Integer
-          return false
-        when Range
-          return item.sub_navigation.level <= level.max
+        when :all then true
+        when Range then item.sub_navigation.level <= level.max
+        else false
         end
-        false
       end
 
       def expand_sub_navigation?(item)
@@ -92,16 +89,24 @@ module SimpleNavigation
       end
 
       # Extracts the options relevant for the generated link
-      #
       def link_options_for(item)
-        special_options = {:method => item.method, :class => item.selected_class}.reject {|k, v| v.nil? }
+        special_options = {
+          method: item.method,
+          class: item.selected_class
+        }.reject { |_, v| v.nil? }
+
         link_options = item.html_options[:link]
+
         return special_options unless link_options
+
         opts = special_options.merge(link_options)
-        opts[:class] = [link_options[:class], item.selected_class].flatten.compact.join(' ')
-        opts.delete(:class) if opts[:class].nil? || opts[:class] == ''
+
+        classes = [link_options[:class], item.selected_class]
+        classes = classes.flatten.compact.join(' ')
+        opts[:class] = classes unless classes.empty?
+
         opts
-      end            
+      end
     end
   end
 end

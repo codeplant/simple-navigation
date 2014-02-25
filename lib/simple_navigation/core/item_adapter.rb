@@ -1,9 +1,10 @@
 require 'forwardable'
 
 module SimpleNavigation
-
-  # This class acts as an adapter to items that are not defined using the DSL in the config/navigation.rb, but directly provided inside the application.
-  # When defining the items that way, every item you provide needs to define the following methods:
+  # This class acts as an adapter to items that are not defined using the DSL
+  # in the config/navigation.rb, but directly provided inside the application.
+  # When defining the items that way, every item you provide needs to define
+  # the following methods:
   #
   # * <tt>key</tt>
   # * <tt>name</tt>
@@ -12,10 +13,13 @@ module SimpleNavigation
   # and optionally
   #
   # * <tt>options</tt>
-  # * <tt>items</tt> - if one of your items has a subnavigation it must respond to <tt>items</tt> providing the subnavigation.
+  # * <tt>items</tt> - if one of your items has a subnavigation it must respond
+  #                    to <tt>items</tt> providing the subnavigation.
   #
-  # You can also specify your items as a list of hashes. The hashes will be converted to objects automatically.
-  # The hashes representing the items obviously must have the keys :key, :name and :url and optionally the keys :options and :items.
+  # You can also specify your items as a list of hashes.
+  # The hashes will be converted to objects automatically.
+  # The hashes representing the items obviously must have the keys :key, :name
+  # and :url and optionally the keys :options and :items.
   #
   # See SimpleNavigation::ItemContainer#item for the purpose of these methods.
   class ItemAdapter
@@ -29,14 +33,16 @@ module SimpleNavigation
       @item = item.is_a?(Hash) ? to_object(item) : item
     end
 
-    # Returns the options for this item. If the wrapped item does not implement an options method, an empty hash is returned.
+    # Returns the options for this item. If the wrapped item does not implement
+    # an options method, an empty hash is returned.
     def options
-      @item.respond_to?(:options) ? @item.options : {}
+      item.respond_to?(:options) ? item.options : {}
     end
 
-    # Returns the items (subnavigation) for this item if it responds to :items and the items-collection is not empty. Returns nil otherwise.
+    # Returns the items (subnavigation) for this item if it responds to :items
+    # and the items-collection is not empty. Returns nil otherwise.
     def items
-      (@item.respond_to?(:items) && !(@item.items.nil? || @item.items.empty?)) ? @item.items : nil
+      item.items if item.respond_to?(:items) && item.items && item.items.any?
     end
 
     # Converts this Item into a SimpleNavigation::Item
@@ -46,8 +52,8 @@ module SimpleNavigation
 
     protected
 
-    # Converts the specified hash into an object. Each key will be added as method.
-    #
+    # Converts the specified hash into an object. Each key will be added
+    # as method.
     def to_object(hash)
       mod = Module.new do
         hash.each_pair do |key, value|
@@ -58,6 +64,5 @@ module SimpleNavigation
       end
       Object.new.extend(mod)
     end
-
   end
 end
