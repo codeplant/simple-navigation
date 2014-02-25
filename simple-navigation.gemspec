@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.summary          = "simple-navigation is a ruby library for creating navigations "\
                           "(with multiple levels) for your Rails2, Rails3, Rails4, Sinatra or "  \
                           "Padrino application."
-  spec.homepage         = 'http://github.com/andi/simple-navigation'
+  spec.homepage         = 'http://github.com/codeplant/simple-navigation'
   spec.license          = 'MIT'
 
   spec.files            = `git ls-files -z`.split("\x0")

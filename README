@@ -4,10 +4,10 @@
 Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Rails 2, Rails 3, Rails4, Sinatra or Padrino applications.
 
 Source code:
-  http://github.com/andi/simple-navigation
+  http://github.com/codeplant/simple-navigation
 
 Documentation: 
-  http://wiki.github.com/andi/simple-navigation
+  http://wiki.github.com/codeplant/simple-navigation
 
 RDoc:
   Please checkout the repository and execute 'rake rdoc'.
@@ -16,7 +16,7 @@ Online Demo:
   http://simple-navigation-demo.codeplant.ch
 
 Source Code for Demo:
-  http://github.com/andi/simple-navigation-demo
+  http://github.com/codeplant/simple-navigation-demo
 
 Discussion Group for Feedback and Questions
   http://groups.google.com/group/simple-navigation
