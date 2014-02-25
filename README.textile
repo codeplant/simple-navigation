@@ -2,7 +2,7 @@
 
 h2. Simple Navigation
 
-Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Rails 2, Rails 3, Rails4, Sinatra or Padrino applications.
+Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Rails 2, Rails 3, Rails4, Sinatra or Padrino applications. It runs with all ruby versions (including ruby 2.0)
 
 h3. Source code
 
