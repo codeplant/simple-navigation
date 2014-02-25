@@ -13,7 +13,7 @@ RDoc:
   Please checkout the repository and execute 'rake rdoc'.
 
 Online Demo:
-  http://simple-navigation-demo.andischacke.com
+  http://simple-navigation-demo.codeplant.ch
 
 Source Code for Demo:
   http://github.com/andi/simple-navigation-demo
@@ -21,5 +21,5 @@ Source Code for Demo:
 Discussion Group for Feedback and Questions
   http://groups.google.com/group/simple-navigation
 
-Copyright (c) 2014 Andi Schacke, released under the MIT license
+Copyright (c) 2014 codeplant GmbH, released under the MIT license
 
