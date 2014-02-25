@@ -1,3 +1,13 @@
+*master
+
+* Relax hash constraint on item_adapter. Thanks to Ramon Tayag.
+* Fixed hidden special character in navigation template. Credits to Stef Lewandowski
+* Added full MIT license text. Thanks to Ben Armstrong.
+* Added license to gemspec. Thanks to Troy Thompson.
+* Allow defining other html attributes than :id and :class on menu container. Credits to Jacek Tomaszewski.
+* Added new config option "consider_item_names_as_safe". Thanks to Alexey Naumov.
+* Big cleanup of specs, removed jeweler in favor of the "bundler" way. Big thanks to Simon Courtois.
+
 *3.11.0
 
 * Added Json renderer. Thanks to Alberto Avila.
