@@ -87,7 +87,7 @@ describe SimpleNavigation do
       before { subject.stub(config_file: 'file') }
 
       it 'returns true' do
-        expect(subject.config_file?).to be_true
+        expect(subject.config_file?).to be_truthy
       end
     end
 
@@ -95,7 +95,7 @@ describe SimpleNavigation do
       before { subject.stub(config_file: nil) }
 
       it 'returns false' do
-        expect(subject.config_file?).to be_false
+        expect(subject.config_file?).to be_falsey
       end
     end
   end

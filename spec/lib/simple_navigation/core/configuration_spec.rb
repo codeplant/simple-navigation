@@ -49,11 +49,11 @@ module SimpleNavigation
       end
 
       it 'sets autogenerate_item_ids to true as default' do
-        expect(config.autogenerate_item_ids).to be_true
+        expect(config.autogenerate_item_ids).to be_truthy
       end
 
       it 'sets auto_highlight to true as default' do
-        expect(config.auto_highlight).to be_true
+        expect(config.auto_highlight).to be_truthy
       end
 
       it 'should set the id_generator' do

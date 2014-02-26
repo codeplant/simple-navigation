@@ -65,7 +65,7 @@ module SimpleNavigation
 
         it 'sets the html options without the method' do
           meth = item.instance_variable_get(:@html_options).key?(:method)
-          expect(meth).to be_false
+          expect(meth).to be_falsey
         end
       end
 
@@ -581,7 +581,7 @@ module SimpleNavigation
           let(:url) { '/' }
 
           it 'returns true' do
-            expect(item.send(:root_path_match?)).to be_true
+            expect(item.send(:root_path_match?)).to be_truthy
           end
         end
 
@@ -589,7 +589,7 @@ module SimpleNavigation
           let(:url) { '/other' }
 
           it 'returns false' do
-            expect(item.send(:root_path_match?)).to be_false
+            expect(item.send(:root_path_match?)).to be_falsey
           end
         end
       end
@@ -601,7 +601,7 @@ module SimpleNavigation
           let(:url) { '/' }
 
           it 'returns false' do
-            expect(item.send(:root_path_match?)).to be_false
+            expect(item.send(:root_path_match?)).to be_falsey
           end
         end
 
@@ -609,7 +609,7 @@ module SimpleNavigation
           let(:url) { nil }
 
           it 'returns false' do
-            expect(item.send(:root_path_match?)).to be_false
+            expect(item.send(:root_path_match?)).to be_falsey
           end
         end
       end
@@ -620,7 +620,7 @@ module SimpleNavigation
         before { adapter.stub(request_path: '/other') }
 
         it 'returns false' do
-          expect(item.send(:root_path_match?)).to be_false
+          expect(item.send(:root_path_match?)).to be_falsey
         end
       end
 
@@ -630,7 +630,7 @@ module SimpleNavigation
         before { adapter.stub(request_path: '/other') }
 
         it 'returns false' do
-          expect(item.send(:root_path_match?)).to be_false
+          expect(item.send(:root_path_match?)).to be_falsey
         end
       end
     end
@@ -647,7 +647,7 @@ module SimpleNavigation
           before { item_container.stub(auto_highlight: true) }
 
           it 'returns true' do
-            expect(item.send(:auto_highlight?)).to be_true
+            expect(item.send(:auto_highlight?)).to be_truthy
           end
         end
 
@@ -655,7 +655,7 @@ module SimpleNavigation
           before { item_container.stub(auto_highlight: false) }
 
           it 'returns false' do
-            expect(item.send(:auto_highlight?)).to be_false
+            expect(item.send(:auto_highlight?)).to be_falsey
           end
         end
       end
@@ -667,7 +667,7 @@ module SimpleNavigation
           before { item_container.stub(auto_highlight: true) }
 
           it 'returns false' do
-            expect(item.send(:auto_highlight?)).to be_false
+            expect(item.send(:auto_highlight?)).to be_falsey
           end
         end
 
@@ -675,7 +675,7 @@ module SimpleNavigation
           before { item_container.stub(auto_highlight: false) }
 
           it 'returns false' do
-            expect(item.send(:auto_highlight?)).to be_false
+            expect(item.send(:auto_highlight?)).to be_falsey
           end
         end
       end

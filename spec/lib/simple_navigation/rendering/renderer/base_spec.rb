@@ -44,7 +44,7 @@ module SimpleNavigation
             let(:options) {{ expand_all: true }}
 
             it 'returns true' do
-              expect(base.expand_all?).to be_true
+              expect(base.expand_all?).to be_truthy
             end
           end
 
@@ -52,7 +52,7 @@ module SimpleNavigation
             let(:options) {{ expand_all: false }}
 
             it 'returns false' do
-              expect(base.expand_all?).to be_false
+              expect(base.expand_all?).to be_falsey
             end
           end
         end
@@ -61,7 +61,7 @@ module SimpleNavigation
           let(:options) { Hash.new }
 
           it 'returns false' do
-            expect(base.expand_all?).to be_false
+            expect(base.expand_all?).to be_falsey
           end
         end
       end
@@ -72,7 +72,7 @@ module SimpleNavigation
             let(:options) {{ skip_if_empty: true }}
 
             it 'returns true' do
-              expect(base.skip_if_empty?).to be_true
+              expect(base.skip_if_empty?).to be_truthy
             end
           end
 
@@ -80,7 +80,7 @@ module SimpleNavigation
             let(:options) {{ skip_if_empty: false }}
 
             it 'returns true' do
-              expect(base.skip_if_empty?).to be_false
+              expect(base.skip_if_empty?).to be_falsey
             end
           end
         end
@@ -89,7 +89,7 @@ module SimpleNavigation
           let(:options) { Hash.new }
 
           it 'returns true' do
-            expect(base.skip_if_empty?).to be_false
+            expect(base.skip_if_empty?).to be_falsey
           end
         end
       end
@@ -121,7 +121,7 @@ module SimpleNavigation
           let(:sub_navigation) { nil }
 
           it 'returns false' do
-            expect(base.send(:consider_sub_navigation?, item)).to be_false
+            expect(base.send(:consider_sub_navigation?, item)).to be_falsey
           end
         end
 
@@ -132,7 +132,7 @@ module SimpleNavigation
             before { base.stub(level: 'unknown') }
 
             it 'returns false' do
-              expect(base.send(:consider_sub_navigation?, item)).to be_false
+              expect(base.send(:consider_sub_navigation?, item)).to be_falsey
             end
           end
 
@@ -140,7 +140,7 @@ module SimpleNavigation
             before { base.stub(level: :all) }
 
             it 'returns false' do
-              expect(base.send(:consider_sub_navigation?, item)).to be_true
+              expect(base.send(:consider_sub_navigation?, item)).to be_truthy
             end
           end
 
@@ -148,7 +148,7 @@ module SimpleNavigation
             before { base.stub(level: 2) }
 
             it 'returns false' do
-              expect(base.send(:consider_sub_navigation?, item)).to be_false
+              expect(base.send(:consider_sub_navigation?, item)).to be_falsey
             end
           end
 
@@ -159,7 +159,7 @@ module SimpleNavigation
               before { sub_navigation.stub(level: 4) }
 
               it 'returns false' do
-                expect(base.send(:consider_sub_navigation?, item)).to be_false
+                expect(base.send(:consider_sub_navigation?, item)).to be_falsey
               end
             end
 
@@ -167,7 +167,7 @@ module SimpleNavigation
               before { sub_navigation.stub(level: 3) }
 
               it 'returns true' do
-                expect(base.send(:consider_sub_navigation?, item)).to be_true
+                expect(base.send(:consider_sub_navigation?, item)).to be_truthy
               end
             end
 
@@ -175,7 +175,7 @@ module SimpleNavigation
               before { sub_navigation.stub(level: 2) }
 
               it 'returns true' do
-                expect(base.send(:consider_sub_navigation?, item)).to be_true
+                expect(base.send(:consider_sub_navigation?, item)).to be_truthy
               end
             end
           end
@@ -192,7 +192,7 @@ module SimpleNavigation
             before { base.stub(expand_sub_navigation?: true) }
 
             it 'returns true' do
-              expect(base.include_sub_navigation?(item)).to be_true
+              expect(base.include_sub_navigation?(item)).to be_truthy
             end
           end
 
@@ -200,7 +200,7 @@ module SimpleNavigation
             before { base.stub(expand_sub_navigation?: false) }
 
             it 'returns false' do
-              expect(base.include_sub_navigation?(item)).to be_false
+              expect(base.include_sub_navigation?(item)).to be_falsey
             end
           end
         end
@@ -212,7 +212,7 @@ module SimpleNavigation
             before { base.stub(expand_sub_navigation?: true) }
 
             it 'returns false' do
-              expect(base.include_sub_navigation?(item)).to be_false
+              expect(base.include_sub_navigation?(item)).to be_falsey
             end
           end
 
@@ -220,7 +220,7 @@ module SimpleNavigation
             before { base.stub(expand_sub_navigation?: false) }
 
             it 'returns false' do
-              expect(base.include_sub_navigation?(item)).to be_false
+              expect(base.include_sub_navigation?(item)).to be_falsey
             end
           end
         end
