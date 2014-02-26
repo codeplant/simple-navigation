@@ -1,6 +1,6 @@
 RSpec::Matchers.define :have_css do |expected, times|
   match do |actual|
-    HTML::Selector.new(expected).select(actual).should have_at_least(times || 1).entry
+    expect(HTML::Selector.new(expected).select(actual).size).to be >= (times || 1)
   end
 
   failure_message_for_should do |actual|

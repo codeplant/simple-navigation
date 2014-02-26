@@ -45,7 +45,7 @@ module SimpleNavigation
         context 'when the navigation method is not called' do
           it "doesn't have any instance method called 'sn_set_navigation'" do
             has_method = controller.respond_to?(:sn_set_navigation, true)
-            expect(has_method).to be_false
+            expect(has_method).to be_falsey
           end
         end
 
@@ -56,7 +56,7 @@ module SimpleNavigation
 
           it 'creates an instance method called "sn_set_navigation"' do
             has_method = controller.respond_to?(:sn_set_navigation, true)
-            expect(has_method).to be_true
+            expect(has_method).to be_truthy
           end
 
           it 'does not create a public method' do

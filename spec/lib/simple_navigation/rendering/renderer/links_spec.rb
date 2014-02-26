@@ -64,7 +64,7 @@ module SimpleNavigation
           let(:options) {{ level: :all, join_with: ' | ' }}
 
           it 'separates the items with the specified separator' do
-            expect(raw_output.scan(' | ')).to have(3).items
+            expect(raw_output.scan(' | ').size).to eq 3
           end
         end
 
