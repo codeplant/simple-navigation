@@ -69,42 +69,31 @@ module SimpleNavigation
     end
 
     describe '#items=' do
-      let(:item) { double(:item) }
+      let(:item) {{ key: :my_key, name: 'test', url: '/' }}
       let(:items) { [item] }
       let(:item_adapter) { double(:item_adapter).as_null_object }
+      let(:real_item) { double(:real_item) }
 
       before do
-        ItemAdapter.stub(new: item_adapter)
-        item_container.stub(should_add_item?: true)
+        ItemAdapter.stub(:new).and_return(item_adapter)
+        item_adapter.stub(to_simple_navigation_item: real_item)
       end
 
-      it 'wraps each item in an ItemAdapter' do
-        expect(ItemAdapter).to receive(:new)
-        item_container.items = items
-      end
+      context 'when the item should be added' do
+        before { item_container.stub(should_add_item?: true) }
 
-      context 'when item should be added' do
-        let(:wrapped_item) { double(:wrapped_item).as_null_object }
-
-        before { ItemAdapter.stub(:new).with(item).and_return(wrapped_item) }
-
-        it 'converts item to an Item and adds it to the items collection' do
+        it 'converts it to an Item and adds it to the items collection' do
           item_container.items = items
-          expect(item_container.items).to include(wrapped_item)
+          expect(item_container.items).to include(real_item)
         end
       end
 
-      context 'when item should not be added' do
+      context 'when the item should not be added' do
         before { item_container.stub(should_add_item?: false) }
 
-        it "doesn't convert the item to an Item" do
-          expect(item_adapter).not_to receive(:to_simple_navigation_item)
+        it "doesn't add it to the items collection" do
           item_container.items = items
-        end
-
-        it "doesn't add the item to the items-collection" do
-          expect(item_container.items).not_to receive(:<<)
-          item_container.items = items
+          expect(item_container.items).not_to include(real_item)
         end
       end
     end

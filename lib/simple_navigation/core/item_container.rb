@@ -74,6 +74,7 @@ module SimpleNavigation
     def items=(new_items)
       @items += new_items.map { |item| ItemAdapter.new(item) }
                          .keep_if { |item| should_add_item?(item.options) }
+                         .map { |item| item.to_simple_navigation_item(self) }
     end
 
     # Returns the Item with the specified key, nil otherwise.
