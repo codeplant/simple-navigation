@@ -1,3 +1,7 @@
+*3.12.2
+
+* Fixing issue #154. Thanks to Simon Curtois.
+
 *3.12.1
 
 * bugfix (error in generator)
