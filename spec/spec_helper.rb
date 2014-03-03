@@ -7,6 +7,12 @@ Coveralls.wear!
 
 RSpec.configure do |config|
   config.expect_with(:rspec) { |c| c.syntax = :expect }
+  config.order = :random
+
+  config.before do
+    SimpleNavigation.config_files.clear
+    setup_adapter_for :rails
+  end
 end
 
 # FIXME: actualize to make it 4 by default
@@ -23,14 +29,14 @@ RAILS_ENV = 'test' unless defined?(RAILS_ENV)
 
 require 'simple_navigation'
 
-def setup_adapter_for(framework)
-  adapter = case framework
-            when :rails
-              context = double(:context, view_context: ActionView::Base.new)
-              SimpleNavigation::Adapters::Rails.new(context)
-            end
-  SimpleNavigation.stub(adapter: adapter)
-  adapter
+def setup_adapter_for(framework, context = double(:context))
+  if framework == :rails
+    context.stub(view_context: ActionView::Base.new)
+  end
+
+  SimpleNavigation.stub(framework: framework)
+  SimpleNavigation.load_adapter
+  SimpleNavigation.init_adapter_from(context)
 end
 
 def setup_renderer(renderer_class, options)
