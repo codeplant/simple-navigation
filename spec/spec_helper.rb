@@ -5,6 +5,10 @@ require 'html/document'
 
 Coveralls.wear!
 
+RSpec.configure do |config|
+  config.expect_with(:rspec) { |c| c.syntax = :expect }
+end
+
 # FIXME: actualize to make it 4 by default
 unless defined? Rails
   module Rails

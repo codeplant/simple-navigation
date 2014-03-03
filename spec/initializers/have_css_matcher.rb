@@ -1,6 +1,11 @@
 RSpec::Matchers.define :have_css do |expected, times|
   match do |actual|
-    HTML::Selector.new(expected).select(actual).should have_at_least(times || 1).entry
+    selector = HTML::Selector.new(expected).select(actual)
+    if times
+      expect(selector).to have(times).matchs
+    else
+      expect(selector).to have_at_least(1).match
+    end
   end
 
   failure_message_for_should do |actual|
