@@ -249,65 +249,6 @@ module SimpleNavigation
           end
         end
       end
-
-      describe '#extract_controller_from' do
-        context 'when context responds to controller' do
-          it 'returns the controller' do
-            expect(adapter.send(:extract_controller_from, context)).to be controller
-          end
-        end
-
-        context 'when context does not respond to controller' do
-          let(:context) { double(:context) }
-
-          it 'returns the context' do
-            expect(adapter.send(:extract_controller_from, context)).to be context
-          end
-        end
-      end
-  
-      describe '#html_safe' do
-        let(:input) { double(:input) }
-
-        context 'when input responds to html_safe' do
-          let(:safe) { double(:safe) }
-
-          before { input.stub(html_safe: safe) }
-
-          it 'returns the html safe version of the input' do
-            expect(adapter.send(:html_safe, input)).to be safe
-          end
-        end
-
-        context 'when input does not respond to html_safe' do
-          it 'returns the input' do
-            expect(adapter.send(:html_safe, input)).to be input
-          end
-        end
-      end
-
-      describe '#link_title' do
-        let(:name) { double(:name, html_safe: safe) }
-        let(:safe) { double(:safe) }
-
-        context 'when config option consider_item_names_as_safe is true' do
-          it 'uses the html_safe version of the name' do
-            expect(adapter.send(:link_title, name)).to be safe
-          end
-        end
-
-        # TODO: Does it make sense ?
-        context 'when config option consider_item_names_as_safe is false' do
-          before do
-            SimpleNavigation.config.consider_item_names_as_safe = false
-            adapter.stub(template: template)
-          end
-
-          it 'uses the item name' do
-            expect(adapter.send(:link_title, name)).to be name
-          end
-        end
-      end
     end
   end
 end
