@@ -4,7 +4,7 @@ module SimpleNavigation
   module Adapters
     describe Rails do
       let(:action_controller) { ActionController::Base }
-      let(:adapter) { SimpleNavigation::Adapters::Rails.new(context) }
+      let(:adapter) { Rails.new(context) }
       let(:context) { double(:context, controller: controller) }
       let(:controller) { double(:controller) }
       let(:request) { double(:request) }
