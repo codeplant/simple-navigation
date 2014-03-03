@@ -25,14 +25,20 @@ module SimpleNavigation
           simple_navigation.register
         end
 
-        it 'installs the helper methods in the controller' do
-          expect(action_controller).to receive(:helper_method).with(:render_navigation)
-          expect(action_controller).to receive(:helper_method).with(:active_navigation_item_name)
-          expect(action_controller).to receive(:helper_method).with(:active_navigation_item_key)
-          expect(action_controller).to receive(:helper_method).with(:active_navigation_item)
-          expect(action_controller).to receive(:helper_method).with(:active_navigation_item_container)
-          simple_navigation.register
+        shared_examples 'installing helper method' do |method|
+          it "installs the #{method} method as helper method" do
+            simple_navigation.register
+
+            helper_methods = action_controller.send(:_helper_methods)
+            expect(helper_methods).to include(method)
+          end
         end
+
+        it_behaves_like 'installing helper method', :render_navigation
+        it_behaves_like 'installing helper method', :active_navigation_item_name
+        it_behaves_like 'installing helper method', :active_navigation_item_key
+        it_behaves_like 'installing helper method', :active_navigation_item
+        it_behaves_like 'installing helper method', :active_navigation_item_container
       end
 
       describe '#initialize' do
