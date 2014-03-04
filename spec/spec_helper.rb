@@ -39,15 +39,6 @@ def setup_adapter_for(framework, context = double(:context))
   SimpleNavigation.init_adapter_from(context)
 end
 
-def setup_renderer(renderer_class, options)
-  renderer_class.new(options)
-end
-
-def primary_navigation
-  # TODO
-  primary_container
-end
-
 def select_an_item(item)
   item.stub(selected?: true)
 end

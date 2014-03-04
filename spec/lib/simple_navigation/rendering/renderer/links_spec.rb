@@ -10,7 +10,7 @@ module SimpleNavigation
         let(:options) {{ level: :all }}
         let(:output) { HTML::Document.new(raw_output).root }
         let(:raw_output) { renderer.render(navigation) }
-        let(:renderer) { setup_renderer(Links, options) }
+        let(:renderer) { Links.new(options) }
 
         before { select_an_item(navigation[item]) if item }
 

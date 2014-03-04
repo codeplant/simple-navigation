@@ -8,7 +8,7 @@ module SimpleNavigation
       let(:item) { nil }
       let(:options) {{ level: :all }}
       let(:output) { renderer.render(navigation) }
-      let(:renderer) { setup_renderer(Text, options) }
+      let(:renderer) { Text.new(options) }
 
       before { select_an_item(navigation[item]) if item }
 

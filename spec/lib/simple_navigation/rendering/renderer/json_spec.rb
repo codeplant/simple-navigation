@@ -13,7 +13,7 @@ module SimpleNavigation
         let(:options) {{ level: :all }}
         let(:output) { renderer.render(navigation) }
         let(:parsed_output) { parse_json(output) }
-        let(:renderer) { setup_renderer(Json, options) }
+        let(:renderer) { Json.new(options) }
 
         before { select_an_item(navigation[item]) if item }
 

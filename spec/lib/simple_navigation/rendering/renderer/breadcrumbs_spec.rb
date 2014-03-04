@@ -9,7 +9,7 @@ module SimpleNavigation
       let(:options) {{ level: :all }}
       let(:output) { HTML::Document.new(raw_output).root }
       let(:raw_output) { renderer.render(navigation) }
-      let(:renderer) { setup_renderer(Breadcrumbs, options) }
+      let(:renderer) { Breadcrumbs.new(options) }
 
       before { select_an_item(navigation[item]) if item }
 
