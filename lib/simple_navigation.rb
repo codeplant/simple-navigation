@@ -7,6 +7,7 @@ require 'simple_navigation/version'
 require 'simple_navigation/core'
 require 'simple_navigation/rendering'
 require 'simple_navigation/adapters'
+require 'simple_navigation/config_file'
 require 'simple_navigation/railtie' if defined?(::Rails)
 
 require 'forwardable'
@@ -106,12 +107,7 @@ module SimpleNavigation
 
     # Returns the name of the config file for the given navigation_context
     def config_file_name(navigation_context = :default)
-      prefix = if navigation_context == :default
-                 ''
-               else
-                 "#{navigation_context.to_s.underscore}_"
-               end
-      "#{prefix}navigation.rb"
+      ConfigFile.new(navigation_context).name
     end
 
     # Resets the list of config_file_paths to the specified path
