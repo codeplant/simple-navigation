@@ -57,7 +57,7 @@ module SimpleNavigation
     def set_env(root, environment)
       self.root = root
       self.environment = environment
-      config_file_paths << SimpleNavigation.default_config_file_path
+      config_file_paths << default_config_file_path
     end
 
     # Returns the current framework in which the plugin is running.
