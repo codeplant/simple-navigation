@@ -1,16 +1,15 @@
 require 'spec_helper'
 
-class TestController
-  include SimpleNavigation::Helpers
-end
-
 module SimpleNavigation
   describe Helpers do
-    subject(:controller) { TestController.new }
+    subject(:controller) { test_controller_class.new }
 
     let(:invoices_item) { navigation[:invoices] }
     let(:item) { nil }
     let(:navigation) { setup_navigation('nav_id', 'nav_class') }
+    let(:test_controller_class) do
+      Class.new { include SimpleNavigation::Helpers }
+    end
     let(:unpaid_item) { invoices_item.sub_navigation[:unpaid] }
 
     before do
