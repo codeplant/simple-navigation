@@ -3,100 +3,12 @@ require 'spec_helper'
 describe SimpleNavigation do
   before { subject.config_file_path = 'path_to_config' }
 
-  describe 'config_file_name' do
-    context 'when the navigation_context is :default' do
-      it 'returns the name of the default config file' do
-        expect(subject.config_file_name).to eq 'navigation.rb'
-      end
-    end
-
-    context 'when the navigation_context is NOT :default' do
-      it 'returns the name of the config file matching the specified context' do
-        file_name = subject.config_file_name(:my_other_context)
-        expect(file_name).to eq 'my_other_context_navigation.rb'
-      end
-
-      it 'converts camelcase-contexts to underscore' do
-        file_name = subject.config_file_name(:WhyWouldYouDoThis)
-        expect(file_name).to eq 'why_would_you_do_this_navigation.rb'
-      end
-    end
-  end
-
   describe 'config_file_path=' do
     before { subject.config_file_paths = ['existing_path'] }
 
     it 'overrides the config_file_paths' do
       subject.config_file_path = 'new_path'
       expect(subject.config_file_paths).to eq ['new_path']
-    end
-  end
-
-  describe 'config_file' do
-    context 'when no config_file_paths are set' do
-      before { subject.config_file_paths = [] }
-
-      it 'returns nil' do
-        expect(subject.config_file).to be_nil
-      end
-    end
-
-    context 'when one config_file_path is set' do
-      before { subject.config_file_paths = ['my_config_file_path'] }
-
-      context 'and the requested config file exists' do
-        before { File.stub(exist?: true) }
-
-        it 'returns the path to the config_file' do
-          expect(subject.config_file).to eq 'my_config_file_path/navigation.rb'
-        end
-      end
-
-      context 'and the requested config file does not exist' do
-        before { File.stub(exist?: false) }
-
-        it 'returns nil' do
-          expect(subject.config_file).to be_nil
-        end
-      end
-    end
-
-    context 'when multiple config_file_paths are set' do
-      before { subject.config_file_paths = ['first_path', 'second_path'] }
-
-      context 'and the requested config file exists' do
-        before { File.stub(exist?: true) }
-
-        it 'returns the path to the first matching config_file' do
-          expect(subject.config_file).to eq 'first_path/navigation.rb'
-        end
-      end
-
-      context 'and the requested config file does not exist' do
-        before { File.stub(exist?: false) }
-
-        it 'returns nil' do
-          expect(subject.config_file).to be_nil
-        end
-      end
-    end
-  end
-
-  describe '.config_file?' do
-    context 'when config_file is present' do
-      before { subject.stub(config_file: 'file') }
-
-      it 'returns true' do
-        expect(subject.config_file?).to be_true
-      end
-    end
-
-    context 'when config_file is not present' do
-      before { subject.stub(config_file: nil) }
-
-      it 'returns false' do
-        expect(subject.config_file?).to be_false
-      end
     end
   end
 
@@ -143,79 +55,59 @@ describe SimpleNavigation do
     end
   end
 
-  describe '.load_config' do
-    context 'when config_file_path is set' do
-      before { subject.stub(config_file: 'path_to_config_file') }
+  describe '.load_config', memfs: true do
+    let(:paths) { ['/path/one', '/path/two'] }
 
-      context 'and config_file exists' do
-        before do
-          subject.stub(config_file?: true)
-          IO.stub(read: 'file_content')
-        end
+    before do
+      FileUtils.mkdir_p(paths)
+      subject.stub(config_file_paths: paths)
+    end
 
-        it "doesn't raise any error" do
-          expect{ subject.load_config }.not_to raise_error
-        end
+    context 'when the config file for the context exists' do
+      before do
+        File.open('/path/two/navigation.rb', 'w') { |f| f.puts 'default content' }
+        File.open('/path/one/other_navigation.rb', 'w') { |f| f.puts 'other content' }
+      end
 
-        it 'reads the specified config file from disc' do
-          expect(IO).to receive(:read).with('path_to_config_file')
+      context 'when no context is provided' do
+        it 'stores the configuration in config_files for the default context' do
           subject.load_config
-        end
-
-        it 'stores the read content in the module (default context)' do
-          expect(subject).to receive(:config_file).with(:default)
-          subject.load_config
-          expect(subject.config_files[:default]).to eq 'file_content'
-        end
-
-        it 'stores the content in the module (non default context)' do
-          expect(subject).to receive(:config_file).with(:my_context)
-          subject.load_config(:my_context)
-          expect(subject.config_files[:my_context]).to eq 'file_content'
+          expect(subject.config_files[:default]).to eq "default content\n"
         end
       end
 
-      context 'and config_file does not exist' do
-        before { subject.stub(config_file?: false) }
+      context 'when a context is provided' do
+        it 'stores the configuration in config_files for the given context' do
+          subject.load_config(:other)
+          expect(subject.config_files[:other]).to eq "other content\n"
+        end
+      end
 
-        it 'raises an exception' do
-        expect{ subject.load_config }.to raise_error
+      context 'and environment is production' do
+        before { subject.stub(environment: 'production') }
+
+        it 'loads the config file only for the first call' do
+          subject.load_config
+          File.open('/path/two/navigation.rb', 'w') { |f| f.puts 'new content' }
+          subject.load_config
+          expect(subject.config_files[:default]).to eq "default content\n"
+        end
+      end
+
+      context "and environment isn't production" do
+        it 'loads the config file for every call' do
+          subject.load_config
+          File.open('/path/two/navigation.rb', 'w') { |f| f.puts 'new content' }
+          subject.load_config
+          expect(subject.config_files[:default]).to eq "new content\n"
         end
       end
     end
 
-    context 'when config_file_path is not set' do
-      before { subject.config_file_path = nil }
-
+    context "when the config file for the context doesn't exists" do
       it 'raises an exception' do
         expect{ subject.load_config }.to raise_error
       end
-    end
-
-    describe 'Regarding caching of the config-files' do
-      before do
-        subject.config_file_path = 'path_to_config'
-        IO.stub(:read).and_return('file_content')
-        File.stub(exist?: true)
-      end
-
-      after { subject.config_files = {} }
-
-      shared_examples 'loading config file' do |env, count|
-        context "when environment is '#{env}'" do
-          before { subject.stub(environment: env) }
-
-          it "loads the config file #{count}" do
-            expect(IO).to receive(:read).exactly(count)
-            2.times { subject.load_config }
-          end
-        end
-      end
-
-      it_behaves_like 'loading config file', nil,           :twice
-      it_behaves_like 'loading config file', 'production',  :once
-      it_behaves_like 'loading config file', 'development', :twice
-      it_behaves_like 'loading config file', 'test',        :twice
     end
   end
 

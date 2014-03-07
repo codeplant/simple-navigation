@@ -7,7 +7,7 @@ require 'simple_navigation/version'
 require 'simple_navigation/core'
 require 'simple_navigation/rendering'
 require 'simple_navigation/adapters'
-require 'simple_navigation/config_file'
+require 'simple_navigation/config_file_finder'
 require 'simple_navigation/railtie' if defined?(::Rails)
 
 require 'forwardable'
@@ -91,25 +91,6 @@ module SimpleNavigation
       File.join(root, 'config')
     end
 
-    # Returns true if the config_file for specified context does exist.
-    def config_file?(navigation_context = :default)
-      !!config_file(navigation_context)
-    end
-
-    # Returns the path to the config file for the given navigation context or
-    # nil if no matching config file can be found.
-    # If multiple config_paths are set, it returns the first matching path.
-    def config_file(navigation_context = :default)
-      config_file_paths
-        .map { |path| File.join(path, config_file_name(navigation_context)) }
-        .find { |full_path| File.exist?(full_path) }
-    end
-
-    # Returns the name of the config file for the given navigation_context
-    def config_file_name(navigation_context = :default)
-      ConfigFile.new(navigation_context).name
-    end
-
     # Resets the list of config_file_paths to the specified path
     def config_file_path=(path)
       self.config_file_paths = [path]
@@ -118,20 +99,10 @@ module SimpleNavigation
     # Reads the config_file for the specified navigation_context and stores it
     # for later evaluation.
     def load_config(navigation_context = :default)
-      unless config_file?(navigation_context)
-        fail "Config file '#{config_file_name(navigation_context)}' not " \
-             "found in path(s) #{config_file_paths.join(', ')}!"
-      end
-
-      # FIXME: what about update_config and update_config! methods ?
       if environment == 'production'
-        config_files[navigation_context] ||= begin
-          IO.read(config_file(navigation_context))
-        end
+        update_config(navigation_context)
       else
-        config_files[navigation_context] = begin
-          IO.read(config_file(navigation_context))
-        end
+        update_config!(navigation_context)
       end
     end
 
@@ -186,6 +157,22 @@ module SimpleNavigation
     def apply_defaults(options)
       options[:level] = options.delete(:levels) if options[:levels]
       { context: :default, level: :all }.merge(options)
+    end
+
+    def config_file(navigation_context)
+      ConfigFileFinder.new(config_file_paths).find(navigation_context)
+    end
+
+    def read_config(navigation_context)
+      File.read config_file(navigation_context)
+    end
+
+    def update_config(navigation_context)
+      config_files[navigation_context] ||= read_config(navigation_context)
+    end
+
+    def update_config!(navigation_context)
+      config_files[navigation_context] = read_config(navigation_context)
     end
   end
 end

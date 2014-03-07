@@ -1,4 +1,5 @@
 require 'initializers/have_css_matcher'
+require 'initializers/memfs'
 require 'action_controller'
 require 'coveralls'
 require 'html/document'
