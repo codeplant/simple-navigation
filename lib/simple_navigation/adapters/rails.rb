@@ -4,7 +4,7 @@ module SimpleNavigation
       attr_reader :controller, :template
 
       def self.register
-        SimpleNavigation.set_env(rails_root, rails_env)
+        SimpleNavigation.set_env(::Rails.root, ::Rails.env)
         ActionController::Base.send(:include, SimpleNavigation::Helpers)
         SimpleNavigation::Helpers.instance_methods.each do |m|
           ActionController::Base.send(:helper_method, m.to_sym)
@@ -50,18 +50,6 @@ module SimpleNavigation
       end
 
       protected
-
-      def self.rails_root
-        gte_rails3? ? ::Rails.root : ::RAILS_ROOT
-      end
-
-      def self.rails_env
-        gte_rails3? ? ::Rails.env : ::RAILS_ENV
-      end
-
-      def self.gte_rails3?
-        ::Rails::VERSION::MAJOR >= 3
-      end
 
       def template_from(controller)
         if controller.respond_to?(:view_context)
