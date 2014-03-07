@@ -97,14 +97,3 @@ module SimpleNavigation
     end
   end
 end
-
-# Initializer for Rails3
-if defined?(Rails) && SimpleNavigation::Adapters::Rails.gte_rails3?
-  module SimpleNavigation
-    class Railtie < Rails::Railtie
-      initializer 'simple_navigation.register' do |app|
-        SimpleNavigation.register
-      end
-    end
-  end
-end
