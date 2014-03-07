@@ -15,17 +15,16 @@ RSpec.configure do |config|
   end
 end
 
-# FIXME: actualize to make it 4 by default
-unless defined? Rails
-  module Rails
-    module VERSION
-      MAJOR = 2
+unless defined?(Rails)
+  module ::Rails
+    def self.root; './'; end
+    def self.env; 'test'; end
+
+    class Railtie
+      def self.initializer(*args); end
     end
   end
 end
-
-RAILS_ROOT = './' unless defined?(RAILS_ROOT)
-RAILS_ENV = 'test' unless defined?(RAILS_ENV)
 
 require 'simple_navigation'
 

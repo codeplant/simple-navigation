@@ -7,6 +7,7 @@ require 'simple_navigation/version'
 require 'simple_navigation/core'
 require 'simple_navigation/rendering'
 require 'simple_navigation/adapters'
+require 'simple_navigation/railtie' if defined?(::Rails)
 
 require 'forwardable'
 

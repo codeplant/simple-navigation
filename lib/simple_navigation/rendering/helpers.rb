@@ -34,10 +34,6 @@ module SimpleNavigation
         SimpleNavigation.config.items(options[:items], &block)
       end
 
-      if SimpleNavigation.respond_to?(:handle_explicit_navigation)
-        SimpleNavigation.handle_explicit_navigation
-      end
-
       unless SimpleNavigation.primary_navigation
         fail 'no primary navigation defined, either use a navigation config ' \
              'file or pass items directly to render_navigation'
