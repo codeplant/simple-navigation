@@ -5,10 +5,10 @@ module SimpleNavigation
     let!(:item_container) { ItemContainer.new }
 
     let(:adapter) { double(:adapter) }
-    let(:item_args) { [item_container, :my_key, 'name', url, options, items] }
+    let(:item_args) { [item_container, :my_key, 'name', url, options] }
     let(:item) { Item.new(*item_args) }
     let(:items) { nil }
-    let(:options) { Hash.new }
+    let(:options) {{ items: items }}
     let(:url) { 'url' }
 
     before { SimpleNavigation.stub(adapter: adapter) }
@@ -144,10 +144,6 @@ module SimpleNavigation
           it "sets the item's url to nil" do
             expect(item.url).to be_nil
           end
-
-          it "sets the item's html_options to an empty hash" do
-            expect(item.instance_variable_get(:@html_options)).to eq({})
-          end
         end
 
         context 'when only a url is given' do
@@ -155,10 +151,6 @@ module SimpleNavigation
 
           it "set the item's url accordingly" do
             expect(item.url).to eq 'url'
-          end
-
-          it "sets the item's html_options to an empty hash" do
-            expect(item.instance_variable_get(:@html_options)).to eq({})
           end
         end
 

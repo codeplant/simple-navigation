@@ -5,6 +5,7 @@
 * `SN.config_file_name`, `SN.config_file` and `SN.config_file?` have been
   removed
 * `ConfigFileFinder` and `ConfigFile` handle the configuration logic
+* File organization was been changed to reflect the Ruby namespacing
 
 ## 3.12.2
 
