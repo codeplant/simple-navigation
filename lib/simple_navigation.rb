@@ -154,11 +154,6 @@ module SimpleNavigation
 
     private
 
-    def apply_defaults(options)
-      options[:level] = options.delete(:levels) if options[:levels]
-      { context: :default, level: :all }.merge(options)
-    end
-
     def config_file(navigation_context)
       ConfigFileFinder.new(config_file_paths).find(navigation_context)
     end
