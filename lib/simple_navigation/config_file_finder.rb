@@ -1,11 +1,23 @@
 require 'simple_navigation/config_file'
 
 module SimpleNavigation
+  # Internal: Encapsulates the configuration file finding logic.
   class ConfigFileFinder
+    # Internal: Initializes a ConfigFileFinder.
+    #
+    # paths - an enumerable list of paths in which to look for configuration
+    #         files.
     def initialize(paths)
       @paths = paths
     end
 
+    # Internal: Searches a configuration file for the given context in the
+    # initialization paths.
+    #
+    # context - The navigation context for which to look the configuration file.
+    #
+    # Returns a String representing the full path of the configuation file.
+    # Raises StandardError if no file is found.
     def find(context)
       config_file_name = config_file_name_for_context(context)
 
