@@ -5,10 +5,10 @@ module SimpleNavigation
     let!(:item_container) { ItemContainer.new }
 
     let(:adapter) { double(:adapter) }
-    let(:item_args) { [item_container, :my_key, 'name', url, options] }
+    let(:item_args) { [item_container, :my_key, 'name', url, options, items] }
     let(:item) { Item.new(*item_args) }
     let(:items) { nil }
-    let(:options) {{ items: items }}
+    let(:options) { Hash.new }
     let(:url) { 'url' }
 
     before { SimpleNavigation.stub(adapter: adapter) }
