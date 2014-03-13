@@ -232,43 +232,11 @@ module SimpleNavigation
     end
 
     describe '#selected?' do
-      context 'when the item is explicitly selected' do
-        before { item.stub(selected_by_config?: true) }
+      context "when the item isn't selected" do
+        before { adapter.stub(current_page?: false) }
 
-        it 'is selected' do
-          expect(item).to be_selected
-        end
-      end
-
-      context "when the item isn't explicitly selected" do
-        before { item.stub(selected_by_config?: false) }
-
-        context 'and it is selected by sub navigation' do
-          before { item.stub(selected_by_subnav?: true) }
-
-          it 'is selected' do
-            expect(item).to be_selected
-          end
-        end
-
-        context "and it isn't selected by sub navigation" do
-          before { item.stub(selected_by_subnav?: false) }
-
-          context 'and it is selected by a highlighting condition' do
-            before { item.stub(selected_by_condition?: true) }
-
-            it 'is selected' do
-              expect(item).to be_selected
-            end
-          end
-
-          context "and it isn't selected by any highlighting condition" do
-            before { item.stub(selected_by_condition?: false) }
-
-            it "isn't selected" do
-              expect(item).not_to be_selected
-            end
-          end
+        it 'returns false' do
+          expect(item).not_to be_selected
         end
       end
 

@@ -43,14 +43,11 @@ module SimpleNavigation
     # Returns true if this navigation item should be rendered as 'selected'.
     # An item is selected if
     #
-    # * it has been explicitly selected in a controller or
     # * it has a subnavigation and one of its subnavigation items is selected or
     # * its url matches the url of the current request (auto highlighting)
     #
     def selected?
-      @selected ||= selected_by_config?    ||
-                    selected_by_subnav?    ||
-                    selected_by_condition?
+      @selected ||= selected_by_subnav? || selected_by_condition?
     end
 
     # Returns the html-options hash for the item, i.e. the options specified
@@ -89,10 +86,6 @@ module SimpleNavigation
     # the sub_navigation is selected
     def selected_by_subnav?
       sub_navigation && sub_navigation.selected?
-    end
-
-    def selected_by_config?
-      false
     end
 
     # Returns true if the item's url matches the request's current url.
