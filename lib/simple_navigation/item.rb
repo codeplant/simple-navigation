@@ -20,8 +20,9 @@ module SimpleNavigation
       @key = key
       @method = options.delete(:method)
       @name = name
-      @container = setup_container(container, options)
+      @container = container
 
+      modify_container_attributes(container, options)
       setup_sub_navigation(items, &sub_nav_block)
     end
 
@@ -149,26 +150,20 @@ module SimpleNavigation
       end
     end
 
-    def setup_container(container, options = {})
-      if options[:container_class]
-        container.dom_class = options.delete(:container_class)
-      end
-
-      if options[:container_id]
-        container.dom_id = options.delete(:container_id)
-      end
-
-      container.dom_attributes = if options[:container_attributes]
-                                   options.delete(:container_attributes)
-                                 else
-                                   {}
+    def modify_container_attributes(container, options = {})
+      container.dom_attributes = options.delete(:container_attributes) do
+                                   container.dom_attributes
                                  end
 
-      if options[:selected_class]
-        container.selected_class = options.delete(:selected_class)
-      end
+      container.dom_class = options.delete(:container_class) do
+                              container.dom_class
+                            end
 
-      container
+      container.dom_id = options.delete(:container_id) { container.dom_id }
+
+      container.selected_class = options.delete(:selected_class) do
+                                   container.selected_class
+                                 end
     end
 
     def setup_url_and_options(url_or_options, options_or_nil)

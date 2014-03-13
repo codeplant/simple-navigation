@@ -76,31 +76,13 @@ module SimpleNavigation
         end
       end
 
-      context 'setting class and id on the container' do
-        let!(:create) { item }
-
-        let(:options) {{
-          container_class: 'container_class',
-          container_id: 'container_id',
-          container_attributes: { 'ng-show' => 'false' }
-        }}
-
-        it "fills in the container's dom_attributes" do
-          expect(item_container.dom_attributes).to eq({
-            id: 'container_id',
-            class: 'container_class',
-            'ng-show' => 'false'
-          })
-        end
-      end
-
-      context 'when a :highlights_on option is given' do
+      context 'when no :highlights_on option is given' do
         it "sets the item's highlights_on to nil" do
           expect(item.highlights_on).to be_nil
         end
       end
 
-      context 'when no :highlights_on option is given' do
+      context 'when an :highlights_on option is given' do
         let(:highlights_on) { double(:highlights_on) }
         let(:options) {{ highlights_on: highlights_on }}
 
@@ -138,47 +120,81 @@ module SimpleNavigation
         end
       end
 
-      describe 'Optional url and optional options' do
-        context 'when no parameter is specified' do
-          let(:item_args) { [item_container, :my_key, 'name'] }
+      context 'when no url nor options is specified' do
+        let(:item_args) { [item_container, :my_key, 'name'] }
 
-          it "sets the item's url to nil" do
-            expect(item.url).to be_nil
-          end
+        it "sets the item's url to nil" do
+          expect(item.url).to be_nil
+        end
+      end
+
+      context 'when only a url is given' do
+        let(:item_args) { [item_container, :my_key, 'name', 'url'] }
+
+        it "set the item's url accordingly" do
+          expect(item.url).to eq 'url'
+        end
+      end
+
+      context 'when only options are given' do
+        let(:item_args) { [item_container, :my_key, 'name', { option: true }] }
+
+        it "sets the item's url to nil" do
+          expect(item.url).to be_nil
         end
 
-        context 'when only a url is given' do
-          let(:item_args) { [item_container, :my_key, 'name', 'url'] }
+        it "sets the item's html_options accordingly" do
+          html_options = item.instance_variable_get(:@html_options)
+          expect(html_options).to eq({ option: true })
+        end
+      end
 
-          it "set the item's url accordingly" do
-            expect(item.url).to eq 'url'
-          end
+      context 'when url and options are given' do
+        let(:options) {{ option: true }}
+
+        it "set the item's url accordingly" do
+          expect(item.url).to eq 'url'
         end
 
-        context 'when only options are given' do
-          let(:item_args) { [item_container, :my_key, 'name', { option: true }] }
-
-          it "sets the item's url to nil" do
-            expect(item.url).to be_nil
-          end
-
-          it "sets the item's html_options accordingly" do
-            html_options = item.instance_variable_get(:@html_options)
-            expect(html_options).to eq({ option: true })
-          end
+        it "sets the item's html_options accordingly" do
+          html_options = item.instance_variable_get(:@html_options)
+          expect(html_options).to eq({ option: true })
         end
+      end
 
-        context 'when url and options are given' do
-          let(:options) {{ option: true }}
+      context 'when the :container_id option is given' do
+        let(:options) {{ container_id: 'c_id' }}
 
-          it "set the item's url accordingly" do
-            expect(item.url).to eq 'url'
-          end
+        it "sets the id on the item's container" do
+          Item.new(*item_args)
+          expect(item_container.dom_id).to eq 'c_id'
+        end
+      end
 
-          it "sets the item's html_options accordingly" do
-            html_options = item.instance_variable_get(:@html_options)
-            expect(html_options).to eq({ option: true })
-          end
+      context 'when the :container_class option is given' do
+        let(:options) {{ container_class: 'c_class' }}
+
+        it "sets the class on the item's container" do
+          Item.new(*item_args)
+          expect(item_container.dom_class).to eq 'c_class'
+        end
+      end
+
+      context 'when the :container_attributes option is given' do
+        let(:options) {{ container_attributes: { attr: true } }}
+
+        it "sets the dom attributes on the item's container" do
+          Item.new(*item_args)
+          expect(item_container.dom_attributes).to include(attr: true)
+        end
+      end
+
+      context 'when the :selected_class option is given' do
+        let(:options) {{ selected_class: 'sel_class' }}
+
+        it "sets the selected_class on the item's container" do
+          Item.new(*item_args)
+          expect(item_container.selected_class).to eq 'sel_class'
         end
       end
     end
@@ -441,7 +457,7 @@ module SimpleNavigation
           end
         end
       end
-  
+
       context 'when the item is not selected' do
         before { item.stub(selected?: false) }
 
