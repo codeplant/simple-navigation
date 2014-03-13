@@ -349,9 +349,8 @@ module SimpleNavigation
         let(:options) {{ id: 'my_id' }}
 
         before do
-          item.stub(selected?: false,
-                    selected_by_condition?: false,
-                    autogenerate_item_ids?: generate_ids)
+          SimpleNavigation.config.stub(autogenerate_item_ids: generate_ids)
+          item.stub(selected?: false, selected_by_condition?: false)
         end
 
         context 'and :autogenerate_item_ids is true' do
@@ -369,9 +368,8 @@ module SimpleNavigation
 
       context "when the :id option isn't given" do
         before do
-          item.stub(selected?: false,
-                    selected_by_condition?: false,
-                    autogenerate_item_ids?: generate_ids)
+          SimpleNavigation.config.stub(autogenerate_item_ids: generate_ids)
+          item.stub(selected?: false, selected_by_condition?: false)
         end
 
         context 'and :autogenerate_item_ids is true' do
