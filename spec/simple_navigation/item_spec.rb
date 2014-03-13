@@ -17,15 +17,20 @@ module SimpleNavigation
       context 'when there is a sub_navigation' do
         let(:subnav_container) { double(:subnav_container).as_null_object }
 
-        before { ItemContainer.stub(new: subnav_container) }
+        shared_examples 'creating sub navigation container' do
+          it 'creates a sub navigation container with a level+1' do
+            expect(item.sub_navigation.level).to eq 2
+          end
+        end
 
         context 'when a block is given' do
-          it 'creates a new ItemContainer with a level+1' do
-            expect(ItemContainer).to receive(:new).with(2)
-            Item.new(*item_args) {}
+          it_behaves_like 'creating sub navigation container' do
+            let(:item) { Item.new(*item_args) {} }
           end
 
           it 'calls the block' do
+            ItemContainer.stub(new: subnav_container)
+
             expect{ |blk|
               Item.new(*item_args, &blk)
             }.to yield_with_args(subnav_container)
@@ -34,23 +39,19 @@ module SimpleNavigation
 
         context 'when no block is given' do
           context 'and items are given' do
-            let(:items) { double(:items) }
+            let(:items) { [] }
 
-            it 'creates a new ItemContainer with a level+1' do
-              expect(ItemContainer).to receive(:new).with(2)
-              Item.new(*item_args)
-            end
+            it_behaves_like 'creating sub navigation container'
 
             it "sets the items on the subnav_container" do
-              expect(subnav_container).to receive(:items=).with(items)
-              Item.new(*item_args)
+              expect(item.sub_navigation.items).to eq items
             end
           end
 
           context 'and no items are given' do
             it "doesn't create a new ItemContainer" do
-              expect(ItemContainer).not_to receive(:new)
-              Item.new(*item_args)
+              item = Item.new(*item_args)
+              expect(item.sub_navigation).to be_nil
             end
           end
         end
@@ -221,18 +222,6 @@ module SimpleNavigation
         it 'is selected' do
           expect(item).to be_selected
         end
-
-        # FIXME: testing the implementation not the behavior here
-        it "doesn't check for selection by sub navigation" do
-          expect(item).not_to receive(:selected_by_subnav?)
-          item.selected?
-        end
-
-        # FIXME: testing the implementation not the behavior here
-        it "doesn't check for selection by highlighting condition" do
-          expect(item).not_to receive(:selected_by_condition?)
-          item.selected?
-        end
       end
 
       context "when the item isn't explicitly selected" do
@@ -263,6 +252,174 @@ module SimpleNavigation
             it "isn't selected" do
               expect(item).not_to be_selected
             end
+          end
+        end
+      end
+
+      describe 'selectible by condition' do
+        let(:current_url) { '' }
+
+        before { adapter.stub(request_uri: current_url) }
+
+        context 'when the :highlights_on option is set' do
+          before { item.stub(highlights_on: /^\/matching/) }
+
+          context 'and :highlights_on is a regexp' do
+            context 'and it matches the current url' do
+              let(:current_url) { '/matching_url' }
+
+              it 'returns true' do
+                expect(item).to be_selected_by_condition
+              end
+            end
+
+            context "and it doesn't match current url" do
+              let(:current_url) { '/other_url' }
+
+              it 'returns false' do
+                expect(item).not_to be_selected_by_condition
+              end
+            end
+          end
+
+          context 'and :highlights_on is a lambda' do
+            context 'and it is truthy' do
+              before { item.stub(highlights_on: ->{ true }) }
+
+              it 'returns true' do
+                expect(item).to be_selected_by_condition
+              end
+            end
+
+            context 'falsey lambda results in no selection' do
+              before { item.stub(highlights_on: ->{ false }) }
+
+              it 'returns false' do
+                expect(item).not_to be_selected_by_condition
+              end
+            end
+          end
+
+          context 'and :highlights_on is :subpath' do
+            before { item.stub(url: '/path', highlights_on: :subpath) }
+
+            context "and the current url is a sub path of the item's url" do
+              let(:current_url) { '/path/sub-path' }
+
+              it 'returns true' do
+                expect(item).to be_selected_by_condition
+              end
+            end
+
+            context "and the current url starts with item's url" do
+              let(:current_url) { '/path_group/id' }
+
+              it 'returns false' do
+                expect(item).not_to be_selected_by_condition
+              end
+            end
+
+            context "and the current url is totally different from the item's url" do
+              let(:current_url) { '/other_path/id' }
+
+              it 'returns false' do
+                expect(item).not_to be_selected_by_condition
+              end
+            end
+          end
+
+          context 'when :highlights_on something else' do
+            before { item.stub(highlights_on: 'nothing') }
+
+            it 'raises an exception' do
+              expect{ item.selected? }.to raise_error
+            end
+          end
+        end
+
+        context 'when :auto_highlight is true' do
+          before { item.stub(auto_highlight?: true) }
+
+          context 'and root path matches' do
+            before { item.stub(root_path_match?: true) }
+
+            it 'returns true' do
+              expect(item).to be_selected_by_condition
+            end
+          end
+
+          context "and root path doesn't match" do
+            before { item.stub(root_path_match?: false) }
+
+            context "and the current url matches the item's url" do
+              let(:url) { 'url#anchor' }
+
+              before { adapter.stub(current_page?: true) }
+
+              it 'returns true' do
+                expect(item).to be_selected_by_condition
+              end
+
+              context 'when url is nil' do
+                let(:url) { nil }
+
+                it 'returns false' do
+                  expect(item.selected?).to be_false
+                end
+              end
+            end
+
+            context "and the current url doesn't match the item's url" do
+              before { adapter.stub(current_page?: false) }
+
+              it 'returns false' do
+                expect(item).not_to be_selected_by_condition
+              end
+            end
+          end
+        end
+
+        context 'when :auto_highlight is false' do
+          before { item.stub(auto_highlight?: false) }
+
+          it 'returns false' do
+            expect(item).not_to be_selected_by_condition
+          end
+        end
+      end
+
+      describe 'selectible by sub navigation' do
+        before { item.stub(sub_navigation: sub_navigation) }
+
+        context 'the item has a sub_navigation' do
+          let(:sub_navigation) { double(:sub_navigation) }
+
+          context 'and an item of the sub_navigation is selected' do
+            before do
+              sub_navigation.stub(selected?: true, selected_by_condition?: true)
+            end
+
+            it 'returns true' do
+              expect(item).to be_selected_by_subnav
+            end
+          end
+
+          context 'and no item of the sub_navigation is selected' do
+            before do
+              sub_navigation.stub(selected?: false, selected_by_condition?: true)
+            end
+
+            it 'returns false' do
+              expect(item).not_to be_selected_by_subnav
+            end
+          end
+        end
+
+        context "when the item doesn't have any sub_navigation" do
+          let(:sub_navigation) { nil }
+
+          it 'returns false' do
+            expect(item).not_to be_selected_by_subnav
           end
         end
       end
@@ -384,308 +541,6 @@ module SimpleNavigation
           it "doesn't set any html id on the item" do
             expect(item.html_options[:id]).to be_blank
           end
-        end
-      end
-    end
-
-    describe '#selected_by_subnav?' do
-      before { item.stub(sub_navigation: sub_navigation) }
-
-      context 'the item has a sub_navigation' do
-        let(:sub_navigation) { double(:sub_navigation) }
-
-        context 'and an item of the sub_navigation is selected' do
-          before do
-            sub_navigation.stub(selected?: true, selected_by_condition?: true)
-          end
-
-          it 'returns true' do
-            expect(item).to be_selected_by_subnav
-          end
-        end
-
-        context 'and no item of the sub_navigation is selected' do
-          before do
-            sub_navigation.stub(selected?: false, selected_by_condition?: true)
-          end
-
-          it 'returns false' do
-            expect(item).not_to be_selected_by_subnav
-          end
-        end
-      end
-
-      context "when the item doesn't have any sub_navigation" do
-        let(:sub_navigation) { nil }
-
-        it 'returns false' do
-          expect(item).not_to be_selected_by_subnav
-        end
-      end
-    end
-
-    describe '#selected_by_condition?' do
-      let(:current_url) { '' }
-
-      before { adapter.stub(request_uri: current_url) }
-
-      context 'when the :highlights_on option is set' do
-        before { item.stub(highlights_on: /^\/matching/) }
-
-        context 'and :highlights_on is a regexp' do
-          context 'and it matches the current url' do
-            let(:current_url) { '/matching_url' }
-
-            it 'returns true' do
-              expect(item).to be_selected_by_condition
-            end
-          end
-
-          context "and it doesn't match current url" do
-            let(:current_url) { '/other_url' }
-
-            it 'returns false' do
-              expect(item).not_to be_selected_by_condition
-            end
-          end
-        end
-
-        context 'and :highlights_on is a lambda' do
-          context 'and it is truthy' do
-            before { item.stub(highlights_on: ->{ true }) }
-
-            it 'returns true' do
-              expect(item).to be_selected_by_condition
-            end
-          end
-
-          context 'falsey lambda results in no selection' do
-            before { item.stub(highlights_on: ->{ false }) }
-
-            it 'returns false' do
-              expect(item).not_to be_selected_by_condition
-            end
-          end
-        end
-
-        context 'and :highlights_on is :subpath' do
-          before { item.stub(url: '/path', highlights_on: :subpath) }
-
-          context "and the current url is a sub path of the item's url" do
-            let(:current_url) { '/path/sub-path' }
-
-            it 'returns true' do
-              expect(item).to be_selected_by_condition
-            end
-          end
-
-          context "and the current url starts with item's url" do
-            let(:current_url) { '/path_group/id' }
-
-            it 'returns false' do
-              expect(item).not_to be_selected_by_condition
-            end
-          end
-
-          context "and the current url is totally different from the item's url" do
-            let(:current_url) { '/other_path/id' }
-
-            it 'returns false' do
-              expect(item).not_to be_selected_by_condition
-            end
-          end
-        end
-
-        context 'when :highlights_on something else' do
-          before { item.stub(highlights_on: 'nothing') }
-
-          it 'raises an exception' do
-            expect{ item.send(:selected_by_condition?) }.to raise_error
-          end
-        end
-      end
-
-      context 'when :auto_highlight is true' do
-        before { item.stub(auto_highlight?: true) }
-
-        context 'and root path matches' do
-          before { item.stub(root_path_match?: true) }
-
-          it 'returns true' do
-            expect(item).to be_selected_by_condition
-          end
-        end
-
-        context "and root path doesn't match" do
-          before { item.stub(root_path_match?: false) }
-
-          context "and the current url matches the item's url" do
-            let(:url) { 'url#anchor' }
-
-            before { adapter.stub(current_page?: true) }
-
-            it 'returns true' do
-              expect(item).to be_selected_by_condition
-            end
-
-            # FIXME: testing the implementation not the behavior here
-            it "removes anchors before testing the item's url" do
-              expect(adapter).to receive(:current_page?).with('url')
-              item.send(:selected_by_condition?)
-            end
-
-            context 'when url is nil' do
-              let(:url) { nil }
-
-              it "doesn't check the url" do
-                expect(adapter).not_to receive(:current_page?)
-                item.send(:selected_by_condition?)
-              end
-            end
-          end
-
-          context "and the current url doesn't match the item's url" do
-            before { adapter.stub(current_page?: false) }
-
-            it 'returns false' do
-              expect(item).not_to be_selected_by_condition
-            end
-          end
-        end
-      end
-
-      context 'when :auto_highlight is false' do
-        before { item.stub(auto_highlight?: false) }
-
-        it 'returns false' do
-          expect(item).not_to be_selected_by_condition
-        end
-      end
-    end
-
-    describe '#root_path_match?' do
-      context "when current url is /" do
-        before { adapter.stub(request_path: '/') }
-
-        context "and the item's url is /" do
-          let(:url) { '/' }
-
-          it 'returns true' do
-            expect(item.send(:root_path_match?)).to be_true
-          end
-        end
-
-        context "and the item's url isn't /" do
-          let(:url) { '/other' }
-
-          it 'returns false' do
-            expect(item.send(:root_path_match?)).to be_false
-          end
-        end
-      end
-
-      context "when current url isn't /" do
-        before { adapter.stub(request_path: '/other') }
-
-        context "and the item's url is /" do
-          let(:url) { '/' }
-
-          it 'returns false' do
-            expect(item.send(:root_path_match?)).to be_false
-          end
-        end
-
-        context "and the item's url is nil" do
-          let(:url) { nil }
-
-          it 'returns false' do
-            expect(item.send(:root_path_match?)).to be_false
-          end
-        end
-      end
-
-      context "when current url doesn't match the item's url" do
-        let(:url) { '/path' }
-
-        before { adapter.stub(request_path: '/other') }
-
-        it 'returns false' do
-          expect(item.send(:root_path_match?)).to be_false
-        end
-      end
-
-      context "when current url doesn't match the item's url" do
-        let(:url) { nil }
-
-        before { adapter.stub(request_path: '/other') }
-
-        it 'returns false' do
-          expect(item.send(:root_path_match?)).to be_false
-        end
-      end
-    end
-
-    describe '#auto_highlight?' do
-      let(:global) { double(:config) }
-
-      before { SimpleNavigation.stub(config: global) }
-
-      context 'when :auto_highlight is globally true' do
-        before { global.stub(auto_highlight: true) }
-
-        context "and container's :auto_highlight is true" do
-          before { item_container.stub(auto_highlight: true) }
-
-          it 'returns true' do
-            expect(item.send(:auto_highlight?)).to be_true
-          end
-        end
-
-        context "and container's :auto_highlight is false" do
-          before { item_container.stub(auto_highlight: false) }
-
-          it 'returns false' do
-            expect(item.send(:auto_highlight?)).to be_false
-          end
-        end
-      end
-
-      context 'when :auto_highlight is globally false' do
-        before { global.stub(auto_highlight: false) }
-
-        context 'when :auto_highlight is globally true' do
-          before { item_container.stub(auto_highlight: true) }
-
-          it 'returns false' do
-            expect(item.send(:auto_highlight?)).to be_false
-          end
-        end
-
-        context "and container's :auto_highlight is false" do
-          before { item_container.stub(auto_highlight: false) }
-
-          it 'returns false' do
-            expect(item.send(:auto_highlight?)).to be_false
-          end
-        end
-      end
-    end
-
-    describe '#autogenerated_item_id' do
-      context 'when no generator is configured' do
-        let(:id_generator) { double(:id_generator) }
-
-        before { SimpleNavigation.config.stub(id_generator: id_generator) }
-
-        it 'calls the globally configured id generator' do
-          expect(id_generator).to receive(:call).with(:my_key)
-          item.send(:autogenerated_item_id)
-        end
-      end
-
-      context 'when no generator is configured' do
-        it 'uses the default generator' do
-          expect(item.send(:autogenerated_item_id)).to eq 'my_key'
         end
       end
     end
