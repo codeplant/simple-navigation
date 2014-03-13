@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'ostruct'
 
 module SimpleNavigation
   # This class acts as an adapter to items that are not defined using the DSL
@@ -30,7 +31,7 @@ module SimpleNavigation
     attr_reader :item
 
     def initialize(item)
-      @item = item.is_a?(Hash) ? to_object(item) : item
+      @item = item.is_a?(Hash) ? OpenStruct.new(item) : item
     end
 
     # Returns the options for this item. If the wrapped item does not implement
@@ -48,21 +49,6 @@ module SimpleNavigation
     # Converts this Item into a SimpleNavigation::Item
     def to_simple_navigation_item(item_container)
       SimpleNavigation::Item.new(item_container, key, name, url, options, items)
-    end
-
-    protected
-
-    # Converts the specified hash into an object. Each key will be added
-    # as method.
-    def to_object(hash)
-      mod = Module.new do
-        hash.each_pair do |key, value|
-          define_method key do
-            value
-          end
-        end
-      end
-      Object.new.extend(mod)
     end
   end
 end
