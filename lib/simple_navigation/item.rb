@@ -22,7 +22,6 @@ module SimpleNavigation
       @name = name
       @container = container
 
-      modify_container_attributes(container, options)
       setup_sub_navigation(items, &sub_nav_block)
     end
 
@@ -141,22 +140,6 @@ module SimpleNavigation
       else
         fail ArgumentError, ':highlights_on must be a Regexp, Proc or :subpath'
       end
-    end
-
-    def modify_container_attributes(container, options = {})
-      container.dom_attributes = options.delete(:container_attributes) do
-                                   container.dom_attributes
-                                 end
-
-      container.dom_class = options.delete(:container_class) do
-                              container.dom_class
-                            end
-
-      container.dom_id = options.delete(:container_id) { container.dom_id }
-
-      container.selected_class = options.delete(:selected_class) do
-                                   container.selected_class
-                                 end
     end
 
     def setup_url_and_options(url_or_options, options_or_nil)

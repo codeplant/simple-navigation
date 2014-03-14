@@ -161,42 +161,6 @@ module SimpleNavigation
           expect(html_options).to eq({ option: true })
         end
       end
-
-      context 'when the :container_id option is given' do
-        let(:options) {{ container_id: 'c_id' }}
-
-        it "sets the id on the item's container" do
-          Item.new(*item_args)
-          expect(item_container.dom_id).to eq 'c_id'
-        end
-      end
-
-      context 'when the :container_class option is given' do
-        let(:options) {{ container_class: 'c_class' }}
-
-        it "sets the class on the item's container" do
-          Item.new(*item_args)
-          expect(item_container.dom_class).to eq 'c_class'
-        end
-      end
-
-      context 'when the :container_attributes option is given' do
-        let(:options) {{ container_attributes: { attr: true } }}
-
-        it "sets the dom attributes on the item's container" do
-          Item.new(*item_args)
-          expect(item_container.dom_attributes).to include(attr: true)
-        end
-      end
-
-      context 'when the :selected_class option is given' do
-        let(:options) {{ selected_class: 'sel_class' }}
-
-        it "sets the selected_class on the item's container" do
-          Item.new(*item_args)
-          expect(item_container.selected_class).to eq 'sel_class'
-        end
-      end
     end
 
     describe '#name' do

@@ -62,19 +62,16 @@ module SimpleNavigation
     def item(key, name, url_or_options = {}, options_or_nil = {}, &block)
       options = url_or_options.is_a?(Hash) ? url_or_options : options_or_nil
       return unless should_add_item?(options)
-      items << SimpleNavigation::Item.new(self,
-                                          key,
-                                          name,
-                                          url_or_options,
-                                          options_or_nil,
-                                          nil,
-                                          &block)
+      item = Item.new(self, key, name, url_or_options, options_or_nil, nil, &block)
+      add_item item, options
     end
 
     def items=(new_items)
-      @items += new_items.map { |item| ItemAdapter.new(item) }
-                         .keep_if { |item| should_add_item?(item.options) }
-                         .map { |item| item.to_simple_navigation_item(self) }
+      new_items.each do |item|
+        item_adapter = ItemAdapter.new(item)
+        next unless should_add_item?(item_adapter.options)
+        add_item item_adapter.to_simple_navigation_item, item_adapter.options
+      end
     end
 
     # Returns the Item with the specified key, nil otherwise.
@@ -147,6 +144,18 @@ module SimpleNavigation
     end
 
     private
+
+    def add_item(item, options)
+      items << item
+      modify_dom_attributes(options)
+    end
+
+    def modify_dom_attributes(options)
+      self.dom_attributes = options.delete(:container_attributes) { dom_attributes }
+      self.dom_class = options.delete(:container_class) { dom_class }
+      self.dom_id = options.delete(:container_id) { dom_id }
+      self.selected_class = options.delete(:selected_class) { selected_class }
+    end
 
     # FIXME: raise an exception if :rederer is a symbol and it is not registred
     #        in SimpleNavigation.registered_renderers
