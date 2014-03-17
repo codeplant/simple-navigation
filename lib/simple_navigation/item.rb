@@ -58,7 +58,7 @@ module SimpleNavigation
 
       classes = [@html_options[:class], selected_class, active_leaf_class]
       classes = classes.flatten.compact.join(' ')
-      options[:class] = classes unless classes.nil? || classes.empty?
+      options[:class] = classes if classes && !classes.empty?
 
       options
     end
@@ -135,8 +135,6 @@ module SimpleNavigation
     end
 
     def selected_by_highlights_on?
-      return false unless highlights_on
-
       case highlights_on
       when Regexp then request_uri =~ highlights_on
       when Proc then highlights_on.call
