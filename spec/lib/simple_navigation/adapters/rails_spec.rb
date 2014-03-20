@@ -212,11 +212,27 @@ module SimpleNavigation
         context "when the adapter's template is set" do
           before { adapter.stub(template: template, html_safe: 'safe_text') }
 
-          it 'delegates the call to the template (with html_safe text)' do
-            expect(template).to receive(:link_to)
-                                .with('safe_text', 'url', options)
-            adapter.link_to('text', 'url', options)
+          context 'with considering item names as safe' do
+            before { SimpleNavigation.config.consider_item_names_as_safe = true }
+            after { SimpleNavigation.config.consider_item_names_as_safe = false }
+
+            it 'delegates the call to the template (with html_safe text)' do
+              expect(template).to receive(:link_to)
+                                  .with('safe_text', 'url', options)
+              adapter.link_to('text', 'url', options)
+            end
           end
+
+          context 'with considering item names as UNsafe (default)' do
+
+            it 'delegates the call to the template (with html_safe text)' do
+              expect(template).to receive(:link_to)
+                                  .with('text', 'url', options)
+              adapter.link_to('text', 'url', options)
+            end
+          end
+
+
         end
 
         context "when the adapter's template is not set" do
@@ -291,13 +307,16 @@ module SimpleNavigation
         let(:safe) { double(:safe) }
 
         context 'when config option consider_item_names_as_safe is true' do
+          before { SimpleNavigation.config.consider_item_names_as_safe = true }
+          after { SimpleNavigation.config.consider_item_names_as_safe = false }
+          
           it 'uses the html_safe version of the name' do
             expect(adapter.send(:link_title, name)).to be safe
           end
         end
 
         # TODO: Does it make sense ?
-        context 'when config option consider_item_names_as_safe is false' do
+        context 'when config option consider_item_names_as_safe is false (default)' do
           before do
             SimpleNavigation.config.consider_item_names_as_safe = false
             adapter.stub(template: template)

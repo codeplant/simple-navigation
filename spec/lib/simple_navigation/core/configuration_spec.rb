@@ -63,6 +63,10 @@ module SimpleNavigation
       it 'should set the name_generator' do
         expect(config.name_generator).not_to be_nil
       end
+      
+      it 'should set the consider_item_names_as_safe to false' do
+        expect(config.consider_item_names_as_safe).to be_false
+      end
     end
 
     describe '#items' do
