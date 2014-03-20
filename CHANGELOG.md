@@ -7,6 +7,10 @@
 * `ConfigFileFinder` and `ConfigFile` handle the configuration logic
 * File organization was been changed to reflect the Ruby namespacing
 
+## 3.13.0
+
+* consider_item_names_as_safe is now false by default. Removed deprecation warning
+
 ## 3.12.2
 
 * Fixing issue #154. Thanks to Simon Curtois.
