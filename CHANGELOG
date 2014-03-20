@@ -1,3 +1,7 @@
+*3.13.0
+
+* consider_item_names_as_safe is now false by default. Removed deprecation warning
+
 *3.12.2
 
 * Fixing issue #154. Thanks to Simon Curtois.
