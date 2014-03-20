@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.0.0
+## 4.0.0 (unreleased)
 
 * `SN.config_file_name`, `SN.config_file` and `SN.config_file?` have been
   removed
