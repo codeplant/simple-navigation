@@ -76,7 +76,9 @@ module SimpleNavigation
 
       before do
         ItemAdapter.stub(:new).and_return(item_adapter)
-        item_adapter.stub(to_simple_navigation_item: real_item)
+        allow(item_adapter).to receive(:to_simple_navigation_item)
+                               .with(item_container)
+                               .and_return(real_item)
       end
 
       context 'when the item should be added' do

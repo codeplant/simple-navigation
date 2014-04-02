@@ -70,7 +70,7 @@ module SimpleNavigation
       new_items.each do |item|
         item_adapter = ItemAdapter.new(item)
         next unless should_add_item?(item_adapter.options)
-        add_item item_adapter.to_simple_navigation_item, item_adapter.options
+        add_item item_adapter.to_simple_navigation_item(self), item_adapter.options
       end
     end
 
