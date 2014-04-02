@@ -308,6 +308,93 @@ module SimpleNavigation
             end
           end
         end
+
+        describe "container options" do
+          before do
+            item_container.stub(should_add_item?: add_item)
+            item_container.item :key, 'name', 'url', options
+          end
+
+          context 'when the :container_id option is specified' do
+            let(:options) {{ container_id: 'c_id' }}
+
+            context 'and the item should be added' do
+              let(:add_item) { true }
+
+              it 'changes its dom_id' do
+                expect(item_container.dom_id).to eq 'c_id'
+              end
+            end
+
+            context "and the item shouldn't be added" do
+              let(:add_item) { false }
+
+              it "doesn't change its dom_id" do
+                expect(item_container.dom_id).to be_nil
+              end
+            end
+          end
+
+          context 'when the :container_class option is specified' do
+            let(:options) {{ container_class: 'c_class' }}
+
+            context 'and the item should be added' do
+              let(:add_item) { true }
+
+              it 'changes its dom_class' do
+                expect(item_container.dom_class).to eq 'c_class'
+              end
+            end
+
+            context "and the item shouldn't be added" do
+              let(:add_item) { false }
+
+              it "doesn't change its dom_class" do
+                expect(item_container.dom_class).to be_nil
+              end
+            end
+          end
+
+          context 'when the :container_attributes option is specified' do
+            let(:options) {{ container_attributes: { option: true } }}
+
+            context 'and the item should be added' do
+              let(:add_item) { true }
+
+              it 'changes its dom_attributes' do
+                expect(item_container.dom_attributes).to eq(option: true)
+              end
+            end
+
+            context "and the item shouldn't be added" do
+              let(:add_item) { false }
+
+              it "doesn't change its dom_attributes" do
+                expect(item_container.dom_attributes).to eq({})
+              end
+            end
+          end
+
+          context 'when the :selected_class option is specified' do
+            let(:options) {{ selected_class: 'sel_class' }}
+
+            context 'and the item should be added' do
+              let(:add_item) { true }
+
+              it 'changes its selected_class' do
+                expect(item_container.selected_class).to eq 'sel_class'
+              end
+            end
+
+            context "and the item shouldn't be added" do
+              let(:add_item) { false }
+
+              it "doesn't change its selected_class" do
+                expect(item_container.selected_class).to be_nil
+              end
+            end
+          end
+        end
       end
 
       describe 'Conditions' do
