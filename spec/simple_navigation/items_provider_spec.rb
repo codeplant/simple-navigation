@@ -11,7 +11,7 @@ module SimpleNavigation
         let(:context) { double(:context, provider_method: items) }
         let(:provider) { :provider_method }
 
-        before { SimpleNavigation.stub(context_for_eval: context) }
+        before { allow(SimpleNavigation).to receive_messages(context_for_eval: context) }
 
         it 'retrieves the items from the evaluation context' do
           expect(items_provider.items).to eq items

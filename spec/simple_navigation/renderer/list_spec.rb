@@ -78,11 +78,10 @@ module SimpleNavigation
 
         context 'when a sub navigation item is selected' do
           before do
-            navigation[:invoices].stub(selected?: true)
+            allow(navigation[:invoices]).to receive_messages(selected?: true)
 
-            navigation[:invoices]
-              .sub_navigation[:unpaid]
-              .stub(selected?: true, selected_by_condition?: true)
+            allow(navigation[:invoices].sub_navigation[:unpaid]).to \
+              receive_messages(selected?: true, selected_by_condition?: true)
           end
 
           it 'renders the parent items as selected' do

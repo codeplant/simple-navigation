@@ -12,7 +12,7 @@ module SimpleNavigation
       let(:template) { double(:template, request: request) }
 
       describe '.register' do
-        before { action_controller.stub(:include) }
+        before { allow(action_controller).to receive(:include) }
 
         it 'calls set_env' do
           expect(simple_navigation).to receive(:set_env).with('./', 'test')
@@ -43,7 +43,7 @@ module SimpleNavigation
 
       describe '#initialize' do
         context "when the controller's template is set" do
-          before { controller.stub(instance_variable_get: template) }
+          before { allow(controller).to receive_messages(instance_variable_get: template) }
 
           it "sets the adapter's request accordingly" do
             expect(adapter.request).to be request
@@ -51,7 +51,7 @@ module SimpleNavigation
         end
 
         context "when the controller's template is not set" do
-          before { controller.stub(instance_variable_get: nil) }
+          before { allow(controller).to receive_messages(instance_variable_get: nil) }
 
           it "sets the adapter's request to nil" do
             expect(adapter.request).to be_nil
@@ -64,7 +64,7 @@ module SimpleNavigation
 
         context "when the controller's template is stored as instance var (Rails2)" do
           context "when the controller's template is set" do
-            before { controller.stub(instance_variable_get: template) }
+            before { allow(controller).to receive_messages(instance_variable_get: template) }
 
             it "sets the adapter's template accordingly" do
               expect(adapter.template).to be template
@@ -72,7 +72,7 @@ module SimpleNavigation
           end
 
           context "when the controller's template is not set" do
-            before { controller.stub(instance_variable_get: nil) }
+            before { allow(controller).to receive_messages(instance_variable_get: nil) }
 
             it "set the adapter's template to nil" do
               expect(adapter.template).to be_nil
@@ -82,7 +82,7 @@ module SimpleNavigation
 
         context "when the controller's template is stored as view_context (Rails3)" do
           context 'and the template is set' do
-            before { controller.stub(view_context: template) }
+            before { allow(controller).to receive_messages(view_context: template) }
 
             it "sets the adapter's template accordingly" do
               expect(adapter.template).to be template
@@ -90,7 +90,7 @@ module SimpleNavigation
           end
 
           context 'and the template is not set' do
-            before { controller.stub(view_context: nil) }
+            before { allow(controller).to receive_messages(view_context: nil) }
 
             it "sets the adapter's template to nil" do
               expect(adapter.template).to be_nil
@@ -98,10 +98,10 @@ module SimpleNavigation
           end
         end
       end
-  
+
       describe '#request_uri' do
         context "when the adapter's request is set" do
-          before { adapter.stub(request: request) }
+          before { allow(adapter).to receive_messages(request: request) }
 
           context 'and request.fullpath is defined' do
             let(:request) { double(:request, fullpath: '/fullpath') }
@@ -114,7 +114,7 @@ module SimpleNavigation
           context 'and request.fullpath is not defined' do
             let(:request) { double(:request, request_uri: '/request_uri') }
 
-            before { adapter.stub(request: request) }
+            before { allow(adapter).to receive_messages(request: request) }
 
             it "sets the adapter's request_uri to the request.request_uri" do
               expect(adapter.request_uri).to eq '/request_uri'
@@ -123,19 +123,19 @@ module SimpleNavigation
         end
 
         context "when the adapter's request is not set" do
-          before { adapter.stub(request: nil) }
+          before { allow(adapter).to receive_messages(request: nil) }
 
           it "sets the adapter's request_uri to an empty string" do
             expect(adapter.request_uri).to eq ''
           end
         end
       end
-  
+
       describe '#request_path' do
         context "when the adapter's request is set" do
           let(:request) { double(:request, path: '/request_path') }
 
-          before { adapter.stub(request: request) }
+          before { allow(adapter).to receive_messages(request: request) }
 
           it "sets the adapter's request_path to the request.path" do
             expect(adapter.request_path).to eq '/request_path'
@@ -143,7 +143,7 @@ module SimpleNavigation
         end
 
         context "when the adapter's request is not set" do
-          before { adapter.stub(request: nil) }
+          before { allow(adapter).to receive_messages(request: nil) }
 
           it "sets the adapter's request_path to an empty string" do
             expect(adapter.request_path).to eq ''
@@ -195,7 +195,7 @@ module SimpleNavigation
 
       describe '#current_page?' do
         context "when the adapter's template is set" do
-          before { adapter.stub(template: template) }
+          before { allow(adapter).to receive_messages(template: template) }
 
           it 'delegates the call to the template' do
             expect(template).to receive(:current_page?).with(:page)
@@ -204,7 +204,7 @@ module SimpleNavigation
         end
 
         context "when the adapter's template is not set" do
-          before { adapter.stub(template: nil) }
+          before { allow(adapter).to receive_messages(template: nil) }
 
           it 'returns false' do
             expect(adapter).not_to be_current_page(:page)
@@ -216,7 +216,7 @@ module SimpleNavigation
         let(:options) { double(:options) }
 
         context "when the adapter's template is set" do
-          before { adapter.stub(template: template, html_safe: 'safe_text') }
+          before { allow(adapter).to receive_messages(template: template, html_safe: 'safe_text') }
 
           context 'with considering item names as safe' do
             before { SimpleNavigation.config.consider_item_names_as_safe = true }
@@ -241,7 +241,7 @@ module SimpleNavigation
         end
 
         context "when the adapter's template is not set" do
-          before { adapter.stub(template: nil) }
+          before { allow(adapter).to receive_messages(template: nil) }
 
           it 'returns nil' do
             expect(adapter.link_to('text', 'url', options)).to be_nil
@@ -253,7 +253,7 @@ module SimpleNavigation
         let(:options) { double(:options) }
 
         context "when the adapter's template is set" do
-          before { adapter.stub(template: template, html_safe: 'safe_text') }
+          before { allow(adapter).to receive_messages(template: template, html_safe: 'safe_text') }
 
           it 'delegates the call to the template (with html_safe text)' do
             expect(template).to receive(:content_tag)
@@ -263,14 +263,14 @@ module SimpleNavigation
         end
 
         context "when the adapter's template is not set" do
-          before { adapter.stub(template: nil) }
+          before { allow(adapter).to receive_messages(template: nil) }
 
           it 'returns nil' do
             expect(adapter.content_tag(:div, 'text', options)).to be_nil
           end
         end
       end
-      
+
     end
   end
 end

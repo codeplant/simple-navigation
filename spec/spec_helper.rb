@@ -2,7 +2,7 @@ require 'initializers/have_css_matcher'
 require 'initializers/memfs'
 require 'action_controller'
 require 'coveralls'
-require 'html/document'
+require 'action_view'
 
 Coveralls.wear!
 
@@ -31,16 +31,16 @@ require 'simple_navigation'
 
 def setup_adapter_for(framework, context = double(:context))
   if framework == :rails
-    context.stub(view_context: ActionView::Base.new)
+    allow(context).to receive_messages(view_context: ActionView::Base.new)
   end
 
-  SimpleNavigation.stub(framework: framework)
+  allow(SimpleNavigation).to receive_messages(framework: framework)
   SimpleNavigation.load_adapter
   SimpleNavigation.init_adapter_from(context)
 end
 
 def select_an_item(item)
-  item.stub(selected?: true)
+  allow(item).to receive_messages(selected?: true)
 end
 
 def setup_container(dom_id, dom_class)
@@ -69,11 +69,11 @@ def setup_items(container)
   container.item :miscellany, 'Miscellany'
 
   container.items.each do |item|
-    item.stub(selected?: false, selected_by_condition?: false)
+    allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
 
     if item.sub_navigation
       item.sub_navigation.items.each do |item|
-        item.stub(selected?: false, selected_by_condition?: false)
+        allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
       end
     end
   end

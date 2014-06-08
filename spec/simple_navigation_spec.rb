@@ -13,7 +13,7 @@ describe SimpleNavigation do
   end
 
   describe '.default_config_file_path' do
-    before { subject.stub(root: 'root') }
+    before { allow(subject).to receive_messages(root: 'root') }
 
     it 'returns the config file path according to :root setting' do
       expect(subject.default_config_file_path).to eq 'root/config'
@@ -38,7 +38,7 @@ describe SimpleNavigation do
   describe '.set_env' do
     before do
       subject.config_file_paths = []
-      subject.stub(default_config_file_path: 'default_path')
+      allow(subject).to receive_messages(default_config_file_path: 'default_path')
       subject.set_env('root', 'my_env')
     end
 
@@ -60,7 +60,7 @@ describe SimpleNavigation do
 
     before do
       FileUtils.mkdir_p(paths)
-      subject.stub(config_file_paths: paths)
+      allow(subject).to receive_messages(config_file_paths: paths)
     end
 
     context 'when the config file for the context exists' do
@@ -84,7 +84,7 @@ describe SimpleNavigation do
       end
 
       context 'and environment is production' do
-        before { subject.stub(environment: 'production') }
+        before { allow(subject).to receive_messages(environment: 'production') }
 
         it 'loads the config file only for the first call' do
           subject.load_config
@@ -120,7 +120,7 @@ describe SimpleNavigation do
   describe '.active_item_container_for' do
     let(:primary) { double(:primary) }
 
-    before { subject.config.stub(primary_navigation: primary) }
+    before { allow(subject.config).to receive_messages(primary_navigation: primary) }
 
     context 'when level is :all' do
       it 'returns the primary_navigation' do
@@ -163,7 +163,7 @@ describe SimpleNavigation do
     shared_examples 'loading the right adapter' do |framework, adapter|
       context "when the context is #{framework}" do
         before do
-          subject.stub(framework: framework)
+          allow(subject).to receive_messages(framework: framework)
           subject.load_adapter
         end
 

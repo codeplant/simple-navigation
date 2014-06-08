@@ -1,7 +1,4 @@
 require 'spec_helper'
-require 'json_spec'
-
-RSpec.configure { |config| config.include JsonSpec::Helpers }
 
 module SimpleNavigation
   module Renderer
@@ -12,7 +9,7 @@ module SimpleNavigation
         let(:item) { :invoices }
         let(:options) {{ level: :all }}
         let(:output) { renderer.render(navigation) }
-        let(:parsed_output) { parse_json(output) }
+        let(:parsed_output) { JSON.parse(output) }
         let(:renderer) { Json.new(options) }
 
         before { select_an_item(navigation[item]) if item }
@@ -48,11 +45,10 @@ module SimpleNavigation
           end
 
           before do
-            navigation[:invoices].stub(selected?: true)
+            allow(navigation[:invoices]).to receive_messages(selected?: true)
 
-            navigation[:invoices]
-              .sub_navigation[:unpaid]
-              .stub(selected?: true, selected_by_condition?: true)
+            allow(navigation[:invoices].sub_navigation[:unpaid]).to \
+              receive_messages(selected?: true, selected_by_condition?: true)
           end
 
           it 'marks all the parent items as selected' do

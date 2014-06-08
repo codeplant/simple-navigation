@@ -6,7 +6,7 @@ module SimpleNavigation
 
     shared_examples 'adding the item to the list' do
       it 'adds the item to the list' do
-        Item.stub(:new).and_return(item)
+        allow(Item).to receive_messages(new: item)
         item_container.item(*args)
         expect(item_container.items).to include(item)
       end
@@ -14,7 +14,7 @@ module SimpleNavigation
 
     shared_examples 'not adding the item to the list' do
       it "doesn't add the item to the list" do
-        Item.stub(:new).and_return(item)
+        allow(Item).to receive_messages(new: item)
         item_container.item(*args)
         expect(item_container.items).not_to include(item)
       end
@@ -75,14 +75,14 @@ module SimpleNavigation
       let(:real_item) { double(:real_item) }
 
       before do
-        ItemAdapter.stub(:new).and_return(item_adapter)
+        allow(ItemAdapter).to receive_messages(new: item_adapter)
         allow(item_adapter).to receive(:to_simple_navigation_item)
                                .with(item_container)
                                .and_return(real_item)
       end
 
       context 'when the item should be added' do
-        before { item_container.stub(should_add_item?: true) }
+        before { allow(item_container).to receive_messages(should_add_item?: true) }
 
         it 'converts it to an Item and adds it to the items collection' do
           item_container.items = items
@@ -91,7 +91,7 @@ module SimpleNavigation
       end
 
       context 'when the item should not be added' do
-        before { item_container.stub(should_add_item?: false) }
+        before { allow(item_container).to receive_messages(should_add_item?: false) }
 
         it "doesn't add it to the items collection" do
           item_container.items = items
@@ -116,7 +116,7 @@ module SimpleNavigation
 
       context 'when an item is selected' do
         it 'returns true' do
-          item_1.stub(selected?: true)
+          allow(item_1).to receive_messages(selected?: true)
           expect(item_container).to be_selected
         end
       end
@@ -127,8 +127,8 @@ module SimpleNavigation
       let(:item_2) { double(:item, selected?: false) }
 
       before(:each) do
-        SimpleNavigation.stub(current_navigation_for: :nav)
-        item_container.stub(:[] => nil)
+        allow(SimpleNavigation).to receive_messages(current_navigation_for: :nav)
+        allow(item_container).to receive_messages(:[] => nil)
         item_container.instance_variable_set(:@items, [item_1, item_2])
       end
 
@@ -140,7 +140,7 @@ module SimpleNavigation
         end
 
         context 'and an item selected' do
-          before { item_1.stub(selected?: true) }
+          before { allow(item_1).to receive_messages(selected?: true) }
 
           it 'returns the selected item' do
             expect(item_container.selected_item).to be item_1
@@ -158,7 +158,7 @@ module SimpleNavigation
 
       context "when the desired level is different than the container's" do
         context 'and no subnavigation is selected' do
-          before { item_container.stub(selected_sub_navigation?: false) }
+          before { allow(item_container).to receive_messages(selected_sub_navigation?: false) }
 
           it 'returns nil' do
             expect(item_container.active_item_container_for(2)).to be_nil
@@ -170,9 +170,9 @@ module SimpleNavigation
           let(:selected_item) { double(:selected_item) }
 
           before do
-            item_container.stub(selected_sub_navigation?: true,
-                                selected_item: selected_item)
-            selected_item.stub(sub_navigation: sub_navigation)
+            allow(item_container).to \
+              receive_messages(selected_sub_navigation?: true, selected_item: selected_item)
+            allow(selected_item).to receive_messages(sub_navigation: sub_navigation)
           end
 
           it 'calls recursively on the sub_navigation' do
@@ -190,9 +190,9 @@ module SimpleNavigation
         let(:selected_item) { double(:selected_item) }
 
         before do
-          item_container.stub(selected_sub_navigation?: true,
+          allow(item_container).to receive_messages(selected_sub_navigation?: true,
                               selected_item: selected_item)
-          selected_item.stub(sub_navigation: sub_navigation)
+          allow(selected_item).to receive_messages(sub_navigation: sub_navigation)
         end
 
         it 'calls recursively on the sub_navigation' do
@@ -202,7 +202,7 @@ module SimpleNavigation
       end
 
       context 'when the current container is the leaf already' do
-        before { item_container.stub(selected_sub_navigation?: false) }
+        before { allow(item_container).to receive_messages(selected_sub_navigation?: false) }
 
         it 'returns itsself' do
           expect(item_container.active_leaf_container).to be item_container
@@ -219,9 +219,8 @@ module SimpleNavigation
         let(:sub_container) { double(:sub_container) }
 
         it 'yields a new ItemContainer' do
-          Item.any_instance
-              .stub(:sub_navigation)
-              .and_return(sub_container)
+          allow_any_instance_of(Item).to \
+            receive_messages(sub_navigation: sub_container)
 
           expect{ |blk|
             item_container.item('key', 'name', 'url', options, &blk)
@@ -229,9 +228,9 @@ module SimpleNavigation
         end
 
         it "creates a new Item with the given params and block" do
-          Item.stub(:new)
-              .with(item_container, 'key', 'name', 'url', options, nil, &block)
-              .and_return(item)
+          allow(Item).to receive(:new)
+                         .with(item_container, 'key', 'name', 'url', options, nil, &block)
+                         .and_return(item)
           item_container.item('key', 'name', 'url', options, &block)
           expect(item_container.items).to include(item)
         end
@@ -244,15 +243,15 @@ module SimpleNavigation
 
       context 'when no block is given' do
         it 'creates a new Item with the given params and no sub navigation' do
-          Item.stub(:new)
-              .with(item_container, 'key', 'name', 'url', options, nil)
-              .and_return(item)
+          allow(Item).to receive(:new)
+                         .with(item_container, 'key', 'name', 'url', options, nil)
+                         .and_return(item)
           item_container.item('key', 'name', 'url', options)
           expect(item_container.items).to include(item)
         end
 
         it 'adds the created item to the list of items' do
-          Item.stub(:new).and_return(item)
+          allow(Item).to receive_messages(new: item)
           item_container.item('key', 'name', 'url', options) {}
           expect(item_container.items).to include(item)
         end
@@ -313,7 +312,7 @@ module SimpleNavigation
 
         describe "container options" do
           before do
-            item_container.stub(should_add_item?: add_item)
+            allow(item_container).to receive_messages(should_add_item?: add_item)
             item_container.item :key, 'name', 'url', options
           end
 
@@ -525,7 +524,7 @@ module SimpleNavigation
       context 'when no renderer is specified' do
         let(:options) { Hash.new }
 
-        before { item_container.stub(renderer: renderer_class) }
+        before { allow(item_container).to receive_messages(renderer: renderer_class) }
 
         it "instantiates the container's renderer with the options" do
           expect(renderer_class).to receive(:new).with(options)

@@ -15,9 +15,9 @@ module SimpleNavigation
       let(:eval_context) { double(:eval_context) }
 
       before do
-        eval_context.stub(:instance_eval)
-        SimpleNavigation.stub(context_for_eval: eval_context,
-                              config_files: config_files)
+        allow(eval_context).to receive(:instance_eval)
+        allow(SimpleNavigation).to \
+          receive_messages(context_for_eval: eval_context, config_files: config_files)
       end
 
       context "with default navigation context" do
@@ -49,11 +49,11 @@ module SimpleNavigation
       end
 
       it 'sets autogenerate_item_ids to true as default' do
-        expect(config.autogenerate_item_ids).to be_true
+        expect(config.autogenerate_item_ids).to be true
       end
 
       it 'sets auto_highlight to true as default' do
-        expect(config.auto_highlight).to be_true
+        expect(config.auto_highlight).to be true
       end
 
       it 'should set the id_generator' do
@@ -63,16 +63,16 @@ module SimpleNavigation
       it 'should set the name_generator' do
         expect(config.name_generator).not_to be_nil
       end
-      
+
       it 'should set the consider_item_names_as_safe to false' do
-        expect(config.consider_item_names_as_safe).to be_false
+        expect(config.consider_item_names_as_safe).to be false
       end
     end
 
     describe '#items' do
       let(:container) { double(:items_container) }
 
-      before { ItemContainer.stub(:new).and_return(container) }
+      before { allow(ItemContainer).to receive_messages(new: container) }
 
       context 'when a block is given' do
         context 'and items_provider is specified' do
@@ -107,8 +107,8 @@ module SimpleNavigation
           let(:items_provider) { double(:items_provider, items: items) }
 
           before do
-            SimpleNavigation::ItemsProvider.stub(new: items_provider)
-            container.stub(:items=)
+            allow(SimpleNavigation::ItemsProvider).to receive_messages(new: items_provider)
+            allow(container).to receive(:items=)
           end
 
           it 'creates a new Provider object for the specified provider' do

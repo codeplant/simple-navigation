@@ -64,17 +64,16 @@ module SimpleNavigation
           let(:options) {{ level: :all, join_with: ' | ' }}
 
           it 'separates the items with the specified separator' do
-            expect(raw_output.scan(' | ')).to have(3).items
+            expect(raw_output.scan(' | ').size).to eq 3
           end
         end
 
         context 'when a sub navigation item is selected' do
           before do
-            navigation[:invoices].stub(selected?: true)
+            allow(navigation[:invoices]).to receive_messages(selected?: true)
 
-            navigation[:invoices]
-              .sub_navigation[:unpaid]
-              .stub(selected?: true, selected_by_condition?: true)
+            allow(navigation[:invoices].sub_navigation[:unpaid]).to \
+              receive_messages(selected?: true, selected_by_condition?: true)
           end
 
           it 'renders the main parent as selected' do

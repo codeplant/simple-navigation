@@ -28,7 +28,7 @@ module SimpleNavigation
         context 'when item responds to options' do
           let(:options) { double(:options) }
 
-          before { item.stub(options: options) }
+          before { allow(item).to receive_messages(options: options) }
 
           it "returns the item's options" do
             expect(item_adapter.options).to be options
@@ -45,7 +45,7 @@ module SimpleNavigation
       describe '#items' do
         context 'when item responds to items' do
           context 'and items is nil' do
-            before { item.stub(items: nil) }
+            before { allow(item).to receive_messages(items: nil) }
 
             it 'returns nil' do
               expect(item_adapter.items).to be_nil
@@ -54,7 +54,7 @@ module SimpleNavigation
 
           context 'when items is not nil' do
             context 'and items is empty' do
-              before { item.stub(items: []) }
+              before { allow(item).to receive_messages(items: []) }
 
               it 'returns nil' do
                 expect(item_adapter.items).to be_nil
@@ -64,7 +64,7 @@ module SimpleNavigation
             context 'and items is not empty' do
               let(:items) { [true] }
 
-              before { item.stub(items: items) }
+              before { allow(item).to receive_messages(items: items) }
 
               it 'returns the items' do
                 expect(item_adapter.items).to eq items
@@ -83,7 +83,7 @@ module SimpleNavigation
       describe '#to_simple_navigation_item' do
         let(:container) { double(:container) }
 
-        before { item.stub(items: [], options: {}) }
+        before { allow(item).to receive_messages(items: [], options: {}) }
 
         it 'creates an Item' do
           expect(Item).to receive(:new)

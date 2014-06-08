@@ -11,7 +11,7 @@ module SimpleNavigation
     let(:options) { Hash.new }
     let(:url) { 'url' }
 
-    before { SimpleNavigation.stub(adapter: adapter) }
+    before { allow(SimpleNavigation).to receive_messages(adapter: adapter) }
 
     describe '#initialize' do
       context 'when there is a sub_navigation' do
@@ -29,7 +29,7 @@ module SimpleNavigation
           end
 
           it 'calls the block' do
-            ItemContainer.stub(new: subnav_container)
+            allow(ItemContainer).to receive_messages(new: subnav_container)
 
             expect{ |blk|
               Item.new(*item_args, &blk)
@@ -66,7 +66,7 @@ module SimpleNavigation
 
         it 'sets the html options without the method' do
           meth = item.instance_variable_get(:@html_options).key?(:method)
-          expect(meth).to be_false
+          expect(meth).to be false
         end
       end
 
@@ -165,8 +165,8 @@ module SimpleNavigation
 
     describe '#name' do
       before do
-        SimpleNavigation.config.stub(
-          name_generator: proc{ |name| "<span>#{name}</span>" })
+        allow(SimpleNavigation.config).to \
+          receive_messages(name_generator: proc{ |name| "<span>#{name}</span>" })
       end
 
       context 'when no option is given' do
@@ -178,8 +178,8 @@ module SimpleNavigation
 
         context 'and the name_generator uses only the item itself' do
           before do
-            SimpleNavigation.config.stub(
-              name_generator: proc{ |name, item| "<span>#{item.key}</span>" })
+            allow(SimpleNavigation.config).to \
+              receive_messages(name_generator: proc{ |name, item| "<span>#{item.key}</span>" })
           end
 
           it 'uses the default name_generator' do
@@ -197,7 +197,7 @@ module SimpleNavigation
 
     describe '#selected?' do
       context "when the item isn't selected" do
-        before { adapter.stub(current_page?: false) }
+        before { allow(adapter).to receive_messages(current_page?: false) }
 
         it 'returns false' do
           expect(item).not_to be_selected
@@ -207,17 +207,17 @@ module SimpleNavigation
       describe 'selectible by condition' do
         let(:current_url) { '' }
 
-        before { adapter.stub(request_uri: current_url) }
+        before { allow(adapter).to receive_messages(request_uri: current_url) }
 
         context 'when the :highlights_on option is set' do
-          before { item.stub(highlights_on: /^\/matching/) }
+          before { allow(item).to receive_messages(highlights_on: /^\/matching/) }
 
           context 'and :highlights_on is a regexp' do
             context 'and it matches the current url' do
               let(:current_url) { '/matching_url' }
 
               it 'returns true' do
-                expect(item).to be_selected_by_condition
+                expect(item.send(:selected_by_condition?)).to be_truthy
               end
             end
 
@@ -225,37 +225,37 @@ module SimpleNavigation
               let(:current_url) { '/other_url' }
 
               it 'returns false' do
-                expect(item).not_to be_selected_by_condition
+                expect(item.send(:selected_by_condition?)).to be_falsey
               end
             end
           end
 
           context 'and :highlights_on is a lambda' do
             context 'and it is truthy' do
-              before { item.stub(highlights_on: ->{ true }) }
+              before { allow(item).to receive_messages(highlights_on: ->{ true }) }
 
               it 'returns true' do
-                expect(item).to be_selected_by_condition
+                expect(item.send(:selected_by_condition?)).to be true
               end
             end
 
             context 'falsey lambda results in no selection' do
-              before { item.stub(highlights_on: ->{ false }) }
+              before { allow(item).to receive_messages(highlights_on: ->{ false }) }
 
               it 'returns false' do
-                expect(item).not_to be_selected_by_condition
+                expect(item.send(:selected_by_condition?)).to be false
               end
             end
           end
 
           context 'and :highlights_on is :subpath' do
-            before { item.stub(url: '/path', highlights_on: :subpath) }
+            before { allow(item).to receive_messages(url: '/path', highlights_on: :subpath) }
 
             context "and the current url is a sub path of the item's url" do
               let(:current_url) { '/path/sub-path' }
 
               it 'returns true' do
-                expect(item).to be_selected_by_condition
+                expect(item.send(:selected_by_condition?)).to be true
               end
             end
 
@@ -263,7 +263,7 @@ module SimpleNavigation
               let(:current_url) { '/path_group/id' }
 
               it 'returns false' do
-                expect(item).not_to be_selected_by_condition
+                expect(item.send(:selected_by_condition?)).to be false
               end
             end
 
@@ -271,13 +271,13 @@ module SimpleNavigation
               let(:current_url) { '/other_path/id' }
 
               it 'returns false' do
-                expect(item).not_to be_selected_by_condition
+                expect(item.send(:selected_by_condition?)).to be false
               end
             end
           end
 
           context 'when :highlights_on something else' do
-            before { item.stub(highlights_on: 'nothing') }
+            before { allow(item).to receive_messages(highlights_on: 'nothing') }
 
             it 'raises an exception' do
               expect{ item.selected? }.to raise_error
@@ -286,79 +286,79 @@ module SimpleNavigation
         end
 
         context 'when :auto_highlight is true' do
-          before { item.stub(auto_highlight?: true) }
+          before { allow(item).to receive_messages(auto_highlight?: true) }
 
           context 'and root path matches' do
-            before { item.stub(root_path_match?: true) }
+            before { allow(item).to receive_messages(root_path_match?: true) }
 
             it 'returns true' do
-              expect(item).to be_selected_by_condition
+              expect(item.send(:selected_by_condition?)).to be true
             end
           end
 
           context "and root path doesn't match" do
-            before { item.stub(root_path_match?: false) }
+            before { allow(item).to receive_messages(root_path_match?: false) }
 
             context "and the current url matches the item's url" do
               let(:url) { 'url#anchor' }
 
-              before { adapter.stub(current_page?: true) }
+              before { allow(adapter).to receive_messages(current_page?: true) }
 
               it 'returns true' do
-                expect(item).to be_selected_by_condition
+                expect(item.send(:selected_by_condition?)).to be true
               end
 
               context 'when url is nil' do
                 let(:url) { nil }
 
                 it 'returns false' do
-                  expect(item.selected?).to be_false
+                  expect(item.selected?).to be_falsey
                 end
               end
             end
 
             context "and the current url doesn't match the item's url" do
-              before { adapter.stub(current_page?: false) }
+              before { allow(adapter).to receive_messages(current_page?: false) }
 
               it 'returns false' do
-                expect(item).not_to be_selected_by_condition
+                expect(item.send(:selected_by_condition?)).to be false
               end
             end
           end
         end
 
         context 'when :auto_highlight is false' do
-          before { item.stub(auto_highlight?: false) }
+          before { allow(item).to receive_messages(auto_highlight?: false) }
 
           it 'returns false' do
-            expect(item).not_to be_selected_by_condition
+            expect(item.send(:selected_by_condition?)).to be false
           end
         end
       end
 
       describe 'selectible by sub navigation' do
-        before { item.stub(sub_navigation: sub_navigation) }
+        before { allow(item).to receive_messages(sub_navigation: sub_navigation) }
 
         context 'the item has a sub_navigation' do
           let(:sub_navigation) { double(:sub_navigation) }
 
           context 'and an item of the sub_navigation is selected' do
             before do
-              sub_navigation.stub(selected?: true, selected_by_condition?: true)
+              allow(sub_navigation).to receive_messages(selected?: true, selected_by_condition?: true)
             end
 
             it 'returns true' do
-              expect(item).to be_selected_by_subnav
+              expect(item.send(:selected_by_subnav?)).to be true
             end
           end
 
           context 'and no item of the sub_navigation is selected' do
             before do
-              sub_navigation.stub(selected?: false, selected_by_condition?: true)
+              allow(sub_navigation).to receive_messages(selected?: false, selected_by_condition?: true)
             end
 
             it 'returns false' do
-              expect(item).not_to be_selected_by_subnav
+              expect(item.send(:selected_by_subnav?)).to be false
             end
           end
         end
@@ -367,7 +367,7 @@ module SimpleNavigation
           let(:sub_navigation) { nil }
 
           it 'returns false' do
-            expect(item).not_to be_selected_by_subnav
+            expect(item.send(:selected_by_subnav?)).to be_falsey
           end
         end
       end
@@ -375,14 +375,14 @@ module SimpleNavigation
 
     describe '#selected_class' do
       context 'when the item is selected' do
-        before { item.stub(selected?: true) }
+        before { allow(item).to receive_messages(selected?: true) }
 
         it 'returns the default selected_class' do
           expect(item.selected_class).to eq 'selected'
         end
 
         context 'and selected_class is defined in the context' do
-          before { item_container.stub(selected_class: 'defined') }
+          before { allow(item_container).to receive_messages(selected_class: 'defined') }
 
           it "returns the context's selected_class" do
             expect(item.selected_class).to eq 'defined'
@@ -391,7 +391,7 @@ module SimpleNavigation
       end
 
       context 'when the item is not selected' do
-        before { item.stub(selected?: false) }
+        before { allow(item).to receive_messages(selected?: false) }
 
         it 'returns nil' do
           expect(item.selected_class).to be_nil
@@ -406,7 +406,7 @@ module SimpleNavigation
         let(:options) {{ class: 'my_class' }}
 
         context 'and the item is selected' do
-          before { item.stub(selected?: true, selected_by_condition?: true) }
+          before { allow(item).to receive_messages(selected?: true, selected_by_condition?: true) }
 
           it "adds the specified class to the item's html classes" do
             expect(item.html_options[:class]).to include('my_class')
@@ -418,7 +418,7 @@ module SimpleNavigation
         end
 
         context "and the item isn't selected" do
-          before { item.stub(selected?: false, selected_by_condition?: false) }
+          before { allow(item).to receive_messages(selected?: false, selected_by_condition?: false) }
 
           it "sets the specified class as the item's html classes" do
             expect(item.html_options[:class]).to include('my_class')
@@ -428,7 +428,7 @@ module SimpleNavigation
 
       context "when the :class option isn't given" do
         context 'and the item is selected' do
-          before { item.stub(selected?: true, selected_by_condition?: true) }
+          before { allow(item).to receive_messages(selected?: true, selected_by_condition?: true) }
 
           it "sets the default html classes of a selected item" do
             expect(item.html_options[:class]).to include(selected_classes)
@@ -436,7 +436,7 @@ module SimpleNavigation
         end
 
         context "and the item isn't selected" do
-           before { item.stub(selected?: false, selected_by_condition?: false) }
+           before { allow(item).to receive_messages(selected?: false, selected_by_condition?: false) }
 
            it "doesn't set any html class on the item" do
              expect(item.html_options[:class]).to be_blank
@@ -454,8 +454,8 @@ module SimpleNavigation
         let(:options) {{ id: 'my_id' }}
 
         before do
-          SimpleNavigation.config.stub(autogenerate_item_ids: generate_ids)
-          item.stub(selected?: false, selected_by_condition?: false)
+          allow(SimpleNavigation.config).to receive_messages(autogenerate_item_ids: generate_ids)
+          allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
         end
 
         context 'and :autogenerate_item_ids is true' do
@@ -473,8 +473,8 @@ module SimpleNavigation
 
       context "when the :id option isn't given" do
         before do
-          SimpleNavigation.config.stub(autogenerate_item_ids: generate_ids)
-          item.stub(selected?: false, selected_by_condition?: false)
+          allow(SimpleNavigation.config).to receive_messages(autogenerate_item_ids: generate_ids)
+          allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
         end
 
         context 'and :autogenerate_item_ids is true' do

@@ -5,12 +5,12 @@ describe SimpleNavigation::Adapters::Sinatra do
   let(:context) { double(:context) }
   let(:request) { double(:request, fullpath: '/full?param=true', path: '/full') }
 
-  before { context.stub(request: request) }
+  before { allow(context).to receive_messages(request: request) }
 
   describe '#context_for_eval' do
     context "when adapter's context is not set" do
       it 'raises an exception' do
-        adapter.stub(context: nil)
+        allow(adapter).to receive_messages(context: nil)
         expect{ adapter.context_for_eval }.to raise_error
       end
     end
@@ -35,7 +35,7 @@ describe SimpleNavigation::Adapters::Sinatra do
   end
 
   describe '#current_page?' do
-    before { request.stub(scheme: 'http', host_with_port: 'my_host:5000') }
+    before { allow(request).to receive_messages(scheme: 'http', host_with_port: 'my_host:5000') }
 
     shared_examples 'detecting current page' do |url, expected|
       context "when url is #{url}" do
@@ -59,7 +59,7 @@ describe SimpleNavigation::Adapters::Sinatra do
 
     context 'when URL is encoded' do
       before do
-        request.stub(fullpath: '/full%20with%20spaces?param=true',
+        allow(request).to receive_messages(fullpath: '/full%20with%20spaces?param=true',
                      path: '/full%20with%20spaces')
       end
 

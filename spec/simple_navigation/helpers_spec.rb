@@ -13,8 +13,8 @@ module SimpleNavigation
     let(:unpaid_item) { invoices_item.sub_navigation[:unpaid] }
 
     before do
-      Configuration.stub(:eval_config)
-      SimpleNavigation.stub(load_config: nil,
+      allow(Configuration).to receive(:eval_config)
+      allow(SimpleNavigation).to receive_messages(load_config: nil,
                             primary_navigation: navigation,
                             config_file?: true,
                             context_for_eval: controller)
@@ -356,7 +356,7 @@ module SimpleNavigation
             let(:item_container) { double(:container).as_null_object }
 
             before do
-              SimpleNavigation.stub(active_item_container_for: item_container)
+              allow(SimpleNavigation).to receive_messages(active_item_container_for: item_container)
             end
 
             it 'finds the selected sub navigation for the specified level' do
@@ -390,7 +390,7 @@ module SimpleNavigation
       end
 
       context 'when the :levels option is set' do
-        before { SimpleNavigation.stub(active_item_container_for: navigation) }
+        before { allow(SimpleNavigation).to receive_messages(active_item_container_for: navigation) }
 
         it 'treats it like the :level option' do
           expect(navigation).to receive(:render).with(level: 2)
@@ -407,7 +407,7 @@ module SimpleNavigation
       end
 
       context 'when no primary configuration is defined' do
-        before { SimpleNavigation.stub(primary_navigation: nil) }
+        before { allow(SimpleNavigation).to receive_messages(primary_navigation: nil) }
 
         it 'raises an exception' do
           expect{controller.render_navigation}.to raise_error
@@ -418,7 +418,7 @@ module SimpleNavigation
         let(:active_item_container) { double(:container).as_null_object }
 
         before do
-          SimpleNavigation.stub(active_item_container_for: active_item_container)
+          allow(SimpleNavigation).to receive_messages(active_item_container_for: active_item_container)
         end
 
         it 'calls render on the active_item_container' do
