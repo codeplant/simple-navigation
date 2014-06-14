@@ -229,7 +229,7 @@ module SimpleNavigation
 
         it "creates a new Item with the given params and block" do
           allow(Item).to receive(:new)
-                         .with(item_container, 'key', 'name', 'url', options, nil, &block)
+                         .with(item_container, 'key', 'name', 'url', options, &block)
                          .and_return(item)
           item_container.item('key', 'name', 'url', options, &block)
           expect(item_container.items).to include(item)
@@ -244,7 +244,7 @@ module SimpleNavigation
       context 'when no block is given' do
         it 'creates a new Item with the given params and no sub navigation' do
           allow(Item).to receive(:new)
-                         .with(item_container, 'key', 'name', 'url', options, nil)
+                         .with(item_container, 'key', 'name', 'url', options)
                          .and_return(item)
           item_container.item('key', 'name', 'url', options)
           expect(item_container.items).to include(item)
@@ -279,13 +279,13 @@ module SimpleNavigation
 
           context 'and options contains a negative condition' do
             it_behaves_like 'not adding the item to the list' do
-              let(:args) { ['key', 'name', { if: ->{ false }, option: true }] }
+              let(:args) { ['key', 'name', nil, { if: ->{ false }, option: true }] }
             end
           end
 
           context 'and options contains a positive condition' do
             it_behaves_like 'adding the item to the list' do
-              let(:args) { ['key', 'name', { if: ->{ true }, option: true }] }
+              let(:args) { ['key', 'name', nil, { if: ->{ true }, option: true }] }
             end
           end
         end
@@ -310,14 +310,26 @@ module SimpleNavigation
           end
         end
 
+        context 'when a frozen options hash is given' do
+          let(:options) do
+            { html: { id: 'test' } }.freeze
+          end
+
+          it 'does not raise an exception' do
+            expect{
+              item_container.item('key', 'name', 'url', options)
+            }.not_to raise_error
+          end
+        end
+
         describe "container options" do
           before do
             allow(item_container).to receive_messages(should_add_item?: add_item)
             item_container.item :key, 'name', 'url', options
           end
 
-          context 'when the :container_id option is specified' do
-            let(:options) {{ container_id: 'c_id' }}
+          context 'when the container :id option is specified' do
+            let(:options) {{ container: { id: 'c_id' } }}
 
             context 'and the item should be added' do
               let(:add_item) { true }
@@ -336,8 +348,8 @@ module SimpleNavigation
             end
           end
 
-          context 'when the :container_class option is specified' do
-            let(:options) {{ container_class: 'c_class' }}
+          context 'when the container :class option is specified' do
+            let(:options) {{ container: { class: 'c_class' } }}
 
             context 'and the item should be added' do
               let(:add_item) { true }
@@ -356,8 +368,8 @@ module SimpleNavigation
             end
           end
 
-          context 'when the :container_attributes option is specified' do
-            let(:options) {{ container_attributes: { option: true } }}
+          context 'when the container :attributes option is specified' do
+            let(:options) {{ container: { attributes: { option: true } } }}
 
             context 'and the item should be added' do
               let(:add_item) { true }
@@ -376,8 +388,8 @@ module SimpleNavigation
             end
           end
 
-          context 'when the :selected_class option is specified' do
-            let(:options) {{ selected_class: 'sel_class' }}
+          context 'when the container :selected_class option is specified' do
+            let(:options) {{ container: { selected_class: 'sel_class' } }}
 
             context 'and the item should be added' do
               let(:add_item) { true }
@@ -402,11 +414,6 @@ module SimpleNavigation
         context 'when an :if option is given' do
           let(:options) {{ if: proc{condition} }}
           let(:condition) { nil }
-
-          it 'removes :if from the options' do
-            item_container.item('key', 'name', 'url', options)
-            expect(options).not_to have_key(:if)
-          end
 
           context 'and it evals to true' do
             let(:condition) { true }
@@ -438,11 +445,6 @@ module SimpleNavigation
         context 'when an :unless option is given' do
           let(:options) {{ unless: proc{condition} }}
           let(:condition) { nil }
-
-          it "removes :unless from the options" do
-            item_container.item('key', 'name', 'url', options)
-            expect(options).not_to have_key(:unless)
-          end
 
           context 'and it evals to false' do
             let(:condition) { false }

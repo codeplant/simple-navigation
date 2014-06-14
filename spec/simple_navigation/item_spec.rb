@@ -5,13 +5,20 @@ module SimpleNavigation
     let!(:item_container) { ItemContainer.new }
 
     let(:adapter) { double(:adapter) }
-    let(:item_args) { [item_container, :my_key, 'name', url, options, items] }
+    let(:item_args) { [item_container, :my_key, 'name', url, options] }
     let(:item) { Item.new(*item_args) }
-    let(:items) { nil }
     let(:options) { Hash.new }
     let(:url) { 'url' }
 
     before { allow(SimpleNavigation).to receive_messages(adapter: adapter) }
+
+    describe '#highlights_on' do
+      let(:options) {{ highlights_on: :test }}
+
+      it "returns the item's highlights_on option" do
+        expect(item.highlights_on).to eq :test
+      end
+    end
 
     describe '#initialize' do
       context 'when there is a sub_navigation' do
@@ -40,6 +47,7 @@ module SimpleNavigation
         context 'when no block is given' do
           context 'and items are given' do
             let(:items) { [] }
+            let(:options) {{ items: items }}
 
             it_behaves_like 'creating sub navigation container'
 
@@ -63,22 +71,11 @@ module SimpleNavigation
         it "sets the item's method" do
           expect(item.method).to eq :delete
         end
-
-        it 'sets the html options without the method' do
-          meth = item.instance_variable_get(:@html_options).key?(:method)
-          expect(meth).to be false
-        end
       end
 
       context 'when no :method option is given' do
         it "sets the item's method to nil" do
           expect(item.method).to be_nil
-        end
-      end
-
-      context 'when no :highlights_on option is given' do
-        it "sets the item's highlights_on to nil" do
-          expect(item.highlights_on).to be_nil
         end
       end
 
@@ -89,10 +86,11 @@ module SimpleNavigation
         it "sets the item's highlights_on" do
           expect(item.highlights_on).to eq highlights_on
         end
+      end
 
-        it 'sets the html options without the method' do
-          html_options = item.instance_variable_get(:@html_options)
-          expect(html_options).not_to have_key(:highlights_on)
+      context 'when no :highlights_on option is given' do
+        it "sets the item's highlights_on to nil" do
+          expect(item.highlights_on).to be_nil
         end
       end
 
@@ -136,30 +134,34 @@ module SimpleNavigation
         end
       end
 
-      context 'when only options are given' do
-        let(:item_args) { [item_container, :my_key, 'name', { option: true }] }
-
-        it "sets the item's url to nil" do
-          expect(item.url).to be_nil
-        end
-
-        it "sets the item's html_options accordingly" do
-          html_options = item.instance_variable_get(:@html_options)
-          expect(html_options).to eq({ option: true })
-        end
-      end
-
       context 'when url and options are given' do
-        let(:options) {{ option: true }}
+        let(:options) {{ html: { option: true } }}
+
+        before { allow(adapter).to receive_messages(current_page?: false) }
 
         it "set the item's url accordingly" do
           expect(item.url).to eq 'url'
         end
 
         it "sets the item's html_options accordingly" do
-          html_options = item.instance_variable_get(:@html_options)
-          expect(html_options).to eq({ option: true })
+          expect(item.html_options).to include(option: true)
         end
+      end
+    end
+
+    describe '#link_html_options' do
+      let(:options) {{ link_html: :test }}
+
+      it "returns the item's link_html option" do
+        expect(item.link_html_options).to eq :test
+      end
+    end
+
+    describe '#method' do
+      let(:options) {{ method: :test }}
+
+      it "returns the item's method option" do
+        expect(item.method).to eq :test
       end
     end
 
@@ -403,7 +405,7 @@ module SimpleNavigation
       let(:selected_classes) { 'selected simple-navigation-active-leaf' }
 
       context 'when the :class option is given' do
-        let(:options) {{ class: 'my_class' }}
+        let(:options) {{ html: { class: 'my_class' } }}
 
         context 'and the item is selected' do
           before { allow(item).to receive_messages(selected?: true, selected_by_condition?: true) }
@@ -451,7 +453,7 @@ module SimpleNavigation
       end
 
       describe 'when the :id option is given' do
-        let(:options) {{ id: 'my_id' }}
+        let(:options) {{ html: { id: 'my_id' } }}
 
         before do
           allow(SimpleNavigation.config).to receive_messages(autogenerate_item_ids: generate_ids)

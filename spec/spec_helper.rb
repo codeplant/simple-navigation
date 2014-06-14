@@ -60,12 +60,12 @@ end
 # FIXME: adding the :link option for the list renderer messes up the other
 #        renderers
 def setup_items(container)
-  container.item :users, 'Users', '/users', id: 'users_id', link: { id: 'users_link_id' }
+  container.item :users, 'Users', '/users', html: { id: 'users_id' }, link_html: { id: 'users_link_id' }
   container.item :invoices, 'Invoices', '/invoices' do |invoices|
     invoices.item :paid, 'Paid', '/invoices/paid'
     invoices.item :unpaid, 'Unpaid', '/invoices/unpaid'
   end
-  container.item :accounts, 'Accounts', '/accounts', style: 'float:right', link: { style: 'float:left' }
+  container.item :accounts, 'Accounts', '/accounts', html: { style: 'float:right' }
   container.item :miscellany, 'Miscellany'
 
   container.items.each do |item|

@@ -95,7 +95,7 @@ module SimpleNavigation
           class: item.selected_class
         }.reject { |_, v| v.nil? }
 
-        link_options = item.html_options[:link]
+        link_options = item.link_html_options
 
         return special_options unless link_options
 

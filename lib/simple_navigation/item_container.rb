@@ -59,10 +59,9 @@ module SimpleNavigation
     #   set a regexp which is matched againstthe current URI.
     #
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
-    def item(key, name, url_or_options = {}, options_or_nil = {}, &block)
-      options = url_or_options.is_a?(Hash) ? url_or_options : options_or_nil
+    def item(key, name, url = nil, options = {}, &block)
       return unless should_add_item?(options)
-      item = Item.new(self, key, name, url_or_options, options_or_nil, nil, &block)
+      item = Item.new(self, key, name, url, options, &block)
       add_item item, options
     end
 
@@ -151,10 +150,11 @@ module SimpleNavigation
     end
 
     def modify_dom_attributes(options)
-      self.dom_attributes = options.delete(:container_attributes) { dom_attributes }
-      self.dom_class = options.delete(:container_class) { dom_class }
-      self.dom_id = options.delete(:container_id) { dom_id }
-      self.selected_class = options.delete(:selected_class) { selected_class }
+      return unless container_options = options[:container]
+      self.dom_attributes = container_options.fetch(:attributes) { dom_attributes }
+      self.dom_class = container_options.fetch(:class) { dom_class }
+      self.dom_id = container_options.fetch(:id) { dom_id }
+      self.selected_class = container_options.fetch(:selected_class) { selected_class }
     end
 
     # FIXME: raise an exception if :rederer is a symbol and it is not registred
@@ -175,8 +175,8 @@ module SimpleNavigation
     end
 
     def should_add_item?(options)
-      [options.delete(:if)].flatten.compact.all? { |m| evaluate_method(m) } &&
-      [options.delete(:unless)].flatten.compact.none? { |m| evaluate_method(m) }
+      [options[:if]].flatten.compact.all? { |m| evaluate_method(m) } &&
+      [options[:unless]].flatten.compact.none? { |m| evaluate_method(m) }
     end
 
     def evaluate_method(method)
