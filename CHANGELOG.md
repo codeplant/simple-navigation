@@ -2,6 +2,7 @@
 
 ## 4.0.0 (unreleased)
 
+* Creating an Item doesn't remove options anymore
 * Creating an Item no longer changed its container, only adding it to a continer
   does
 * `Item#autogenerate_item_ids?` has been removed
