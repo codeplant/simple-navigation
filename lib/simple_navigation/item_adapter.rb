@@ -48,7 +48,7 @@ module SimpleNavigation
 
     # Converts this Item into a SimpleNavigation::Item
     def to_simple_navigation_item(item_container)
-      SimpleNavigation::Item.new(item_container, key, name, url, options, items)
+      SimpleNavigation::Item.new(item_container, key, name, url, options)
     end
   end
 end

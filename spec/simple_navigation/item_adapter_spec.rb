@@ -87,7 +87,7 @@ module SimpleNavigation
 
         it 'creates an Item' do
           expect(Item).to receive(:new)
-                          .with(container, 'key', 'name', 'url', {}, nil)
+                          .with(container, 'key', 'name', 'url', {})
           item_adapter.to_simple_navigation_item(container)
         end
       end
@@ -172,12 +172,17 @@ module SimpleNavigation
       describe '#to_simple_navigation_item' do
         let(:container) { double(:container) }
 
-        before { item.merge(items: [], options: {}) }
+        before { item.merge(options: {}) }
+
+        it 'passes the right arguments to Item' do
+          expect(Item).to receive(:new)
+                          .with(container, 'key', 'name', 'url', {})
+          item_adapter.to_simple_navigation_item(container)
+        end
 
         it 'creates an Item' do
-          expect(Item).to receive(:new)
-                          .with(container, 'key', 'name', 'url', {}, nil)
-          item_adapter.to_simple_navigation_item(container)
+          created_item = item_adapter.to_simple_navigation_item(container)
+          expect(created_item).to be_an(Item)
         end
       end
     end
