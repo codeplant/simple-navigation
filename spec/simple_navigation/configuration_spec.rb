@@ -21,14 +21,14 @@ module SimpleNavigation
       end
 
       context "with default navigation context" do
-        it "should instance_eval the default config_file-string inside the context" do
+        it "calls instance_eval with the default config_file-string inside the context" do
           expect(eval_context).to receive(:instance_eval).with('default')
           Configuration.eval_config
         end
       end
 
       context 'with non default navigation context' do
-        it "should instance_eval the specified config_file-string inside the context" do
+        it "calls instance_eval with the specified config_file-string inside the context" do
           expect(eval_context).to receive(:instance_eval).with('my_context')
           Configuration.eval_config(:my_context)
         end
@@ -56,15 +56,15 @@ module SimpleNavigation
         expect(config.auto_highlight).to be true
       end
 
-      it 'should set the id_generator' do
-        expect(config.id_generator).not_to be_nil
+      it 'sets the id_generator to a callable object' do
+        expect(config.id_generator).to respond_to(:call)
       end
 
-      it 'should set the name_generator' do
-        expect(config.name_generator).not_to be_nil
+      it 'sets the name_generator to a callable object' do
+        expect(config.name_generator).to respond_to(:call)
       end
 
-      it 'should set the consider_item_names_as_safe to false' do
+      it 'sets the consider_item_names_as_safe to false' do
         expect(config.consider_item_names_as_safe).to be false
       end
     end
@@ -144,7 +144,7 @@ module SimpleNavigation
       end
 
       context 'when primary_nav is not set' do
-        it "should return false if no primary_nav is set" do
+        it 'returns false if no primary_nav is set' do
           config.instance_variable_set(:@primary_navigation, nil)
           expect(config).not_to be_loaded
         end
