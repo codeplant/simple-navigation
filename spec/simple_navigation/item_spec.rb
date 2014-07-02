@@ -144,6 +144,9 @@ module SimpleNavigation
         end
 
         it "sets the item's html_options accordingly" do
+          allow(item).to \
+            receive_messages(selected_by_subnav?: false,
+                             selected_by_condition?: false)
           expect(item.html_options).to include(option: true)
         end
       end
@@ -198,178 +201,138 @@ module SimpleNavigation
     end
 
     describe '#selected?' do
-      context "when the item isn't selected" do
-        before { allow(adapter).to receive_messages(current_page?: false) }
+      context 'when the item has no :highlights_on option' do
+        before { allow(SimpleNavigation).to receive_messages(config: config) }
 
-        it 'returns false' do
-          expect(item).not_to be_selected
-        end
-      end
-
-      describe 'selectible by condition' do
-        let(:current_url) { '' }
-
-        before { allow(adapter).to receive_messages(request_uri: current_url) }
-
-        context 'when the :highlights_on option is set' do
-          before { allow(item).to receive_messages(highlights_on: /^\/matching/) }
-
-          context 'and :highlights_on is a regexp' do
-            context 'and it matches the current url' do
-              let(:current_url) { '/matching_url' }
-
-              it 'returns true' do
-                expect(item.send(:selected_by_condition?)).to be_truthy
-              end
-            end
-
-            context "and it doesn't match current url" do
-              let(:current_url) { '/other_url' }
-
-              it 'returns false' do
-                expect(item.send(:selected_by_condition?)).to be_falsey
-              end
-            end
-          end
-
-          context 'and :highlights_on is a lambda' do
-            context 'and it is truthy' do
-              before { allow(item).to receive_messages(highlights_on: ->{ true }) }
-
-              it 'returns true' do
-                expect(item.send(:selected_by_condition?)).to be true
-              end
-            end
-
-            context 'falsey lambda results in no selection' do
-              before { allow(item).to receive_messages(highlights_on: ->{ false }) }
-
-              it 'returns false' do
-                expect(item.send(:selected_by_condition?)).to be false
-              end
-            end
-          end
-
-          context 'and :highlights_on is :subpath' do
-            before { allow(item).to receive_messages(url: '/path', highlights_on: :subpath) }
-
-            context "and the current url is a sub path of the item's url" do
-              let(:current_url) { '/path/sub-path' }
-
-              it 'returns true' do
-                expect(item.send(:selected_by_condition?)).to be true
-              end
-            end
-
-            context "and the current url starts with item's url" do
-              let(:current_url) { '/path_group/id' }
-
-              it 'returns false' do
-                expect(item.send(:selected_by_condition?)).to be false
-              end
-            end
-
-            context "and the current url is totally different from the item's url" do
-              let(:current_url) { '/other_path/id' }
-
-              it 'returns false' do
-                expect(item.send(:selected_by_condition?)).to be false
-              end
-            end
-          end
-
-          context 'when :highlights_on something else' do
-            before { allow(item).to receive_messages(highlights_on: 'nothing') }
-
-            it 'raises an exception' do
-              expect{ item.selected? }.to raise_error
-            end
-          end
-        end
-
-        context 'when :auto_highlight is true' do
-          before { allow(item).to receive_messages(auto_highlight?: true) }
-
-          context 'and root path matches' do
-            before { allow(item).to receive_messages(root_path_match?: true) }
-
-            it 'returns true' do
-              expect(item.send(:selected_by_condition?)).to be true
-            end
-          end
-
-          context "and root path doesn't match" do
-            before { allow(item).to receive_messages(root_path_match?: false) }
-
-            context "and the current url matches the item's url" do
-              let(:url) { 'url#anchor' }
-
-              before { allow(adapter).to receive_messages(current_page?: true) }
-
-              it 'returns true' do
-                expect(item.send(:selected_by_condition?)).to be true
-              end
-
-              context 'when url is nil' do
-                let(:url) { nil }
-
-                it 'returns false' do
-                  expect(item.selected?).to be_falsey
-                end
-              end
-            end
-
-            context "and the current url doesn't match the item's url" do
-              before { allow(adapter).to receive_messages(current_page?: false) }
-
-              it 'returns false' do
-                expect(item.send(:selected_by_condition?)).to be false
-              end
-            end
-          end
-        end
-
-        context 'when :auto_highlight is false' do
-          before { allow(item).to receive_messages(auto_highlight?: false) }
+        context 'and auto highlighting is off' do
+          let(:config) { double(:config, auto_highlight: false) }
 
           it 'returns false' do
-            expect(item.send(:selected_by_condition?)).to be false
+            expect(item.selected?).to be false
+          end
+        end
+
+        context 'and auto highlighting is on' do
+          let(:config) { double(:config, auto_highlight: true) }
+
+          context "and the current url matches the item's url" do
+            before { allow(adapter).to receive_messages(current_page?: true) }
+
+            it 'returns true' do
+              expect(item.selected?).to be true
+            end
+          end
+
+          context "and the current url does not match the item's url" do
+            let(:config) do
+              double(:config, auto_highlight: false, highlight_on_subpath: false)
+            end
+
+            before { allow(adapter).to receive_messages(current_page?: false) }
+
+            it 'returns false' do
+              expect(item.selected?).to be false
+            end
+          end
+
+          context 'and highlights_on_subpath is on' do
+            let(:config) do
+              double(:config, auto_highlight: true, highlight_on_subpath: true)
+            end
+
+            context "and the current url is a sub path of the item's url" do
+              before do
+                allow(adapter).to \
+                  receive_messages(current_page?: false, request_uri: 'url/test')
+              end
+
+              it 'returns true' do
+                expect(item.selected?).to be true
+              end
+            end
+
+            context "and the current url is not a sub path of the item's url" do
+              before do
+                allow(adapter).to \
+                  receive_messages(current_page?: false, request_uri: 'other/test')
+              end
+
+              it 'returns false' do
+                expect(item.selected?).to be false
+              end
+            end
           end
         end
       end
 
-      describe 'selectible by sub navigation' do
-        before { allow(item).to receive_messages(sub_navigation: sub_navigation) }
+      context 'when the item has a :highlights_on option' do
+        context 'and it is a regular expression' do
+          before { allow(adapter).to receive_messages(request_uri: '/test') }
 
-        context 'the item has a sub_navigation' do
-          let(:sub_navigation) { double(:sub_navigation) }
-
-          context 'and an item of the sub_navigation is selected' do
-            before do
-              allow(sub_navigation).to receive_messages(selected?: true, selected_by_condition?: true)
-            end
+          context 'and the current url matches the expression' do
+            let(:options) {{ highlights_on: /test/ }}
 
             it 'returns true' do
-              expect(item.send(:selected_by_subnav?)).to be true
+              expect(item.selected?).to be true
             end
           end
 
-          context 'and no item of the sub_navigation is selected' do
+          context 'and the current url does not match the expression' do
+            let(:options) {{ highlights_on: /other/ }}
+
+            it 'returns false' do
+              expect(item.selected?).to be false
+            end
+          end
+        end
+
+        context 'and it is a callable object' do
+          context 'and the call returns true' do
+            let(:options) {{ highlights_on: -> { true } }}
+
+            it 'returns true' do
+              expect(item.selected?).to be true
+            end
+          end
+
+          context 'and the call returns false' do
+            let(:options) {{ highlights_on: -> { false } }}
+
+            it 'returns false' do
+              expect(item.selected?).to be false
+            end
+          end
+        end
+
+        context 'and it is the :subpath symbol' do
+          let(:options) {{ highlights_on: :subpath }}
+
+          context "and the current url is a sub path of the item's url" do
             before do
-              allow(sub_navigation).to receive_messages(selected?: false, selected_by_condition?: true)
+              allow(adapter).to receive_messages(request_uri: 'url/test')
+            end
+
+            it 'returns true' do
+              expect(item.selected?).to be true
+            end
+          end
+
+          context "and the current url is not a sub path of the item's url" do
+            before do
+              allow(adapter).to receive_messages(request_uri: 'other/test')
             end
 
             it 'returns false' do
-              expect(item.send(:selected_by_subnav?)).to be false
+              expect(item.selected?).to be false
             end
           end
         end
 
-        context "when the item doesn't have any sub_navigation" do
-          let(:sub_navigation) { nil }
+        context 'and it is non usable' do
+          let(:options) {{ highlights_on: :hello }}
 
-          it 'returns false' do
-            expect(item.send(:selected_by_subnav?)).to be_falsey
+          it 'raises an exception' do
+            expect{ item.selected? }.to raise_error
           end
         end
       end

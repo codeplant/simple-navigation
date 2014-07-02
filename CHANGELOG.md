@@ -2,6 +2,7 @@
 
 ## 4.0.0 (unreleased)
 
+* It's now possible to set a global `highlight_on_subpath` option instead of adding it to every item
 * Creating an Item doesn't remove options anymore
 * Creating an Item no longer changed its container, only adding it to a continer
   does

@@ -28,7 +28,7 @@ module SimpleNavigation
     #
     def name(options = {})
       options = { apply_generator: true }.merge(options)
-      if (options[:apply_generator])
+      if options[:apply_generator]
         config.name_generator.call(@name, self)
       else
         @name
@@ -142,22 +142,29 @@ module SimpleNavigation
     end
 
     def selected_by_autohighlight?
-      auto_highlight? &&
-      (root_path_match? ||
-       (url_without_anchor &&
-        SimpleNavigation.current_page?(url_without_anchor)))
+      return false unless auto_highlight?
+      root_path_match? ||
+      SimpleNavigation.current_page?(url_without_anchor) ||
+      autohighlight_by_subpath?
+    end
+
+    def autohighlight_by_subpath?
+      SimpleNavigation.config.highlight_on_subpath && selected_by_subpath?
     end
 
     def selected_by_highlights_on?
       case highlights_on
-      when Regexp then request_uri =~ highlights_on
+      when Regexp then !!(request_uri =~ highlights_on)
       when Proc then highlights_on.call
-      when :subpath
-        escaped_url = Regexp.escape(url_without_anchor)
-        !!(request_uri =~ /^#{escaped_url}(\/|$|\?)/i)
+      when :subpath then selected_by_subpath?
       else
         fail ArgumentError, ':highlights_on must be a Regexp, Proc or :subpath'
       end
+    end
+
+    def selected_by_subpath?
+      escaped_url = Regexp.escape(url_without_anchor)
+      !!(request_uri =~ /^#{escaped_url}(\/|$|\?)/i)
     end
 
     def setup_sub_navigation(items = nil, &sub_nav_block)

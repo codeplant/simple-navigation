@@ -67,6 +67,10 @@ module SimpleNavigation
       it 'sets the consider_item_names_as_safe to false' do
         expect(config.consider_item_names_as_safe).to be false
       end
+
+      it 'sets highlights_on_subpath to false as default' do
+        expect(config.highlight_on_subpath).to be false
+      end
     end
 
     describe '#items' do
