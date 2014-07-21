@@ -198,6 +198,15 @@ module SimpleNavigation
           expect(item.name(apply_generator: false)).to eq 'name'
         end
       end
+
+      context 'when block is given' do
+        it "returns the item's name that is defined in block" do
+          local_item_args = [item_container, :my_key, -> { "Name in block" }, url, options]
+          item = Item.new(*local_item_args)
+
+          expect(item.name).to include 'Name in block'
+        end
+      end
     end
 
     describe '#selected?' do

@@ -14,7 +14,7 @@ module SimpleNavigation
     def initialize(container, key, name, url = nil, opts = {}, &sub_nav_block)
       self.container = container
       self.key = key
-      self.name = name
+      self.name = name.respond_to?(:call) ? name.call : name
       self.url =  url.respond_to?(:call) ? url.call : url
       self.options = opts
 
