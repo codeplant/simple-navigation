@@ -199,11 +199,10 @@ module SimpleNavigation
         end
       end
 
-      context 'when block is given' do
-        it "returns the item's name that is defined in block" do
-          local_item_args = [item_container, :my_key, -> { "Name in block" }, url, options]
-          item = Item.new(*local_item_args)
+      context 'when a block is given' do
+        let(:item_args) { [item_container, :my_key, -> { 'Name in block' }, url, options] }
 
+        it "returns the item's name that is defined in the block" do
           expect(item.name).to include 'Name in block'
         end
       end
