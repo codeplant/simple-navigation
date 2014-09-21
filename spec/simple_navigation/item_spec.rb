@@ -168,6 +168,55 @@ module SimpleNavigation
       end
     end
 
+    describe '#fetch', focus: true do
+      let(:bin) { setup_navigation('main', 'main_css') }
+
+      context 'when key is one-level' do
+        it 'retrieves the item' do
+          expect(bin.fetch('invoices')).to eq bin[:invoices]
+        end
+      end
+
+      context 'when the key is multiple-levels' do
+        it 'retrieves the item' do
+          expect(bin.fetch('invoices.unpaid')).to eq bin[:invoices].sub_navigation[:unpaid]
+        end
+      end
+
+      context 'when a one-level key is invalid' do
+        it 'returns nil' do
+          expect(bin.fetch('invoicing')).to be_nil
+        end
+      end
+
+      context 'when a multiple-level key is invalid' do
+        it 'returns nil' do
+          expect(bin.fetch('invoices.payable')).to be_nil
+        end
+      end
+    end
+
+    describe '#store' do
+      let(:item_to_add) { ItemAdapter.new({key: :bar, name:'Bar', url:'#'}) }
+      let(:bin) { setup_navigation('main', 'main_css') }
+
+      context 'when key is one level' do
+        it 'adds the item using the key' do
+          puts item.store('my_key', item_to_add)
+          expect(item.sub_navigation[:bar].name).to eq 'Bar'
+        end
+      end
+
+      context 'when key is multiple levels' do
+        let(:added_item) { bin[:invoices].sub_navigation[:paid].sub_navigation[:bar] }
+
+        it 'adds the item using a compound key' do
+          bin.store('invoices.paid', item_to_add)
+          expect(added_item.name).to eq 'Bar'
+        end
+      end
+    end
+
     describe '#name' do
       before do
         allow(SimpleNavigation.config).to \
