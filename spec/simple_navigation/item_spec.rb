@@ -168,37 +168,48 @@ module SimpleNavigation
       end
     end
 
-    describe '#fetch', focus: true do
-      let(:bin) { setup_navigation('main', 'main_css') }
+    describe '#fetch' do
+      let(:bin)      { setup_navigation('main', 'main_css') }
+      let(:invoices) { bin[:invoices] }
+      let(:unpaid)   { invoices.sub_navigation[:unpaid] }
 
       context 'when key is one-level' do
         it 'retrieves the item' do
-          expect(bin.fetch('invoices')).to eq bin[:invoices]
+          expect(invoices.fetch(:invoices)).to eq invoices
         end
       end
 
       context 'when the key is multiple-levels' do
         it 'retrieves the item' do
-          expect(bin.fetch('invoices.unpaid')).to eq bin[:invoices].sub_navigation[:unpaid]
+          expect(invoices.fetch('invoices.unpaid')).to eq unpaid
+        end
+      end
+
+      context 'when a block is supplied' do
+        it 'calls the block with the item' do
+          expect{ |blk|
+            invoices.fetch('invoices.unpaid', &blk)
+          }.to yield_with_args(unpaid)
         end
       end
 
       context 'when a one-level key is invalid' do
         it 'returns nil' do
-          expect(bin.fetch('invoicing')).to be_nil
+          expect(invoices.fetch(:payable)).to be_nil
         end
       end
 
       context 'when a multiple-level key is invalid' do
         it 'returns nil' do
-          expect(bin.fetch('invoices.payable')).to be_nil
+          expect(invoices.fetch('payable.overdue')).to be_nil
         end
       end
     end
 
     describe '#store' do
       let(:item_to_add) { ItemAdapter.new({key: :bar, name:'Bar', url:'#'}) }
-      let(:bin) { setup_navigation('main', 'main_css') }
+      let(:bin)         { setup_navigation('main', 'main_css') }
+      let(:invoices)    { bin[:invoices] }
 
       context 'when key is one level' do
         it 'adds the item using the key' do
@@ -208,10 +219,10 @@ module SimpleNavigation
       end
 
       context 'when key is multiple levels' do
-        let(:added_item) { bin[:invoices].sub_navigation[:paid].sub_navigation[:bar] }
+        let(:added_item) { invoices.sub_navigation[:paid].sub_navigation[:bar] }
 
         it 'adds the item using a compound key' do
-          bin.store('invoices.paid', item_to_add)
+          invoices.store('invoices.paid', item_to_add)
           expect(added_item.name).to eq 'Bar'
         end
       end
