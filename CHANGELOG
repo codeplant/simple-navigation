@@ -1,3 +1,7 @@
+*3.14.0
+
+* renamed PADRINO_ENV to RACK_ENV for Padrino adapter. Thanks to Slava Ptsarev.
+
 *3.13.0
 
 * consider_item_names_as_safe is now false by default. Removed deprecation warning
