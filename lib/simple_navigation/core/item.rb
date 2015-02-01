@@ -6,7 +6,8 @@ module SimpleNavigation
                 :key,
                 :method,
                 :sub_navigation,
-                :url
+                :url,
+                :include_query
 
     attr_writer :html_options
 
@@ -122,6 +123,11 @@ module SimpleNavigation
     def url_without_anchor
       url && url.split('#').first
     end
+    
+    def clean_url
+      url = url_without_anchor
+      include_query ? url : url.split('?').first
+    end
 
     private
 
@@ -129,13 +135,14 @@ module SimpleNavigation
 
     attr_writer :highlights_on,
                 :sub_navigation,
-                :url
+                :url,
+                :include_query
 
     def selected_by_autohighlight?
       auto_highlight? &&
       (root_path_match? ||
-       (url_without_anchor &&
-        SimpleNavigation.current_page?(url_without_anchor)))
+       (clean_url &&
+        SimpleNavigation.current_page?(clean_url)))
     end
 
     def selected_by_highlights_on?
@@ -145,7 +152,7 @@ module SimpleNavigation
       when Regexp then SimpleNavigation.request_uri =~ highlights_on
       when Proc then highlights_on.call
       when :subpath
-        escaped_url = Regexp.escape(url_without_anchor)
+        escaped_url = Regexp.escape(clean_url)
         !!(SimpleNavigation.request_uri =~ /^#{escaped_url}(\/|$|\?)/i)
       else
         fail ArgumentError, ':highlights_on must be a Regexp, Proc or :subpath'
@@ -183,6 +190,7 @@ module SimpleNavigation
 
       options ||= options_or_nil
       self.highlights_on = options.delete(:highlights_on)
+      self.include_query = options.delete(:include_query)
       self.html_options = options
     end
 
