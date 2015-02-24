@@ -8,7 +8,7 @@ module SimpleNavigation
 
         let(:item) { nil }
         let(:options) {{ level: :all }}
-        let(:output) { HTML::Document.new(raw_output).root }
+        let(:output) { Loofah.document(raw_output) }
         let(:raw_output) { renderer.render(navigation) }
         let(:renderer) { Links.new(options) }
 
@@ -31,7 +31,7 @@ module SimpleNavigation
         end
 
         it "renders the 'a' tags with the corresponding item's :html_options" do
-          expect(output).to have_css('a[style=float:right]')
+          expect(output).to have_css('a[style="float:right"]')
         end
 
         context 'when an item has a specified id' do
