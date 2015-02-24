@@ -7,7 +7,7 @@ module SimpleNavigation
 
       let(:item) { nil }
       let(:options) {{ level: :all }}
-      let(:output) { HTML::Document.new(raw_output).root }
+      let(:output) { Loofah.document(raw_output) }
       let(:raw_output) { renderer.render(navigation) }
       let(:renderer) { Breadcrumbs.new(options) }
 

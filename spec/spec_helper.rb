@@ -1,6 +1,8 @@
 require 'initializers/have_css_matcher'
 require 'initializers/memfs'
+require 'rails'
 require 'action_controller'
+require 'rails-dom-testing'
 require 'coveralls'
 require 'action_view'
 

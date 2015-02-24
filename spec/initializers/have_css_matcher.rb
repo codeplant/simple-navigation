@@ -1,10 +1,10 @@
 RSpec::Matchers.define :have_css do |expected, times|
   match do |actual|
-    selector = HTML::Selector.new(expected).select(actual)
+    selection = HTMLSelector.new(Array(expected), actual).select
     if times
-      expect(selector.size).to eq times
+      expect(selection.size).to eq times
     else
-      expect(selector.size).to be >= 1
+      expect(selection.size).to be >= 1
     end
   end
 
