@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe SimpleNavigation do
   before { subject.config_file_path = 'path_to_config' }
 

@@ -1,33 +1,26 @@
 require 'initializers/have_css_matcher'
 require 'initializers/memfs'
-require 'action_controller'
-require 'coveralls'
-require 'action_view'
+require 'initializers/coveralls'
+require 'initializers/rails'
+require 'initializers/rspec'
+require 'capybara/rspec'
 
-Coveralls.wear!
+require 'bundler/setup'
+Bundler.require
 
-RSpec.configure do |config|
-  config.expect_with(:rspec) { |c| c.syntax = :expect }
-  config.order = :random
+if defined? Rails
+  require 'fake_app/rails_app'
+  require 'rspec/rails'
 
-  config.before do
-    SimpleNavigation.config_files.clear
-    setup_adapter_for :rails
-  end
-end
+  Capybara.app = RailsApp::Application
 
-unless defined?(Rails)
-  module ::Rails
-    def self.root; './'; end
-    def self.env; 'test'; end
-
-    class Railtie
-      def self.initializer(*args); end
+  RSpec.configure do |config|
+    config.before do
+      SimpleNavigation.config_files.clear
+      setup_adapter_for :rails
     end
   end
 end
-
-require 'simple_navigation'
 
 def setup_adapter_for(framework, context = double(:context))
   if framework == :rails

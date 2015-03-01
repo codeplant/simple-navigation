@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module SimpleNavigation
   describe Configuration do
     subject(:config) { Configuration.instance }

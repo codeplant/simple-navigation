@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module SimpleNavigation
   module Adapters
     describe Padrino do

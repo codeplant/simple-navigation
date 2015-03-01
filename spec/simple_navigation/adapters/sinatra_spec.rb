@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe SimpleNavigation::Adapters::Sinatra do
   let(:adapter) { SimpleNavigation::Adapters::Sinatra.new(context) }
   let(:context) { double(:context) }

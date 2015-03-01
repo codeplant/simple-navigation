@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module SimpleNavigation
   describe ItemAdapter do
     let(:item_adapter) { ItemAdapter.new(item) }

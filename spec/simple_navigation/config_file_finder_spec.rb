@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'fileutils'
 require 'simple_navigation/config_file_finder'
 

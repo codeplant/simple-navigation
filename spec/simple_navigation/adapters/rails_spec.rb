@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module SimpleNavigation
   module Adapters
     describe Rails do
@@ -15,7 +13,8 @@ module SimpleNavigation
         before { allow(action_controller).to receive(:include) }
 
         it 'calls set_env' do
-          expect(simple_navigation).to receive(:set_env).with('./', 'test')
+          app_path = RailsApp::Application.root
+          expect(simple_navigation).to receive(:set_env).with(app_path, 'test')
           simple_navigation.register
         end
 

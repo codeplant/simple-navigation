@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module SimpleNavigation
   describe Helpers do
     subject(:controller) { test_controller_class.new }

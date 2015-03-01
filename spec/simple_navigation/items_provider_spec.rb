@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module SimpleNavigation
   describe ItemsProvider do
     let(:items_provider) { ItemsProvider.new(provider) }

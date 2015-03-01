@@ -149,7 +149,7 @@ module SimpleNavigation
     end
 
     def autohighlight_by_subpath?
-      SimpleNavigation.config.highlight_on_subpath && selected_by_subpath?
+      config.highlight_on_subpath && selected_by_subpath?
     end
 
     def selected_by_highlights_on?

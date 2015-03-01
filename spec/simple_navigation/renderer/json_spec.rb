@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module SimpleNavigation
   module Renderer
     describe Json do

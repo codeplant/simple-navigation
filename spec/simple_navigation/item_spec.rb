@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module SimpleNavigation
   describe Item do
     let!(:item_container) { ItemContainer.new }
