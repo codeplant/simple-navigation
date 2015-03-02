@@ -3,9 +3,8 @@ require 'cgi'
 module SimpleNavigation
   module Adapters
     class Sinatra < Base
-      def self.register
-        SimpleNavigation.set_env(sinatra_root, sinatra_environment)
-        ::Sinatra::Application.send(:helpers, SimpleNavigation::Helpers)
+      def self.register(app)
+        SimpleNavigation.set_env(app.root, app.environment)
       end
 
       def initialize(context)
@@ -49,14 +48,6 @@ module SimpleNavigation
       end
 
       protected
-
-      def self.sinatra_root
-        ::Sinatra::Application.root
-      end
-
-      def self.sinatra_environment
-        ::Sinatra::Application.environment
-      end
 
       def to_attributes(options)
         options.map { |k, v| v.nil? ? '' : " #{k}='#{v}'" }.join
