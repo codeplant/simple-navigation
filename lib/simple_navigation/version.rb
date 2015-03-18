@@ -1,3 +1,3 @@
 module SimpleNavigation
-  VERSION = '3.13.0'
+  VERSION = '3.15.0'
 end
