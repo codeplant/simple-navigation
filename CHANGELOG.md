@@ -2,6 +2,7 @@
 
 ## 4.0.0 (unreleased)
 
+* Remove dependency on classic-style Sinatra applications and enable use with modular-style apps. Credits to Stefan Kolb.
 * Item can now receive a block as `name`
 * It's now possible to set a global `highlight_on_subpath` option instead of adding it to every item
 * Creating an Item doesn't remove options anymore
@@ -12,10 +13,6 @@
   removed
 * `ConfigFileFinder` and `ConfigFile` handle the configuration logic
 * File organization was been changed to reflect the Ruby namespacing
-
-## 3.15.0
-
-* Remove dependency on classic-style Sinatra applications and enable use with modular-style apps
 
 ## 3.13.0
 
