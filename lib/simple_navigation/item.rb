@@ -119,10 +119,6 @@ module SimpleNavigation
       config.auto_highlight && container.auto_highlight
     end
 
-    def url_without_anchor
-      url && url.split('#').first
-    end
-
     private
 
     attr_accessor :container,
@@ -141,10 +137,24 @@ module SimpleNavigation
       SimpleNavigation.request_uri
     end
 
+    def remove_anchors(url_with_anchors)
+      url_with_anchors && url_with_anchors.split('#').first
+    end
+    
+    def remove_query_params(url_with_params)
+      url_with_params && url_with_params.split('?').first
+    end
+    
+    def url_for_autohighlight
+      relevant_url = remove_anchors(self.url) if config.ignore_anchors_on_auto_highlight
+      relevant_url = remove_query_params(relevant_url) if config.ignore_query_params_on_auto_highlight
+      relevant_url
+    end
+
     def selected_by_autohighlight?
       return false unless auto_highlight?
       root_path_match? ||
-      SimpleNavigation.current_page?(url_without_anchor) ||
+      SimpleNavigation.current_page?(url_for_autohighlight) ||
       autohighlight_by_subpath?
     end
 
@@ -163,8 +173,8 @@ module SimpleNavigation
     end
 
     def selected_by_subpath?
-      escaped_url = Regexp.escape(url_without_anchor)
-      !!(request_uri =~ /^#{escaped_url}(\/|$|\?)/i)
+      escaped_url = Regexp.escape(url_for_autohighlight)
+      !!(request_uri =~ /^#{escaped_url}(\/|$||\?)/i)
     end
 
     def setup_sub_navigation(items = nil, &sub_nav_block)

@@ -8,7 +8,9 @@ module SimpleNavigation
     attr_accessor :autogenerate_item_ids,
                   :auto_highlight,
                   :consider_item_names_as_safe,
-                  :highlight_on_subpath
+                  :highlight_on_subpath,
+                  :ignore_query_params_on_auto_highlight,
+                  :ignore_anchors_on_auto_highlight
 
     attr_reader :primary_navigation
 
@@ -35,6 +37,8 @@ module SimpleNavigation
       @auto_highlight = true
       @consider_item_names_as_safe = false
       @highlight_on_subpath = false
+      @ignore_anchors_on_auto_highlight = true
+      @ignore_query_params_on_auto_highlight = true
     end
 
     def active_leaf_class

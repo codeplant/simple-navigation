@@ -219,7 +219,7 @@ module SimpleNavigation
         end
 
         context 'and auto highlighting is on' do
-          let(:config) { double(:config, auto_highlight: true) }
+          let(:config) { double(:config, ignore_query_params_on_auto_highlight: true, ignore_anchors_on_auto_highlight: true, auto_highlight: true) }
 
           context "and the current url matches the item's url" do
             before { allow(adapter).to receive_messages(current_page?: true) }
@@ -243,7 +243,7 @@ module SimpleNavigation
 
           context 'and highlights_on_subpath is on' do
             let(:config) do
-              double(:config, auto_highlight: true, highlight_on_subpath: true)
+              double(:config, auto_highlight: true, highlight_on_subpath: true, ignore_query_params_on_auto_highlight: true, ignore_anchors_on_auto_highlight: true)
             end
 
             context "and the current url is a sub path of the item's url" do

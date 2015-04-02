@@ -69,6 +69,14 @@ module SimpleNavigation
       it 'sets highlights_on_subpath to false as default' do
         expect(config.highlight_on_subpath).to be false
       end
+      
+      it 'sets ignore_query_params_on_auto_highlight to true as default' do
+        expect(config.ignore_query_params_on_auto_highlight).to be true
+      end
+
+      it 'sets ignore_anchors_on_auto_highlight to true as default' do
+        expect(config.ignore_anchors_on_auto_highlight).to be true
+      end
     end
 
     describe '#items' do
