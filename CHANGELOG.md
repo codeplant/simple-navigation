@@ -1,12 +1,13 @@
 # Changelog
 
-## 4.0.0 (unreleased)
+## 4.0.0
 
+* added two new configuration options ignore_query_params_on_auto_highlight and ignore_anchors_on_auto_highlight
 * Remove dependency on classic-style Sinatra applications and enable use with modular-style apps. Credits to Stefan Kolb.
 * Item can now receive a block as `name`
 * It's now possible to set a global `highlight_on_subpath` option instead of adding it to every item
 * Creating an Item doesn't remove options anymore
-* Creating an Item no longer changed its container, only adding it to a continer
+* Creating an Item no longer changed its container, only adding it to a container
   does
 * `Item#autogenerate_item_ids?` has been removed
 * `SN.config_file_name`, `SN.config_file` and `SN.config_file?` have been
