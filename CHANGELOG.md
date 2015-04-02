@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.1 
+
+* fixed padrino adapter
+
 ## 4.0.0
 
 * added two new configuration options ignore_query_params_on_auto_highlight and ignore_anchors_on_auto_highlight
