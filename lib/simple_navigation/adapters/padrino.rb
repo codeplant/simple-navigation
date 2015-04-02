@@ -1,8 +1,8 @@
 module SimpleNavigation
   module Adapters
     class Padrino < Sinatra
-      def self.register
-        SimpleNavigation.set_env(PADRINO_ROOT, RACK_ENV)
+      def self.register(app)
+        SimpleNavigation.set_env(::Padrino.root, ::Padrino.env)
         ::Padrino::Application.send(:helpers, SimpleNavigation::Helpers)
       end
 
