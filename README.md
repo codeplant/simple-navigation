@@ -5,7 +5,7 @@
 [![Code Climate](https://codeclimate.com/github/codeplant/simple-navigation.png)](https://codeclimate.com/github/codeplant/simple-navigation)
 [![Coverage Status](https://coveralls.io/repos/codeplant/simple-navigation/badge.png)](https://coveralls.io/r/codeplant/simple-navigation)
 
-Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Rails 2, Rails 3, Rails 4, Sinatra or Padrino applications. It runs with all ruby versions (including ruby 2.0).
+Simple Navigation is a ruby library for creating navigations (with multiple levels) for your Rails 2, Rails 3, Rails 4, Sinatra or Padrino applications. It runs with all ruby versions (including ruby 2.x).
 
 ## Documentation
 
