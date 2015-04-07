@@ -38,7 +38,7 @@ module SimpleNavigation
       end
 
       def current_page?(url)
-        template && template.current_page?(url)
+        url && template && template.current_page?(url)
       end
 
       def link_to(name, url, options = {})

@@ -140,11 +140,11 @@ module SimpleNavigation
     def remove_anchors(url_with_anchors)
       url_with_anchors && url_with_anchors.split('#').first
     end
-    
+
     def remove_query_params(url_with_params)
       url_with_params && url_with_params.split('?').first
     end
-    
+
     def url_for_autohighlight
       relevant_url = remove_anchors(self.url) if config.ignore_anchors_on_auto_highlight
       relevant_url = remove_query_params(relevant_url) if config.ignore_query_params_on_auto_highlight

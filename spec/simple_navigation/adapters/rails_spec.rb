@@ -206,7 +206,13 @@ module SimpleNavigation
           before { allow(adapter).to receive_messages(template: nil) }
 
           it 'returns false' do
-            expect(adapter).not_to be_current_page(:page)
+            expect(adapter.current_page?(:page)).to be_falsey
+          end
+        end
+
+        context 'when the given url is nil' do
+          it 'returns false' do
+            expect(adapter.current_page?(nil)).to be_falsey
           end
         end
       end
