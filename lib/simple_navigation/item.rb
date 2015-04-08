@@ -153,8 +153,9 @@ module SimpleNavigation
 
     def selected_by_autohighlight?
       return false unless auto_highlight?
+
       root_path_match? ||
-      SimpleNavigation.current_page?(url_for_autohighlight) ||
+      (url_for_autohighlight && SimpleNavigation.current_page?(url_for_autohighlight)) ||
       autohighlight_by_subpath?
     end
 
