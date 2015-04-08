@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.2
+
+* fixing current_page? when url is nil 
+
 ## 4.0.1 
 
 * fixed padrino adapter
