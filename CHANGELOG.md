@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.3
+
+* Fix #180 Check URL before invoking current_page?
+
 ## 4.0.2
 
 * fixing current_page? when url is nil 
