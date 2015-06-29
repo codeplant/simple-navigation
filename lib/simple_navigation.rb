@@ -12,7 +12,7 @@ require 'simple_navigation/items_provider'
 require 'simple_navigation/renderer'
 require 'simple_navigation/adapters'
 require 'simple_navigation/config_file_finder'
-require 'simple_navigation/railtie' if defined?(::Rails)
+require 'simple_navigation/railtie' if defined?(::Rails::Railtie)
 
 require 'forwardable'
 
