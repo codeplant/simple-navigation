@@ -29,11 +29,34 @@ Don't hesitate to come talk on the [project's group](http://groups.google.com/gr
 
 ## Contributing
 
-1. Fork it (https://github.com/codeplant/simple-navigation/fork)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+Fork, fix, then send a Pull Request.
+
+To run the test suite locally against all supported frameworks:
+
+    % bundle install
+    % rake spec:all
+
+To target the test suite against one framework:
+
+    % rake spec:rails-4-2-stable
+
+You can find a list of supported spec tasks by running rake -T. You may also find it useful to run a specific test for a specific framework. To do so, you'll have to first make sure you have bundled everything for that configuration, then you can run the specific test:
+
+% BUNDLE_GEMFILE='gemfiles/rails-4-2-stable.gemfile' bundle install -j 4
+% BUNDLE_GEMFILE='gemfiles/rails-4-2-stable.gemfile' bundle exec rspec ./spec/requests/users_spec.rb
+
+### Rake and Bundler
+
+If you use a shell plugin (like oh-my-zsh:bundler) that auto-prefixes commands with `bundle exec` using the `rake` command will fail.
+
+Get the original command with `type -a rake`:
+
+    % type -a rake
+    rake is an alias for bundled_rake
+    rake is /Users/username/.rubies/ruby-2.2.3/bin/rake
+    rake is /usr/bin/rake
+
+In this situation `/Users/username/.rubies/ruby-2.2.3/bin/rake` is the command you should use.
 
 ## License
 
