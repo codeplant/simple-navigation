@@ -1,14 +1,18 @@
 # Changelog
 
+## 4.0.4
+
+* Fix #184 uninitialized constant Rails::Railtie (NameError). Credits to n-rodriguez.
+
 ## 4.0.3
 
 * Fix #180 Check URL before invoking current_page?
 
 ## 4.0.2
 
-* fixing current_page? when url is nil 
+* fixing current_page? when url is nil
 
-## 4.0.1 
+## 4.0.1
 
 * fixed padrino adapter
 
