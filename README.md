@@ -60,4 +60,4 @@ In this situation `/Users/username/.rubies/ruby-2.2.3/bin/rake` is the command y
 
 ## License
 
-Copyright (c) 2015 codeplant GmbH, released under the MIT license
+Copyright (c) 2017 codeplant GmbH, released under the MIT license
