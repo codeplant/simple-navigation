@@ -246,6 +246,14 @@ module SimpleNavigation
               double(:config, auto_highlight: true, highlight_on_subpath: true, ignore_query_params_on_auto_highlight: true, ignore_anchors_on_auto_highlight: true)
             end
 
+            context "but item has no url" do
+              let(:url) { nil }
+
+              it 'returns false' do
+                expect(item.selected?).to be false
+              end
+            end
+
             context "and the current url is a sub path of the item's url" do
               before do
                 allow(adapter).to \
