@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.5
+
+* Fix #188 Blank url and highligh_on_subpath = true causes error. Credits to Tristan Harmer (gondalez) and Ilia Pozhilov (ilyapoz).
+
 ## 4.0.4
 
 * Fix #184 uninitialized constant Rails::Railtie (NameError). Credits to n-rodriguez.
