@@ -6,6 +6,8 @@ rvm:
   - 2.1.5
   - 2.2.1
 
+script: rake spec
+
 gemfile:
   - gemfiles/rails-4-2-stable.gemfile
   - gemfiles/rails-4-1-stable.gemfile
