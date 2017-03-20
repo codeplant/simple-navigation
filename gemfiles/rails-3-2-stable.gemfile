@@ -7,8 +7,5 @@ gem 'rspec-rails', '~> 3.2.1'
 if RUBY_VERSION >= '2.2.0'
   gem 'test-unit', '~> 3.0'
 end
-if RUBY_VERSION < '2.2.5'
-  gem 'RubyDep', '~> 1.3'
-end
 
 gemspec path: '../'
