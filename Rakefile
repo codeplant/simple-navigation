@@ -8,7 +8,7 @@ require 'rdoc/task'
 
 RSpec::Core::RakeTask.new(:spec)
 
-task default: 'spec:all'
+task default: 'spec'
 
 namespace :spec do
   mappers = %w[
