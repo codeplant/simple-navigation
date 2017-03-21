@@ -65,6 +65,34 @@ module SimpleNavigation
       add_item item, options
     end
 
+    def fetch(compound_key, &block)
+      result = nil
+      items.each do |member|
+        result = member.fetch(compound_key, &block)
+        break if result
+      end
+      result
+    end
+
+    def store(compound_key, component, &block)
+      options = component.options
+      result, item_to_add = false, component
+      if component.is_a?(ItemAdapter)
+        item_to_add = Item.new self, *component.to_item_args, &block
+      end
+      if compound_key.to_s.size.zero?
+        if should_add_item?(options)
+          add_item(item_to_add, options)
+          result = true
+        end
+      else
+        items.each do |member|
+          result = member.store(compound_key, component, &block) and break
+        end
+      end
+      result
+    end
+
     def items=(new_items)
       new_items.each do |item|
         item_adapter = ItemAdapter.new(item)

@@ -91,6 +91,28 @@ module SimpleNavigation
       @link_html_options ||= options[:link_html]
     end
 
+    def fetch(compound_key, &blk)
+      k, dot, rest = compound_key.to_s.partition('.')
+      return unless k == key.to_s
+      if rest.size.zero?
+        if block_given?
+          blk.call(self)
+        else
+          return self
+        end
+      else
+        return if sub_navigation.nil?
+        sub_navigation.fetch(rest, &blk)
+      end
+    end
+
+    def store(compound_key, item, &blk)
+      k, dot, rest = compound_key.to_s.partition('.')
+      return false unless k == key.to_s
+      @sub_navigation ||= ItemContainer.new(container.level + 1)
+      @sub_navigation.store(rest, item, &blk)
+    end
+
     protected
 
     # Returns true if item has a subnavigation and

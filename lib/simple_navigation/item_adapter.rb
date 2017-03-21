@@ -46,9 +46,13 @@ module SimpleNavigation
       item.items if item.respond_to?(:items) && item.items && item.items.any?
     end
 
+    def to_item_args
+      [key, name, url, options]
+    end
+
     # Converts this Item into a SimpleNavigation::Item
     def to_simple_navigation_item(item_container)
-      SimpleNavigation::Item.new(item_container, key, name, url, options)
+      SimpleNavigation::Item.new(item_container, *to_item_args)
     end
   end
 end
