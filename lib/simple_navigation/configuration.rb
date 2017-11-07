@@ -23,7 +23,8 @@ module SimpleNavigation
     # Evals the config_file for the given navigation_context
     def self.eval_config(navigation_context = :default)
       context = SimpleNavigation.config_files[navigation_context]
-      SimpleNavigation.context_for_eval.instance_eval(context)
+      config_file_path = SimpleNavigation.config_file(navigation_context)
+      SimpleNavigation.context_for_eval.instance_eval(context, config_file_path)
     end
 
     # Starts processing the configuration
