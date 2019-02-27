@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-ruby '2.3.3'
-
 gem 'rake', '< 11.0'
 gem 'railties', '~> 5.2.0'
 gem 'rspec-rails', '~> 3.8.2'
