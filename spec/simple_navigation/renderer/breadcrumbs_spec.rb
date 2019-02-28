@@ -5,8 +5,7 @@ module SimpleNavigation
 
       let(:item) { nil }
       let(:options) {{ level: :all }}
-      let(:output) { HTML::Document.new(raw_output).root }
-      let(:raw_output) { renderer.render(navigation) }
+      let(:output) { renderer.render(navigation) }
       let(:renderer) { Breadcrumbs.new(options) }
 
       before { select_an_item(navigation[item]) if item }
@@ -75,7 +74,7 @@ module SimpleNavigation
             let(:item) { nil }
 
             it "doesn't render the prefix before the breadcrumbs" do
-              expect(raw_output).not_to match(/^<div.+>You are here: /)
+              expect(output).not_to match(/^<div.+>You are here: /)
             end
           end
 
@@ -83,7 +82,7 @@ module SimpleNavigation
             let(:item) { :invoices }
 
             it 'renders the prefix before the breadcrumbs' do
-              expect(raw_output).to match(/^<div.+>You are here: /)
+              expect(output).to match(/^<div.+>You are here: /)
             end
           end
         end

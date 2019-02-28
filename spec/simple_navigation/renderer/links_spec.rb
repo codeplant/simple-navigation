@@ -5,9 +5,8 @@ module SimpleNavigation
         let!(:navigation) { setup_navigation('nav_id', 'nav_class') }
 
         let(:item) { nil }
-        let(:options) {{ level: :all }}
-        let(:output) { HTML::Document.new(raw_output).root }
-        let(:raw_output) { renderer.render(navigation) }
+        let(:options) { { level: :all } }
+        let(:output) { renderer.render(navigation) }
         let(:renderer) { Links.new(options) }
 
         before { select_an_item(navigation[item]) if item }
@@ -29,7 +28,7 @@ module SimpleNavigation
         end
 
         it "renders the 'a' tags with the corresponding item's :html_options" do
-          expect(output).to have_css('a[style=float:right]')
+          expect(output).to have_css('a[style="float:right"]')
         end
 
         context 'when an item has a specified id' do
@@ -62,7 +61,7 @@ module SimpleNavigation
           let(:options) {{ level: :all, join_with: ' | ' }}
 
           it 'separates the items with the specified separator' do
-            expect(raw_output.scan(' | ').size).to eq 3
+            expect(output.scan(' | ').size).to eq 3
           end
         end
 

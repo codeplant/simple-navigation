@@ -1,6 +1,7 @@
 RSpec::Matchers.define :have_css do |expected, times|
   match do |actual|
-    selector = HTML::Selector.new(expected).select(actual)
+    selector = Nokogiri::HTML(actual).css(expected)
+
     if times
       expect(selector.size).to eq times
     else
