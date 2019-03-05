@@ -16,6 +16,7 @@ module SimpleNavigation
       @items ||= []
       @renderer = SimpleNavigation.config.renderer
       @auto_highlight = true
+      @dom_attributes = {}
     end
 
     def dom_attributes
@@ -24,7 +25,8 @@ module SimpleNavigation
         id: dom_id,
         class: dom_class
       }.reject { |_, v| v.nil? }
-      (@dom_attributes || {}).merge(dom_id_and_class)
+
+      @dom_attributes.merge(dom_id_and_class)
     end
 
     # Creates a new navigation item.
