@@ -1,0 +1,10 @@
+source 'https://rubygems.org'
+
+gem 'rake', '< 11.0'
+
+# not yet
+#gem 'railties', '~> 6.0.0'
+gem 'railties', '6.0.0.rc2'
+gem 'rspec-rails', '~> 3.8.2'
+
+gemspec path: '../'

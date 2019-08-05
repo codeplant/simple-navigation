@@ -5,6 +5,21 @@ module SimpleNavigation
 
       def self.register
         SimpleNavigation.set_env(::Rails.root, ::Rails.env)
+
+        # Autoloading in initializers is deprecated on rails 6.0
+        # This delays the hook initialization using the on_load
+        # hooks, but does not change behaviour for existing
+        # rails versions.
+        if ::Rails::VERSION::MAJOR >= 6
+          ActiveSupport.on_load(:action_controller_base) do
+            SimpleNavigation::Adapters::Rails.register_controller_helpers
+          end
+        else
+          register_controller_helpers
+        end
+      end
+
+      def self.register_controller_helpers
         ActionController::Base.send(:include, SimpleNavigation::Helpers)
         SimpleNavigation::Helpers.instance_methods.each do |m|
           ActionController::Base.send(:helper_method, m.to_sym)
