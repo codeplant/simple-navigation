@@ -3,6 +3,7 @@ before_install:
 
 rvm:
   - 2.3.3
+  - 2.5.0
 
 gemfile:
   - gemfiles/rails-6-0-stable.gemfile
