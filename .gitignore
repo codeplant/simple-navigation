@@ -7,3 +7,4 @@ Gemfile.lock
 capybara-*
 gemfiles/*.lock
 log
+spec/fake_app/tmp
