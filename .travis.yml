@@ -1,25 +1,18 @@
 before_install:
   - gem install bundler
 
-rvm:
-  - 2.3.3
-  - 2.5.3
-
-gemfile:
-  - gemfiles/rails-6-0-stable.gemfile
-  - gemfiles/rails-5-2-stable.gemfile
-  - gemfiles/rails-4-2-stable.gemfile
-  - gemfiles/rails-4-1-stable.gemfile
-  - gemfiles/rails-3-2-stable.gemfile
-
 matrix:
-  exclude:
-  - rvm: 2.3.3
+  include:
+  - rvm: 2.5.3
     gemfile: gemfiles/rails-6-0-stable.gemfile
-    env: ISOLATED=true
-  # - rvm: 2.5.3
-  #   gemfile: gemfiles/rails-4-1-stable.gemfile
-  #   env: ISOLATED=true
-  # - rvm: 2.5.3
-  #   gemfile: gemfiles/rails-3-2-stable.gemfile
-  #   env: ISOLATED=true
+  - rvm: 2.6.0
+    gemfile: gemfiles/rails-6-0-stable.gemfile
+  - rvm: 2.5.1
+    gemfile: gemfiles/rails-5-2-stable.gemfile
+  - rvm: 2.4.5
+    gemfile: gemfiles/rails-4-2-stable.gemfile
+  - rvm: 2.3.3
+    gemfile: gemfiles/rails-4-1-stable.gemfile
+  - rvm: 2.3.3
+    gemfile: gemfiles/rails-3-2-stable.gemfile
+  
