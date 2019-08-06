@@ -5,6 +5,7 @@ rvm:
   - 2.3.3
 
 gemfile:
+  - gemfiles/rails-6-0-stable.gemfile
   - gemfiles/rails-5-2-stable.gemfile
   - gemfiles/rails-4-2-stable.gemfile
   - gemfiles/rails-4-1-stable.gemfile
