@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.1.0
+
+* Delay rails6 initialization using on_load (getting rid of deprecation warnings in rails 6). Credits to Markus Benning.
+* Fix link to wiki in README. Thanks to Greg Molnar.
+* Fix uninitialized variable `@dom_attributes` warning. Credits to Johan Tell.
+* Fixed tests for rails 5x. Credits to Eugene Gavrilov.
+
+
 ## 4.0.5
 
 * Fix #188 Blank url and highligh_on_subpath = true causes error. Credits to Tristan Harmer (gondalez) and Ilia Pozhilov (ilyapoz).
