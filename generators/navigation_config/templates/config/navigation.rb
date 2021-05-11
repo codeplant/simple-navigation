@@ -24,7 +24,7 @@ SimpleNavigation::Configuration.run do |navigation|
   # If you need to add custom html around item names, you can define a proc that
   # will be called with the name you pass in to the navigation.
   # The example below shows how to wrap items spans.
-  #navigation.name_generator = Proc.new {|name, item| "<span>#{name}</span>"}
+  #navigation.name_generator = Proc.new {|name, item| tag.span(name) }
 
   # Specify if the auto highlight feature is turned on (globally, for the whole navigation). Defaults to true
   #navigation.auto_highlight = true
@@ -45,6 +45,7 @@ SimpleNavigation::Configuration.run do |navigation|
     # url - the address that the generated item links to. You can also use url_helpers (named routes, restful routes helper, url_for etc.)
     # options - can be used to specify attributes that will be included in the rendered navigation item (e.g. id, class etc.)
     #           some special options that can be set:
+    #           :html - Specifies html attributes that will be included in the rendered navigation item
     #           :if - Specifies a proc to call to determine if the item should
     #                 be rendered (e.g. <tt>if: -> { current_user.admin? }</tt>). The
     #                 proc should evaluate to a true or false value and is evaluated in the context of the view.
@@ -67,7 +68,7 @@ SimpleNavigation::Configuration.run do |navigation|
     # You can also specify a condition-proc that needs to be fullfilled to display an item.
     # Conditions are part of the options. They are evaluated in the context of the views,
     # thus you can use all the methods and vars you have available in the views.
-    primary.item :key_3, 'Admin', url, class: 'special', if: -> { current_user.admin? }
+    primary.item :key_3, 'Admin', url, html: { class: 'special' }, if: -> { current_user.admin? }
     primary.item :key_4, 'Account', url, unless: -> { logged_in? }
 
     # you can also specify html attributes to attach to this particular level
