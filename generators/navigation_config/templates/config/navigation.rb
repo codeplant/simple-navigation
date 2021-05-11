@@ -24,7 +24,7 @@ SimpleNavigation::Configuration.run do |navigation|
   # If you need to add custom html around item names, you can define a proc that
   # will be called with the name you pass in to the navigation.
   # The example below shows how to wrap items spans.
-  #navigation.name_generator = Proc.new {|name, item| "<span>#{name}</span>"}
+  #navigation.name_generator = Proc.new {|name, item| tag.span(name) }
 
   # Specify if the auto highlight feature is turned on (globally, for the whole navigation). Defaults to true
   #navigation.auto_highlight = true
