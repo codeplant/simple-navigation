@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.0
+
+* improvements to generator template. Credits to mgrunberg.
+* be able to run 'rake spec:rails-6-0-stable'. Credits to mgrunberg.
+
 ## 4.1.0
 
 * Delay rails6 initialization using on_load (getting rid of deprecation warnings in rails 6). Credits to Markus Benning.
