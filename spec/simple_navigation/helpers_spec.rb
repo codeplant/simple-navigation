@@ -382,7 +382,7 @@ module SimpleNavigation
           it 'raises an exception' do
             expect{
               controller.render_navigation(level: :invalid)
-            }.to raise_error
+            }.to raise_error(ArgumentError, 'Invalid navigation level: invalid')
           end
         end
       end
@@ -408,7 +408,7 @@ module SimpleNavigation
         before { allow(SimpleNavigation).to receive_messages(primary_navigation: nil) }
 
         it 'raises an exception' do
-          expect{controller.render_navigation}.to raise_error
+          expect{controller.render_navigation}.to raise_error(RuntimeError, 'no primary navigation defined, either use a navigation config file or pass items directly to render_navigation')
         end
       end
 

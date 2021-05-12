@@ -32,7 +32,7 @@ module SimpleNavigation
 
       describe '#render' do
         it "raise an exception to indicate it's a subclass responsibility" do
-          expect{ base.render(:container) }.to raise_error
+          expect{ base.render(:container) }.to raise_error(NotImplementedError, 'subclass responsibility')
         end
       end
 

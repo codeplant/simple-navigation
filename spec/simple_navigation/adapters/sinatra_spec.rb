@@ -9,7 +9,7 @@ describe SimpleNavigation::Adapters::Sinatra do
     context "when adapter's context is not set" do
       it 'raises an exception' do
         allow(adapter).to receive_messages(context: nil)
-        expect{ adapter.context_for_eval }.to raise_error
+        expect{ adapter.context_for_eval }.to raise_error(RuntimeError, 'no context set for evaluation the config file')
       end
     end
 

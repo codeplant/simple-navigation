@@ -346,7 +346,7 @@ module SimpleNavigation
           let(:options) {{ highlights_on: :hello }}
 
           it 'raises an exception' do
-            expect{ item.selected? }.to raise_error
+            expect{ item.selected? }.to raise_error(ArgumentError, ':highlights_on must be a Regexp, Proc or :subpath')
           end
         end
       end
