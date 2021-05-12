@@ -17,6 +17,7 @@ namespace :spec do
     rails-4-2-stable
     rails-5-2-stable
     rails-6-0-stable
+    rails-6-1-stable
   ]
 
   mappers.each do |gemfile|
