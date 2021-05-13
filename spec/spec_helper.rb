@@ -24,7 +24,10 @@ end
 
 def setup_adapter_for(framework, context = double(:context))
   if framework == :rails
-    allow(context).to receive_messages(view_context: ActionView::Base.new)
+    # Rails 6.0 and 6.1 provide ActionView::Base.empty method that creates ActionView with an empty LookupContext.
+    # The method is not available on older versions
+    view_context = ActionView::Base.respond_to?(:empty) ? ActionView::Base.empty : ActionView::Base.new
+    allow(context).to receive_messages(view_context: view_context)
   end
 
   allow(SimpleNavigation).to receive_messages(framework: framework)
