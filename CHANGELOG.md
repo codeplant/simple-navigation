@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.0
+
+* removed warnings from rspec. Thanks mgrunberg.
+* add compatibility with rails 6.1. Credits to mgrunberg.
+* run specs against 6.1. Credits to mgrunberg.
+
 ## 4.2.0
 
 * improvements to generator template. Credits to mgrunberg.
