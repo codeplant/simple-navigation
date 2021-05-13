@@ -186,7 +186,7 @@ module SimpleNavigation
             before { adapter.instance_variable_set(:@template, nil) }
 
             it 'raises an exception' do
-              expect{ adapter.context_for_eval }.to raise_error
+              expect{ adapter.context_for_eval }.to raise_error(RuntimeError, 'no context set for evaluation the config file')
             end
           end
         end

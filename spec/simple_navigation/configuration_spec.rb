@@ -89,7 +89,7 @@ module SimpleNavigation
           let(:provider) { double(:provider) }
 
           it 'raises an exception' do
-            expect{ config.items(provider) {} }.to raise_error
+            expect{ config.items(provider) {} }.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both')
           end
         end
 
@@ -139,7 +139,7 @@ module SimpleNavigation
 
         context 'when items_provider is not specified' do
           it "raises an exception" do
-            expect{ config.items }.to raise_error
+            expect{ config.items }.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both')
           end
         end
       end

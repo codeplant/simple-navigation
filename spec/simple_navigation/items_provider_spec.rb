@@ -36,7 +36,7 @@ module SimpleNavigation
         let(:provider) { double(:provider) }
 
         it 'raises an exception' do
-          expect{ items_provider.items }.to raise_error
+          expect{ items_provider.items }.to raise_error(RuntimeError, /items_provider either must be a symbol .*, an object .* or an enumerable/)
         end
       end
     end

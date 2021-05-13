@@ -435,7 +435,7 @@ module SimpleNavigation
             it 'raises an error' do
               expect{
                 item_container.item('key', 'name', 'url', { if: 'text' })
-              }.to raise_error
+              }.to raise_error(ArgumentError, ':if or :unless must be procs or lambdas')
             end
           end
         end
