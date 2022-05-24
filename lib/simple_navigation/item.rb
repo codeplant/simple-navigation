@@ -5,7 +5,8 @@ module SimpleNavigation
     attr_reader :key,
                 :name,
                 :sub_navigation,
-                :url
+                :url,
+                :options
 
     # see ItemContainer#item
     #
@@ -121,13 +122,13 @@ module SimpleNavigation
 
     private
 
-    attr_accessor :container,
-                  :options
+    attr_accessor :container
 
     attr_writer :key,
                 :name,
                 :sub_navigation,
-                :url
+                :url,
+                :options
 
     def config
       SimpleNavigation.config

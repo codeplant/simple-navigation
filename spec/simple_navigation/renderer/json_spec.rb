@@ -20,17 +20,28 @@ module SimpleNavigation
           end
         end
 
-        # FIXME: not sure if :as_hash returning an array makes sense...
         context 'when the :as_hash option is true' do
           let(:options) {{ level: :all, as_hash: true }}
 
-          it 'returns a hash' do
+          it 'returns every item as a hash' do
             expect(output).to be_an Array
+
+            output.each do |item|
+              expect(item).to be_an Hash
+            end
           end
 
           it 'renders the selected page' do
             invoices_item = output.find { |item| item[:name] == 'Invoices' }
             expect(invoices_item).to include(selected: true)
+          end
+        end
+
+        context 'with options' do
+          it 'should render options for each item' do
+            parsed_output.each do |item|
+              expect(item).to have_key('options')
+            end
           end
         end
 

@@ -20,7 +20,8 @@ module SimpleNavigation
             items: hash_render(item.sub_navigation),
             name: item.name,
             selected: item.selected?,
-            url: item.url
+            url: item.url,
+            options: item.options
           }
         end
       end
