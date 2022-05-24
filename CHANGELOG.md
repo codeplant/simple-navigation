@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.4.0
+
+* add options rendering to json renderer. Credits to Mikhail Kytyzov.
+
 ## 4.3.0
 
 * removed warnings from rspec. Thanks mgrunberg.
