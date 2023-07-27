@@ -17,11 +17,9 @@ You can consult the project's RDoc on [RubyDoc.info](http://rubydoc.info/github/
 
 If you need to generate the RDoc files locally, check out the repository and simply call the `rake rdoc` in the project's folder.
 
-## Online Demo
+##  Demo
 
-You can try simple-navigation with the [online demo](http://simple-navigation-demo.codeplant.ch).
-
-The source code of this online demo is [available on Github](http://github.com/codeplant/simple-navigation-demo).
+Demo source code is [available on Github](http://github.com/codeplant/simple-navigation-demo).
 
 ## Feedback and Questions
 
