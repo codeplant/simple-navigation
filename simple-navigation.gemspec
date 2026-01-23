@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.rdoc_options     = ['--inline-source', '--charset=UTF-8']
 
   spec.add_runtime_dependency 'activesupport', '>= 2.3.2'
+  spec.add_runtime_dependency 'ostruct'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'capybara'
