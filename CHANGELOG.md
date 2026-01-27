@@ -1,19 +1,24 @@
 # Changelog
 
+## 4.4.1
+
+* Removes the link to the online demo from the README. Credits to tosbourn.
+* Adds ostruct as explicit runtime dep to silence warnings with ruby 3.4.x. Credits to SebouChu.
+
 ## 4.4.0
 
-* add options rendering to json renderer. Credits to Mikhail Kytyzov.
+* Add options rendering to json renderer. Credits to Mikhail Kytyzov.
 
 ## 4.3.0
 
-* removed warnings from rspec. Thanks mgrunberg.
-* add compatibility with rails 6.1. Credits to mgrunberg.
-* run specs against 6.1. Credits to mgrunberg.
+* Removed warnings from rspec. Thanks mgrunberg.
+* Add compatibility with rails 6.1. Credits to mgrunberg.
+* Run specs against 6.1. Credits to mgrunberg.
 
 ## 4.2.0
 
-* improvements to generator template. Credits to mgrunberg.
-* be able to run 'rake spec:rails-6-0-stable'. Credits to mgrunberg.
+* Improvements to generator template. Credits to mgrunberg.
+* Be able to run 'rake spec:rails-6-0-stable'. Credits to mgrunberg.
 
 ## 4.1.0
 
