@@ -1,6 +1,6 @@
 require 'initializers/have_css_matcher'
 require 'initializers/memfs'
-require 'initializers/coveralls'
+#require 'initializers/coveralls'
 require 'initializers/rails'
 require 'initializers/rspec'
 require 'capybara/rspec'
