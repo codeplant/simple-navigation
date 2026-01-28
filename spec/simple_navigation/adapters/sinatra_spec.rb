@@ -1,4 +1,4 @@
-describe SimpleNavigation::Adapters::Sinatra do
+RSpec.describe SimpleNavigation::Adapters::Sinatra do
   let(:adapter) { SimpleNavigation::Adapters::Sinatra.new(context) }
   let(:context) { double(:context) }
   let(:request) { double(:request, fullpath: '/full?param=true', path: '/full') }

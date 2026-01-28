@@ -1,4 +1,4 @@
-describe SimpleNavigation do
+RSpec.describe SimpleNavigation do
   before { subject.config_file_path = 'path_to_config' }
 
   describe 'config_file_path=' do
