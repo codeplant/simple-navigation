@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'simple_navigation/config_file'
 
 module SimpleNavigation
@@ -22,8 +24,8 @@ module SimpleNavigation
       config_file_name = config_file_name_for_context(context)
 
       find_config_file(config_file_name) ||
-      fail("Config file '#{config_file_name}' not found in " \
-           "path(s) #{paths.join(', ')}!")
+        raise("Config file '#{config_file_name}' not found in " \
+              "path(s) #{paths.join(', ')}!")
     end
 
     private

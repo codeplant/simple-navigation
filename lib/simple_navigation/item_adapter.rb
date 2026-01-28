@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'forwardable'
 require 'ostruct'
 
@@ -43,7 +45,7 @@ module SimpleNavigation
     # Returns the items (subnavigation) for this item if it responds to :items
     # and the items-collection is not empty. Returns nil otherwise.
     def items
-      item.items if item.respond_to?(:items) && item.items && item.items.any?
+      item.items if item.respond_to?(:items) && item.items&.any?
     end
 
     # Converts this Item into a SimpleNavigation::Item

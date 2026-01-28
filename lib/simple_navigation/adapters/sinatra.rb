@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cgi'
 
 module SimpleNavigation
@@ -13,7 +15,7 @@ module SimpleNavigation
       end
 
       def context_for_eval
-        context || fail('no context set for evaluation the config file')
+        context || raise('no context set for evaluation the config file')
       end
 
       def request_uri
@@ -32,9 +34,7 @@ module SimpleNavigation
                 request_uri.split('?').first
               end
 
-        if url_string =~ %r(^\w+://)
-          uri = "#{request.scheme}://#{request.host_with_port}#{uri}"
-        end
+        uri = "#{request.scheme}://#{request.host_with_port}#{uri}" if %r{^\w+://}.match?(url_string)
 
         url_string == CGI.unescape(uri)
       end

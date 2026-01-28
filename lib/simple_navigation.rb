@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # cherry picking active_support stuff
 require 'active_support/core_ext/array'
 require 'active_support/core_ext/hash'
@@ -12,7 +14,7 @@ require 'simple_navigation/items_provider'
 require 'simple_navigation/renderer'
 require 'simple_navigation/adapters'
 require 'simple_navigation/config_file_finder'
-require 'simple_navigation/railtie' if defined?(::Rails::Railtie)
+require 'simple_navigation/railtie' if defined?(Rails::Railtie)
 
 require 'forwardable'
 
@@ -38,21 +40,21 @@ module SimpleNavigation
   # Maps renderer keys to classes. The keys serve as shortcut in the
   # render_navigation calls (renderer: :list)
   self.registered_renderers = {
-    list:        SimpleNavigation::Renderer::List,
-    links:       SimpleNavigation::Renderer::Links,
+    list: SimpleNavigation::Renderer::List,
+    links: SimpleNavigation::Renderer::Links,
     breadcrumbs: SimpleNavigation::Renderer::Breadcrumbs,
-    text:        SimpleNavigation::Renderer::Text,
-    json:        SimpleNavigation::Renderer::Json
+    text: SimpleNavigation::Renderer::Text,
+    json: SimpleNavigation::Renderer::Json
   }
 
   class << self
     extend Forwardable
 
     def_delegators :adapter, :context_for_eval,
-                             :current_page?,
-                             :request,
-                             :request_path,
-                             :request_uri
+                   :current_page?,
+                   :request,
+                   :request_path,
+                   :request_uri
 
     def_delegators :adapter_class, :register
 
@@ -70,8 +72,9 @@ module SimpleNavigation
       return :padrino if defined?(Padrino)
       return :sinatra if defined?(Sinatra)
       return :nanoc if defined?(Nanoc3)
-      fail 'simple_navigation currently only works for Rails, Sinatra and ' \
-           'Padrino apps'
+
+      raise 'simple_navigation currently only works for Rails, Sinatra and ' \
+            'Padrino apps'
     end
 
     # Loads the adapter for the current framework
@@ -138,7 +141,7 @@ module SimpleNavigation
       when Integer then primary_navigation.active_item_container_for(level)
       when Range then primary_navigation.active_item_container_for(level.min)
       else
-        fail ArgumentError, "Invalid navigation level: #{level}"
+        raise ArgumentError, "Invalid navigation level: #{level}"
       end
     end
 

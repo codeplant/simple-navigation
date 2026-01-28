@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'simple_navigation/helpers'
 require 'simple_navigation/renderer/base'
 

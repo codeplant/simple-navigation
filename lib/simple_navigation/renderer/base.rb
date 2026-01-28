@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'forwardable'
 
 module SimpleNavigation
@@ -13,7 +15,7 @@ module SimpleNavigation
 
       def_delegators :adapter, :link_to, :content_tag
 
-      def initialize(options) #:nodoc:
+      def initialize(options) # :nodoc:
         @options = options
         @adapter = SimpleNavigation.adapter
       end
@@ -44,7 +46,7 @@ module SimpleNavigation
       # include_sub_navigation? to determine whether an item's sub_navigation
       # should be rendered or not.
       def render(item_container)
-        fail NotImplementedError, 'subclass responsibility'
+        raise NotImplementedError, 'subclass responsibility'
       end
 
       protected
@@ -93,7 +95,7 @@ module SimpleNavigation
         special_options = {
           method: item.method,
           class: item.selected_class
-        }.reject { |_, v| v.nil? }
+        }.compact
 
         link_options = item.link_html_options
 

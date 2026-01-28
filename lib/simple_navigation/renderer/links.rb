@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleNavigation
   module Renderer
     # Renders an ItemContainer as a <div> element and its containing items as

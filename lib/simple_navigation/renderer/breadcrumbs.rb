@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleNavigation
   module Renderer
     # Renders an ItemContainer as a <div> element and its containing items as
@@ -25,11 +27,10 @@ module SimpleNavigation
       def a_tags(item_container)
         item_container.items.each_with_object([]) do |item, list|
           next unless item.selected?
+
           list << tag_for(item)
 
-          if include_sub_navigation?(item)
-            list.concat a_tags(item.sub_navigation)
-          end
+          list.concat a_tags(item.sub_navigation) if include_sub_navigation?(item)
         end
       end
 

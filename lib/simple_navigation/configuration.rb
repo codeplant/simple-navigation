@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'singleton'
 
 module SimpleNavigation
@@ -27,8 +29,8 @@ module SimpleNavigation
     end
 
     # Starts processing the configuration
-    def self.run(&block)
-      block.call Configuration.instance
+    def self.run
+      yield Configuration.instance
     end
 
     # Sets the config's default-settings
@@ -75,13 +77,13 @@ module SimpleNavigation
     #
     def items(items_provider = nil, &block)
       if (items_provider && block) || (items_provider.nil? && block.nil?)
-        fail('please specify either items_provider or block, but not both')
+        raise('please specify either items_provider or block, but not both')
       end
 
       self.primary_navigation = ItemContainer.new
 
       if block
-        block.call primary_navigation
+        yield primary_navigation
       else
         primary_navigation.items = ItemsProvider.new(items_provider).items
       end
