@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+# Dev libs
 gem 'appraisal', git: 'https://github.com/thoughtbot/appraisal.git'
-gem 'bundler'
 gem 'capybara'
 gem 'coveralls', '~> 0.7'
 gem 'guard-rspec', '~> 4.2'
