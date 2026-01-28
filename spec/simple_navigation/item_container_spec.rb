@@ -492,7 +492,7 @@ module SimpleNavigation
         context 'and is specified as a class' do
           it 'instantiates the passed renderer_class with the options' do
             expect(renderer_class).to receive(:new)
-                                      .with(renderer: renderer_class)
+                                      .with({renderer: renderer_class})
             item_container.render(renderer: renderer_class)
           end
 
@@ -510,7 +510,7 @@ module SimpleNavigation
           end
 
           it "instantiates the passed renderer_class with the options" do
-            expect(renderer_class).to receive(:new).with(renderer: :my_renderer)
+            expect(renderer_class).to receive(:new).with({renderer: :my_renderer})
             item_container.render(renderer: :my_renderer)
           end
 

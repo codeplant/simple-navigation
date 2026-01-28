@@ -9,7 +9,7 @@ module SimpleNavigation
       describe '#link_to' do
         it 'delegates to context' do
           expect(context).to receive(:link_to)
-                             .with('name', 'url', :my_option => true)
+                             .with('name', 'url', {:my_option => true})
           adapter.link_to('name', 'url', :my_option => true)
         end
       end
@@ -18,7 +18,7 @@ module SimpleNavigation
         it 'delegates to context' do
           expect(content).to receive(:html_safe).and_return('content')
           expect(context).to receive(:content_tag)
-                             .with('type', 'content', my_option: true)
+                             .with('type', 'content', {my_option: true})
           adapter.content_tag('type', content, my_option: true)
         end
       end

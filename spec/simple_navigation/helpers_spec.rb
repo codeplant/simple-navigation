@@ -344,7 +344,7 @@ module SimpleNavigation
       context 'when the :level option is set' do
         context 'and its value is 1' do
           it 'calls render on the primary navigation' do
-            expect(navigation).to receive(:render).with(level: 1)
+            expect(navigation).to receive(:render).with({level: 1})
             controller.render_navigation(level: 1)
           end
         end
@@ -364,7 +364,7 @@ module SimpleNavigation
             end
 
             it 'calls render on the active item_container' do
-              expect(item_container).to receive(:render).with(level: 2)
+              expect(item_container).to receive(:render).with({level: 2})
               controller.render_navigation(level: 2)
             end
           end
@@ -391,7 +391,7 @@ module SimpleNavigation
         before { allow(SimpleNavigation).to receive_messages(active_item_container_for: navigation) }
 
         it 'treats it like the :level option' do
-          expect(navigation).to receive(:render).with(level: 2)
+          expect(navigation).to receive(:render).with({level: 2})
           controller.render_navigation(levels: 2)
         end
       end
