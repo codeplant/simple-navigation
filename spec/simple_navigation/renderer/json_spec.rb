@@ -1,17 +1,18 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::Renderer::Json do
   describe '#render' do
     let!(:navigation) { setup_navigation('nav_id', 'nav_class') }
 
     let(:item) { :invoices }
-    let(:options) {{ level: :all }}
+    let(:options) { { level: :all } }
     let(:output) { renderer.render(navigation) }
     let(:parsed_output) { JSON.parse(output) }
-    let(:renderer) { SimpleNavigation::Renderer::Json.new(options) }
+    let(:renderer) { described_class.new(options) }
 
     before { select_an_item(navigation[item]) if item }
 
     context 'when an item is selected' do
-
       it 'renders the selected page' do
         invoices_item = parsed_output.find { |item| item['name'] == 'Invoices' }
         expect(invoices_item).to include('selected' => true)
@@ -19,14 +20,12 @@ RSpec.describe SimpleNavigation::Renderer::Json do
     end
 
     context 'when the :as_hash option is true' do
-      let(:options) {{ level: :all, as_hash: true }}
+      let(:options) { { level: :all, as_hash: true } }
 
-      it 'returns every item as a hash' do
+      it 'returns every item as a hash' do # rubocop:disable RSpec/MultipleExpectations
         expect(output).to be_an Array
 
-        output.each do |item|
-          expect(item).to be_an Hash
-        end
+        expect(output).to all(be_an Hash)
       end
 
       it 'renders the selected page' do
@@ -36,10 +35,8 @@ RSpec.describe SimpleNavigation::Renderer::Json do
     end
 
     context 'with options' do
-      it 'should render options for each item' do
-        parsed_output.each do |item|
-          expect(item).to have_key('options')
-        end
+      it 'renders options for each item' do
+        expect(parsed_output).to all(have_key('options'))
       end
     end
 

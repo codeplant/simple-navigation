@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::ItemsProvider do
-  let(:items_provider) { SimpleNavigation::ItemsProvider.new(provider) }
+  let(:items_provider) { described_class.new(provider) }
 
   describe '#items' do
     let(:items) { double(:items) }
@@ -35,7 +37,7 @@ RSpec.describe SimpleNavigation::ItemsProvider do
       let(:provider) { double(:provider) }
 
       it 'raises an exception' do
-        expect{ items_provider.items }.to raise_error(RuntimeError, /items_provider either must be a symbol .*, an object .* or an enumerable/)
+        expect { items_provider.items }.to raise_error(RuntimeError, /items_provider either must be a symbol .*, an object .* or an enumerable/)
       end
     end
   end

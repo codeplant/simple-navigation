@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::Renderer::Base do
-  subject(:base) { SimpleNavigation::Renderer::Base.new(options) }
+  subject(:base) { described_class.new(options) }
 
   let(:adapter) { double(:adapter) }
-  let(:options) { Hash.new }
+  let(:options) { {} }
 
   before { allow(SimpleNavigation).to receive_messages(adapter: adapter) }
 
@@ -17,7 +19,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
   end
 
   describe '#initialize' do
-    it "sets the renderer adapter to the SimpleNavigation one" do
+    it 'sets the renderer adapter to the SimpleNavigation one' do
       expect(base.adapter).to be adapter
     end
   end
@@ -30,14 +32,14 @@ RSpec.describe SimpleNavigation::Renderer::Base do
 
   describe '#render' do
     it "raise an exception to indicate it's a subclass responsibility" do
-      expect{ base.render(:container) }.to raise_error(NotImplementedError, 'subclass responsibility')
+      expect { base.render(:container) }.to raise_error(NotImplementedError, 'subclass responsibility')
     end
   end
 
   describe '#expand_all?' do
     context 'when :options is set' do
       context 'and the :expand_all option is true' do
-        let(:options) {{ expand_all: true }}
+        let(:options) { { expand_all: true } }
 
         it 'returns true' do
           expect(base.expand_all?).to be true
@@ -45,7 +47,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
       end
 
       context 'and the :expand_all option is false' do
-        let(:options) {{ expand_all: false }}
+        let(:options) { { expand_all: false } }
 
         it 'returns false' do
           expect(base.expand_all?).to be false
@@ -54,7 +56,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
     end
 
     context "when :options isn't set" do
-      let(:options) { Hash.new }
+      let(:options) { {} }
 
       it 'returns false' do
         expect(base.expand_all?).to be false
@@ -65,7 +67,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
   describe '#skip_if_empty?' do
     context 'when :options is set' do
       context 'and the :skip_if_empty option is true' do
-        let(:options) {{ skip_if_empty: true }}
+        let(:options) { { skip_if_empty: true } }
 
         it 'returns true' do
           expect(base.skip_if_empty?).to be true
@@ -73,7 +75,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
       end
 
       context 'and the :skip_if_empty option is false' do
-        let(:options) {{ skip_if_empty: false }}
+        let(:options) { { skip_if_empty: false } }
 
         it 'returns true' do
           expect(base.skip_if_empty?).to be false
@@ -82,7 +84,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
     end
 
     context "when :options isn't set" do
-      let(:options) { Hash.new }
+      let(:options) { {} }
 
       it 'returns true' do
         expect(base.skip_if_empty?).to be false
@@ -92,7 +94,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
 
   describe '#level' do
     context 'and the :level option is set' do
-      let(:options) {{ level: 1 }}
+      let(:options) { { level: 1 } }
 
       it 'returns the specified level' do
         expect(base.level).to eq 1
@@ -100,7 +102,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
     end
 
     context "and the :level option isn't set" do
-      let(:options) { Hash.new }
+      let(:options) { {} }
 
       it 'returns :all' do
         expect(base.level).to eq :all

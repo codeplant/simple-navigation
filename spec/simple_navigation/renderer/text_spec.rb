@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::Renderer::Text do
   let!(:navigation) { setup_navigation('nav_id', 'nav_class') }
 
   let(:item) { nil }
-  let(:options) {{ level: :all }}
+  let(:options) { { level: :all } }
   let(:output) { renderer.render(navigation) }
-  let(:renderer) { SimpleNavigation::Renderer::Text.new(options) }
+  let(:renderer) { described_class.new(options) }
 
   before { select_an_item(navigation[item]) if item }
 
@@ -35,8 +37,8 @@ RSpec.describe SimpleNavigation::Renderer::Text do
         expect(output).to eq 'Invoices Unpaid'
       end
 
-      context "and the :join_with option is set" do
-        let(:options) {{ level: :all, join_with: ' | ' }}
+      context 'and the :join_with option is set' do
+        let(:options) { { level: :all, join_with: ' | ' } }
 
         it 'separates the items with the specified separator' do
           expect(output).to eq 'Invoices | Unpaid'

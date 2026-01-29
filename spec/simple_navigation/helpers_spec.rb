@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::Helpers do
   subject(:controller) { test_controller_class.new }
 
@@ -12,9 +14,9 @@ RSpec.describe SimpleNavigation::Helpers do
   before do
     allow(SimpleNavigation::Configuration).to receive(:eval_config)
     allow(SimpleNavigation).to receive_messages(load_config: nil,
-                          primary_navigation: navigation,
-                          config_file?: true,
-                          context_for_eval: controller)
+                                                primary_navigation: navigation,
+                                                config_file?: true,
+                                                context_for_eval: controller)
 
     select_an_item(navigation[item]) if item
   end
@@ -25,7 +27,7 @@ RSpec.describe SimpleNavigation::Helpers do
         expect(controller.active_navigation_item_name).to eq ''
       end
 
-      it "returns an empty string for level: 1" do
+      it 'returns an empty string for level: 1' do
         item_name = controller.active_navigation_item_name(level: 1)
         expect(item_name).to eq ''
       end
@@ -95,15 +97,11 @@ RSpec.describe SimpleNavigation::Helpers do
 
   describe '#active_navigation_item_key' do
     context 'when no item is selected' do
-      it 'returns nil' do
-        expect(controller.active_navigation_item_key).to be_nil
-      end
-
       it 'returns nil for no parameters' do
         expect(controller.active_navigation_item_key).to be_nil
       end
 
-      it "returns nil for level: 1" do
+      it 'returns nil for level: 1' do
         item_key = controller.active_navigation_item_key(level: 1)
         expect(item_key).to be_nil
       end
@@ -177,7 +175,7 @@ RSpec.describe SimpleNavigation::Helpers do
         expect(controller.active_navigation_item).to be_nil
       end
 
-      it "returns nil for level: 1" do
+      it 'returns nil for level: 1' do
         item_key = controller.active_navigation_item(level: 1)
         expect(item_key).to be_nil
       end
@@ -251,7 +249,7 @@ RSpec.describe SimpleNavigation::Helpers do
         expect(controller.active_navigation_item_container).to be navigation
       end
 
-      it "returns the primary navigation for level: 1" do
+      it 'returns the primary navigation for level: 1' do
         item_container = controller.active_navigation_item_container(level: 1)
         expect(item_container).to be navigation
       end
@@ -320,7 +318,7 @@ RSpec.describe SimpleNavigation::Helpers do
 
     it 'looks up the active_item_container based on the level' do
       expect(SimpleNavigation).to receive(:active_item_container_for)
-                                  .with(:all)
+        .with(:all)
       controller.render_navigation
     end
 
@@ -343,7 +341,7 @@ RSpec.describe SimpleNavigation::Helpers do
     context 'when the :level option is set' do
       context 'and its value is 1' do
         it 'calls render on the primary navigation' do
-          expect(navigation).to receive(:render).with({level: 1})
+          expect(navigation).to receive(:render).with({ level: 1 })
           controller.render_navigation(level: 1)
         end
       end
@@ -358,19 +356,19 @@ RSpec.describe SimpleNavigation::Helpers do
 
           it 'finds the selected sub navigation for the specified level' do
             expect(SimpleNavigation).to receive(:active_item_container_for)
-                                          .with(2)
+              .with(2)
             controller.render_navigation(level: 2)
           end
 
           it 'calls render on the active item_container' do
-            expect(item_container).to receive(:render).with({level: 2})
+            expect(item_container).to receive(:render).with({ level: 2 })
             controller.render_navigation(level: 2)
           end
         end
 
         context "and the active_item_container isn't set" do
           it "doesn't raise an exception" do
-            expect{
+            expect {
               controller.render_navigation(level: 2)
             }.not_to raise_error
           end
@@ -379,7 +377,7 @@ RSpec.describe SimpleNavigation::Helpers do
 
       context "and its value isn't a valid level" do
         it 'raises an exception' do
-          expect{
+          expect {
             controller.render_navigation(level: :invalid)
           }.to raise_error(ArgumentError, 'Invalid navigation level: invalid')
         end
@@ -390,14 +388,14 @@ RSpec.describe SimpleNavigation::Helpers do
       before { allow(SimpleNavigation).to receive_messages(active_item_container_for: navigation) }
 
       it 'treats it like the :level option' do
-        expect(navigation).to receive(:render).with({level: 2})
+        expect(navigation).to receive(:render).with({ level: 2 })
         controller.render_navigation(levels: 2)
       end
     end
 
     context 'when a block is given' do
       it 'calls the block passing it an item container' do
-        expect{ |blk|
+        expect { |blk|
           controller.render_navigation(&blk)
         }.to yield_with_args(SimpleNavigation::ItemContainer)
       end
@@ -407,11 +405,11 @@ RSpec.describe SimpleNavigation::Helpers do
       before { allow(SimpleNavigation).to receive_messages(primary_navigation: nil) }
 
       it 'raises an exception' do
-        expect{controller.render_navigation}.to raise_error(RuntimeError, 'no primary navigation defined, either use a navigation config file or pass items directly to render_navigation')
+        expect { controller.render_navigation }.to raise_error(RuntimeError, 'no primary navigation defined, either use a navigation config file or pass items directly to render_navigation')
       end
     end
 
-    context "when active_item_container is set" do
+    context 'when active_item_container is set' do
       let(:active_item_container) { double(:container).as_null_object }
 
       before do

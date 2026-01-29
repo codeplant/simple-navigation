@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::Configuration do
-  subject(:config) { SimpleNavigation::Configuration.instance }
+  subject(:config) { described_class.instance }
 
   describe '.run' do
-    it "yields the singleton Configuration object" do
-      expect{ |blk| SimpleNavigation::Configuration.run(&blk) }.to yield_with_args(config)
+    it 'yields the singleton Configuration object' do
+      expect { |blk| described_class.run(&blk) }.to yield_with_args(config)
     end
   end
 
   describe '.eval_config' do
-    let(:config_files) {{ default: 'default', my_context: 'my_context' }}
+    let(:config_files) { { default: 'default', my_context: 'my_context' } }
     let(:eval_context) { double(:eval_context) }
 
     before do
@@ -17,17 +19,17 @@ RSpec.describe SimpleNavigation::Configuration do
         receive_messages(context_for_eval: eval_context, config_files: config_files)
     end
 
-    context "with default navigation context" do
-      it "calls instance_eval with the default config_file-string inside the context" do
+    context 'with default navigation context' do
+      it 'calls instance_eval with the default config_file-string inside the context' do
         expect(eval_context).to receive(:instance_eval).with('default')
-        SimpleNavigation::Configuration.eval_config
+        described_class.eval_config
       end
     end
 
     context 'with non default navigation context' do
-      it "calls instance_eval with the specified config_file-string inside the context" do
+      it 'calls instance_eval with the specified config_file-string inside the context' do
         expect(eval_context).to receive(:instance_eval).with('my_context')
-        SimpleNavigation::Configuration.eval_config(:my_context)
+        described_class.eval_config(:my_context)
       end
     end
   end
@@ -88,23 +90,23 @@ RSpec.describe SimpleNavigation::Configuration do
         let(:provider) { double(:provider) }
 
         it 'raises an exception' do
-          expect{ config.items(provider) {} }.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both')
+          expect { config.items(provider) {} }.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both') # rubocop:disable Lint/EmptyBlock
         end
       end
 
       context 'when no items_provider is specified' do
         it 'yields an new ItemContainer' do
-          expect{ |blk| config.items(&blk) }.to yield_with_args(container)
+          expect { |blk| config.items(&blk) }.to yield_with_args(container)
         end
 
         it 'assigns the ItemContainer to an instance-var' do
-          config.items {}
+          config.items {} # rubocop:disable Lint/EmptyBlock
           expect(config.primary_navigation).to be container
         end
 
         it "doesn't set the items on the container" do
           expect(container).not_to receive(:items=)
-          config.items {}
+          config.items {} # rubocop:disable Lint/EmptyBlock
         end
       end
     end
@@ -137,8 +139,8 @@ RSpec.describe SimpleNavigation::Configuration do
       end
 
       context 'when items_provider is not specified' do
-        it "raises an exception" do
-          expect{ config.items }.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both')
+        it 'raises an exception' do
+          expect { config.items }.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both')
         end
       end
     end

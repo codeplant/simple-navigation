@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::ItemAdapter do
-  let(:item_adapter) { SimpleNavigation::ItemAdapter.new(item) }
+  let(:item_adapter) { described_class.new(item) }
 
   context 'when item is an object' do
     let(:item) { double(:item, key: 'key', name: 'name', url: 'url') }
@@ -84,15 +86,13 @@ RSpec.describe SimpleNavigation::ItemAdapter do
 
       it 'creates an Item' do
         expect(SimpleNavigation::Item).to receive(:new)
-                        .with(container, 'key', 'name', 'url', {})
+          .with(container, 'key', 'name', 'url', {})
         item_adapter.to_simple_navigation_item(container)
       end
     end
   end
 
   context 'when item is a kind of hash' do
-    class ModifiedHash < Hash; end
-
     let(:item) { ModifiedHash[key: 'key', url: 'url', name: 'name'] }
 
     shared_examples 'delegating to item' do |meth|
@@ -150,10 +150,10 @@ RSpec.describe SimpleNavigation::ItemAdapter do
           end
 
           context 'and items is not empty' do
-            before { item[:items] = ['not', 'empty'] }
+            before { item[:items] = %w[not empty] }
 
             it 'returns the items' do
-              expect(item_adapter.items).to eq ['not', 'empty']
+              expect(item_adapter.items).to eq %w[not empty]
             end
           end
         end
@@ -173,7 +173,7 @@ RSpec.describe SimpleNavigation::ItemAdapter do
 
       it 'passes the right arguments to Item' do
         expect(SimpleNavigation::Item).to receive(:new)
-                        .with(container, 'key', 'name', 'url', {})
+          .with(container, 'key', 'name', 'url', {})
         item_adapter.to_simple_navigation_item(container)
       end
 

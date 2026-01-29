@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'initializers/have_css_matcher'
 require 'initializers/memfs'
-#require 'initializers/coveralls'
+# require 'initializers/coveralls'
 require 'initializers/rails'
 require 'initializers/rspec'
 require 'capybara/rspec'
@@ -55,7 +57,7 @@ end
 
 # FIXME: adding the :link option for the list renderer messes up the other
 #        renderers
-def setup_items(container)
+def setup_items(container) # rubocop:disable Metrics/AbcSize
   container.item :users, 'Users', '/users', html: { id: 'users_id' }, link_html: { id: 'users_link_id' }
   container.item :invoices, 'Invoices', '/invoices' do |invoices|
     invoices.item :paid, 'Paid', '/invoices/paid'
@@ -67,10 +69,10 @@ def setup_items(container)
   container.items.each do |item|
     allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
 
-    if item.sub_navigation
-      item.sub_navigation.items.each do |item|
-        allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
-      end
+    item.sub_navigation&.items&.each do |item|
+      allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
     end
   end
 end
+
+class ModifiedHash < Hash; end

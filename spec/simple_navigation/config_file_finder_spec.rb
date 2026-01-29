@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require 'fileutils'
 require 'simple_navigation/config_file_finder'
 
 RSpec.describe SimpleNavigation::ConfigFileFinder do
-  subject(:finder) { SimpleNavigation::ConfigFileFinder.new(paths) }
+  subject(:finder) { described_class.new(paths) }
 
   let(:paths) { ['/path/one', '/path/two'] }
 
-  describe '#find', memfs: true do
+  describe '#find', :memfs do
     before { FileUtils.mkdir_p(paths) }
 
     context 'when the context is :default' do
@@ -40,7 +42,7 @@ RSpec.describe SimpleNavigation::ConfigFileFinder do
 
       context 'and no other_navigation.rb file is found in the paths' do
         it 'raise an exception' do
-          expect{ finder.find(context) }.to raise_error(RuntimeError, /Config file 'other_navigation.rb' not found in path\(s\)/)
+          expect { finder.find(context) }.to raise_error(RuntimeError, /Config file 'other_navigation.rb' not found in path\(s\)/)
         end
       end
     end

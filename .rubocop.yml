@@ -12,4 +12,57 @@ AllCops:
   Exclude:
     - bin/*
     - gemfiles/*
+
+Gemspec/RequireMFA:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/ClassLength:
+  Exclude:
     - spec/**/*
+
+Metrics/MethodLength:
+  Exclude:
+    - spec/**/*
+
+RSpec/SubjectStub:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 6
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 8
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
+
+Layout/LineLength:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+Naming/FileName:
+  Exclude:
+    - lib/simple-navigation.rb
+
+Style/BlockDelimiters:
+  Enabled: false
+
+Capybara/NegationMatcher:
+  Enabled: false

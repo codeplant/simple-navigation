@@ -1,4 +1,6 @@
+# frozen_string_literal: true
+
 begin
   require 'rails'
-rescue LoadError
+rescue LoadError # rubocop:disable Lint/SuppressedException
 end

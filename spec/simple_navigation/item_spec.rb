@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::Item do
   let!(:item_container) { SimpleNavigation::ItemContainer.new }
 
   let(:adapter) { double(:adapter) }
   let(:item_args) { [item_container, :my_key, 'name', url, options] }
-  let(:item) { SimpleNavigation::Item.new(*item_args) }
-  let(:options) { Hash.new }
+  let(:item) { described_class.new(*item_args) }
+  let(:options) { {} }
   let(:url) { 'url' }
 
   before { allow(SimpleNavigation).to receive_messages(adapter: adapter) }
 
   describe '#highlights_on' do
-    let(:options) {{ highlights_on: :test }}
+    let(:options) { { highlights_on: :test } }
 
     it "returns the item's highlights_on option" do
       expect(item.highlights_on).to eq :test
@@ -29,14 +31,14 @@ RSpec.describe SimpleNavigation::Item do
 
       context 'when a block is given' do
         it_behaves_like 'creating sub navigation container' do
-          let(:item) { SimpleNavigation::Item.new(*item_args) {} }
+          let(:item) { described_class.new(*item_args) {} } # rubocop:disable Lint/EmptyBlock
         end
 
         it 'calls the block' do
           allow(SimpleNavigation::ItemContainer).to receive_messages(new: subnav_container)
 
-          expect{ |blk|
-            SimpleNavigation::Item.new(*item_args, &blk)
+          expect { |blk|
+            described_class.new(*item_args, &blk)
           }.to yield_with_args(subnav_container)
         end
       end
@@ -44,18 +46,18 @@ RSpec.describe SimpleNavigation::Item do
       context 'when no block is given' do
         context 'and items are given' do
           let(:items) { [] }
-          let(:options) {{ items: items }}
+          let(:options) { { items: items } }
 
           it_behaves_like 'creating sub navigation container'
 
-          it "sets the items on the subnav_container" do
+          it 'sets the items on the subnav_container' do
             expect(item.sub_navigation.items).to eq items
           end
         end
 
         context 'and no items are given' do
           it "doesn't create a new ItemContainer" do
-            item = SimpleNavigation::Item.new(*item_args)
+            item = described_class.new(*item_args)
             expect(item.sub_navigation).to be_nil
           end
         end
@@ -63,7 +65,7 @@ RSpec.describe SimpleNavigation::Item do
     end
 
     context 'when a :method option is given' do
-      let(:options) {{ method: :delete }}
+      let(:options) { { method: :delete } }
 
       it "sets the item's method" do
         expect(item.method).to eq :delete
@@ -78,7 +80,7 @@ RSpec.describe SimpleNavigation::Item do
 
     context 'when an :highlights_on option is given' do
       let(:highlights_on) { double(:highlights_on) }
-      let(:options) {{ highlights_on: highlights_on }}
+      let(:options) { { highlights_on: highlights_on } }
 
       it "sets the item's highlights_on" do
         expect(item.highlights_on).to eq highlights_on
@@ -99,7 +101,7 @@ RSpec.describe SimpleNavigation::Item do
       end
 
       context 'and it is a proc' do
-        let(:url) { proc{ "my_" + "url" } }
+        let(:url) { proc { 'my_url' } }
 
         it "sets the item's url accordingly" do
           expect(item.url).to eq 'my_url'
@@ -132,7 +134,7 @@ RSpec.describe SimpleNavigation::Item do
     end
 
     context 'when url and options are given' do
-      let(:options) {{ html: { option: true } }}
+      let(:options) { { html: { option: true } } }
 
       before { allow(adapter).to receive_messages(current_page?: false) }
 
@@ -150,7 +152,7 @@ RSpec.describe SimpleNavigation::Item do
   end
 
   describe '#link_html_options' do
-    let(:options) {{ link_html: :test }}
+    let(:options) { { link_html: :test } }
 
     it "returns the item's link_html option" do
       expect(item.link_html_options).to eq :test
@@ -158,7 +160,7 @@ RSpec.describe SimpleNavigation::Item do
   end
 
   describe '#method' do
-    let(:options) {{ method: :test }}
+    let(:options) { { method: :test } }
 
     it "returns the item's method option" do
       expect(item.method).to eq :test
@@ -168,7 +170,7 @@ RSpec.describe SimpleNavigation::Item do
   describe '#name' do
     before do
       allow(SimpleNavigation.config).to \
-        receive_messages(name_generator: proc{ |name| "<span>#{name}</span>" })
+        receive_messages(name_generator: proc { |name| "<span>#{name}</span>" })
     end
 
     context 'when no option is given' do
@@ -181,7 +183,7 @@ RSpec.describe SimpleNavigation::Item do
       context 'and the name_generator uses only the item itself' do
         before do
           allow(SimpleNavigation.config).to \
-            receive_messages(name_generator: proc{ |name, item| "<span>#{item.key}</span>" })
+            receive_messages(name_generator: proc { |_name, item| "<span>#{item.key}</span>" })
         end
 
         it 'uses the default name_generator' do
@@ -245,7 +247,7 @@ RSpec.describe SimpleNavigation::Item do
             double(:config, auto_highlight: true, highlight_on_subpath: true, ignore_query_params_on_auto_highlight: true, ignore_anchors_on_auto_highlight: true)
           end
 
-          context "but item has no url" do
+          context 'but item has no url' do
             let(:url) { nil }
 
             it 'returns false' do
@@ -283,7 +285,7 @@ RSpec.describe SimpleNavigation::Item do
         before { allow(adapter).to receive_messages(request_uri: '/test') }
 
         context 'and the current url matches the expression' do
-          let(:options) {{ highlights_on: /test/ }}
+          let(:options) { { highlights_on: /test/ } }
 
           it 'returns true' do
             expect(item.selected?).to be true
@@ -291,7 +293,7 @@ RSpec.describe SimpleNavigation::Item do
         end
 
         context 'and the current url does not match the expression' do
-          let(:options) {{ highlights_on: /other/ }}
+          let(:options) { { highlights_on: /other/ } }
 
           it 'returns false' do
             expect(item.selected?).to be false
@@ -301,7 +303,7 @@ RSpec.describe SimpleNavigation::Item do
 
       context 'and it is a callable object' do
         context 'and the call returns true' do
-          let(:options) {{ highlights_on: -> { true } }}
+          let(:options) { { highlights_on: -> { true } } }
 
           it 'returns true' do
             expect(item.selected?).to be true
@@ -309,7 +311,7 @@ RSpec.describe SimpleNavigation::Item do
         end
 
         context 'and the call returns false' do
-          let(:options) {{ highlights_on: -> { false } }}
+          let(:options) { { highlights_on: -> { false } } }
 
           it 'returns false' do
             expect(item.selected?).to be false
@@ -318,7 +320,7 @@ RSpec.describe SimpleNavigation::Item do
       end
 
       context 'and it is the :subpath symbol' do
-        let(:options) {{ highlights_on: :subpath }}
+        let(:options) { { highlights_on: :subpath } }
 
         context "and the current url is a sub path of the item's url" do
           before do
@@ -342,10 +344,10 @@ RSpec.describe SimpleNavigation::Item do
       end
 
       context 'and it is non usable' do
-        let(:options) {{ highlights_on: :hello }}
+        let(:options) { { highlights_on: :hello } }
 
         it 'raises an exception' do
-          expect{ item.selected? }.to raise_error(ArgumentError, ':highlights_on must be a Regexp, Proc or :subpath')
+          expect { item.selected? }.to raise_error(ArgumentError, ':highlights_on must be a Regexp, Proc or :subpath')
         end
       end
     end
@@ -381,7 +383,7 @@ RSpec.describe SimpleNavigation::Item do
     let(:selected_classes) { 'selected simple-navigation-active-leaf' }
 
     context 'when the :class option is given' do
-      let(:options) {{ html: { class: 'my_class' } }}
+      let(:options) { { html: { class: 'my_class' } } }
 
       context 'and the item is selected' do
         before { allow(item).to receive_messages(selected?: true, selected_by_condition?: true) }
@@ -408,17 +410,17 @@ RSpec.describe SimpleNavigation::Item do
       context 'and the item is selected' do
         before { allow(item).to receive_messages(selected?: true, selected_by_condition?: true) }
 
-        it "sets the default html classes of a selected item" do
+        it 'sets the default html classes of a selected item' do
           expect(item.html_options[:class]).to include(selected_classes)
         end
       end
 
       context "and the item isn't selected" do
-         before { allow(item).to receive_messages(selected?: false, selected_by_condition?: false) }
+        before { allow(item).to receive_messages(selected?: false, selected_by_condition?: false) }
 
-         it "doesn't set any html class on the item" do
-           expect(item.html_options[:class]).to be_blank
-         end
+        it "doesn't set any html class on the item" do
+          expect(item.html_options[:class]).to be_blank
+        end
       end
     end
 
@@ -429,7 +431,7 @@ RSpec.describe SimpleNavigation::Item do
     end
 
     describe 'when the :id option is given' do
-      let(:options) {{ html: { id: 'my_id' } }}
+      let(:options) { { html: { id: 'my_id' } } }
 
       before do
         allow(SimpleNavigation.config).to receive_messages(autogenerate_item_ids: generate_ids)

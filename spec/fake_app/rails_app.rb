@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ENV['RAILS_ENV'] ||= 'test'
 
 require 'action_controller/railtie'
@@ -9,20 +11,20 @@ module RailsApp
     config.cache_classes = true
     config.eager_load = false
     config.root = __dir__
-    config.secret_token = 'x'*100
+    config.secret_token = 'x' * 100
     config.session_store :cookie_store, key: '_myapp_session'
   end
 
   class TestsController < ActionController::Base
     def base
-      render inline: <<-END
+      render inline: <<-HTML
         <!DOCTYPE html>
         <html>
           <body>
             <%= render_navigation %>
           </body>
         </html>
-      END
+      HTML
     end
   end
 end

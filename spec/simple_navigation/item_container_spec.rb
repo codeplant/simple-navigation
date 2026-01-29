@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::ItemContainer do
-  subject(:item_container) { SimpleNavigation::ItemContainer.new }
+  subject(:item_container) { described_class.new }
 
   shared_examples 'adding the item to the list' do
     it 'adds the item to the list' do
@@ -24,7 +26,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
   end
 
   describe '#dom_attributes' do
-    let(:dom_attributes) {{ id: 'test_id', class: 'test_class' }}
+    let(:dom_attributes) { { id: 'test_id', class: 'test_class' } }
 
     before { item_container.dom_attributes = dom_attributes }
 
@@ -33,7 +35,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
     end
 
     context 'when the dom_attributes do not contain any id or class' do
-      let(:dom_attributes) {{ test: 'test' }}
+      let(:dom_attributes) { { test: 'test' } }
 
       context "and the container hasn't any dom_id" do
         it "returns the contaier's dom_attributes without any id" do
@@ -66,7 +68,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
   end
 
   describe '#items=' do
-    let(:item) {{ key: :my_key, name: 'test', url: '/' }}
+    let(:item) { { key: :my_key, name: 'test', url: '/' } }
     let(:items) { [item] }
     let(:item_adapter) { double(:item_adapter).as_null_object }
     let(:real_item) { double(:real_item) }
@@ -74,8 +76,8 @@ RSpec.describe SimpleNavigation::ItemContainer do
     before do
       allow(SimpleNavigation::ItemAdapter).to receive_messages(new: item_adapter)
       allow(item_adapter).to receive(:to_simple_navigation_item)
-                             .with(item_container)
-                             .and_return(real_item)
+        .with(item_container)
+        .and_return(real_item)
     end
 
     context 'when the item should be added' do
@@ -123,7 +125,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
     let(:item_1) { double(:item, selected?: false) }
     let(:item_2) { double(:item, selected?: false) }
 
-    before(:each) do
+    before do
       allow(SimpleNavigation).to receive_messages(current_navigation_for: :nav)
       allow(item_container).to receive_messages(:[] => nil)
       item_container.instance_variable_set(:@items, [item_1, item_2])
@@ -174,7 +176,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
 
         it 'calls recursively on the sub_navigation' do
           expect(sub_navigation).to receive(:active_item_container_for)
-                                    .with(2)
+            .with(2)
           item_container.active_item_container_for(2)
         end
       end
@@ -188,7 +190,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
 
       before do
         allow(item_container).to receive_messages(selected_sub_navigation?: true,
-                            selected_item: selected_item)
+                                                  selected_item: selected_item)
         allow(selected_item).to receive_messages(sub_navigation: sub_navigation)
       end
 
@@ -208,32 +210,31 @@ RSpec.describe SimpleNavigation::ItemContainer do
   end
 
   describe '#item' do
-    let(:options) { Hash.new }
+    let(:options) { {} }
     let(:item) { double(:item) }
 
     context 'when a block is given' do
-      let(:block) { proc{} }
+      let(:block) { proc {} }
       let(:sub_container) { double(:sub_container) }
 
       it 'yields a new ItemContainer' do
-        allow_any_instance_of(SimpleNavigation::Item).to \
-          receive_messages(sub_navigation: sub_container)
+        allow_any_instance_of(SimpleNavigation::Item).to receive_messages(sub_navigation: sub_container) # rubocop:disable RSpec/AnyInstance
 
-        expect{ |blk|
+        expect { |blk|
           item_container.item('key', 'name', 'url', options, &blk)
         }.to yield_with_args(sub_container)
       end
 
-      it "creates a new Item with the given params and block" do
+      it 'creates a new Item with the given params and block' do
         allow(SimpleNavigation::Item).to receive(:new)
-                       .with(item_container, 'key', 'name', 'url', options, &block)
-                       .and_return(item)
+          .with(item_container, 'key', 'name', 'url', options, &block)
+          .and_return(item)
         item_container.item('key', 'name', 'url', options, &block)
         expect(item_container.items).to include(item)
       end
 
       it 'adds the created item to the list of items' do
-        item_container.item('key', 'name', 'url', options) {}
+        item_container.item('key', 'name', 'url', options) {} # rubocop:disable Lint/EmptyBlock
         expect(item_container.items).not_to include(item)
       end
     end
@@ -241,15 +242,15 @@ RSpec.describe SimpleNavigation::ItemContainer do
     context 'when no block is given' do
       it 'creates a new Item with the given params and no sub navigation' do
         allow(SimpleNavigation::Item).to receive(:new)
-                       .with(item_container, 'key', 'name', 'url', options)
-                       .and_return(item)
+          .with(item_container, 'key', 'name', 'url', options)
+          .and_return(item)
         item_container.item('key', 'name', 'url', options)
         expect(item_container.items).to include(item)
       end
 
       it 'adds the created item to the list of items' do
         allow(SimpleNavigation::Item).to receive_messages(new: item)
-        item_container.item('key', 'name', 'url', options) {}
+        item_container.item('key', 'name', 'url', options) {} # rubocop:disable Lint/EmptyBlock
         expect(item_container.items).to include(item)
       end
     end
@@ -257,13 +258,13 @@ RSpec.describe SimpleNavigation::ItemContainer do
     describe 'Optional url and optional options' do
       context 'when item specifed without url or options' do
         it_behaves_like 'adding the item to the list' do
-          let(:args) { ['key', 'name'] }
+          let(:args) { %w[key name] }
         end
       end
 
       context 'when item is specified with only a url' do
         it_behaves_like 'adding the item to the list' do
-          let(:args) { ['key', 'name', 'url'] }
+          let(:args) { %w[key name url] }
         end
       end
 
@@ -276,13 +277,13 @@ RSpec.describe SimpleNavigation::ItemContainer do
 
         context 'and options contains a negative condition' do
           it_behaves_like 'not adding the item to the list' do
-            let(:args) { ['key', 'name', nil, { if: ->{ false }, option: true }] }
+            let(:args) { ['key', 'name', nil, { if: -> { false }, option: true }] }
           end
         end
 
         context 'and options contains a positive condition' do
           it_behaves_like 'adding the item to the list' do
-            let(:args) { ['key', 'name', nil, { if: ->{ true }, option: true }] }
+            let(:args) { ['key', 'name', nil, { if: -> { true }, option: true }] }
           end
         end
       end
@@ -296,13 +297,13 @@ RSpec.describe SimpleNavigation::ItemContainer do
 
         context 'and options contains a negative condition' do
           it_behaves_like 'not adding the item to the list' do
-            let(:args) { ['key', 'name', 'url', { if: ->{ false }, option: true }] }
+            let(:args) { ['key', 'name', 'url', { if: -> { false }, option: true }] }
           end
         end
 
         context 'and options contains a positive condition' do
           it_behaves_like 'adding the item to the list' do
-            let(:args) { ['key', 'name', 'url', { if: ->{ true }, option: true }] }
+            let(:args) { ['key', 'name', 'url', { if: -> { true }, option: true }] }
           end
         end
       end
@@ -313,20 +314,20 @@ RSpec.describe SimpleNavigation::ItemContainer do
         end
 
         it 'does not raise an exception' do
-          expect{
+          expect {
             item_container.item('key', 'name', 'url', options)
           }.not_to raise_error
         end
       end
 
-      describe "container options" do
+      describe 'container options' do
         before do
           allow(item_container).to receive_messages(should_add_item?: add_item)
           item_container.item :key, 'name', 'url', options
         end
 
         context 'when the container :id option is specified' do
-          let(:options) {{ container: { id: 'c_id' } }}
+          let(:options) { { container: { id: 'c_id' } } }
 
           context 'and the item should be added' do
             let(:add_item) { true }
@@ -346,7 +347,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         end
 
         context 'when the container :class option is specified' do
-          let(:options) {{ container: { class: 'c_class' } }}
+          let(:options) { { container: { class: 'c_class' } } }
 
           context 'and the item should be added' do
             let(:add_item) { true }
@@ -366,7 +367,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         end
 
         context 'when the container :attributes option is specified' do
-          let(:options) {{ container: { attributes: { option: true } } }}
+          let(:options) { { container: { attributes: { option: true } } } }
 
           context 'and the item should be added' do
             let(:add_item) { true }
@@ -386,7 +387,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         end
 
         context 'when the container :selected_class option is specified' do
-          let(:options) {{ container: { selected_class: 'sel_class' } }}
+          let(:options) { { container: { selected_class: 'sel_class' } } }
 
           context 'and the item should be added' do
             let(:add_item) { true }
@@ -409,7 +410,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
 
     describe 'Conditions' do
       context 'when an :if option is given' do
-        let(:options) {{ if: proc{condition} }}
+        let(:options) { { if: proc { condition } } }
         let(:condition) { nil }
 
         context 'and it evals to true' do
@@ -432,7 +433,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
 
         context 'and it is not a proc or a method' do
           it 'raises an error' do
-            expect{
+            expect {
               item_container.item('key', 'name', 'url', { if: 'text' })
             }.to raise_error(ArgumentError, ':if or :unless must be procs or lambdas')
           end
@@ -440,7 +441,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
       end
 
       context 'when an :unless option is given' do
-        let(:options) {{ unless: proc{condition} }}
+        let(:options) { { unless: proc { condition } } }
         let(:condition) { nil }
 
         context 'and it evals to false' do
@@ -491,7 +492,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
       context 'and is specified as a class' do
         it 'instantiates the passed renderer_class with the options' do
           expect(renderer_class).to receive(:new)
-                                    .with({renderer: renderer_class})
+            .with({ renderer: renderer_class })
           item_container.render(renderer: renderer_class)
         end
 
@@ -508,8 +509,8 @@ RSpec.describe SimpleNavigation::ItemContainer do
           }
         end
 
-        it "instantiates the passed renderer_class with the options" do
-          expect(renderer_class).to receive(:new).with({renderer: :my_renderer})
+        it 'instantiates the passed renderer_class with the options' do
+          expect(renderer_class).to receive(:new).with({ renderer: :my_renderer })
           item_container.render(renderer: :my_renderer)
         end
 
@@ -521,7 +522,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
     end
 
     context 'when no renderer is specified' do
-      let(:options) { Hash.new }
+      let(:options) { {} }
 
       before { allow(item_container).to receive_messages(renderer: renderer_class) }
 
@@ -556,7 +557,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
   end
 
   describe '#level_for_item' do
-    before(:each) do
+    before do
       item_container.item(:p1, 'p1', 'p1')
       item_container.item(:p2, 'p2', 'p2') do |p2|
         p2.item(:s1, 's1', 's1')
@@ -570,7 +571,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
     end
 
     shared_examples 'returning the level of an item' do |item, level|
-      specify{ expect(item_container.level_for_item(item)).to eq level }
+      specify { expect(item_container.level_for_item(item)).to eq level }
     end
 
     it_behaves_like 'returning the level of an item', :p1, 1

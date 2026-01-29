@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::Renderer::Links do
   describe '#render' do
     let!(:navigation) { setup_navigation('nav_id', 'nav_class') }
@@ -5,7 +7,7 @@ RSpec.describe SimpleNavigation::Renderer::Links do
     let(:item) { nil }
     let(:options) { { level: :all } }
     let(:output) { renderer.render(navigation) }
-    let(:renderer) { SimpleNavigation::Renderer::Links.new(options) }
+    let(:renderer) { described_class.new(options) }
 
     before { select_an_item(navigation[item]) if item }
 
@@ -55,8 +57,8 @@ RSpec.describe SimpleNavigation::Renderer::Links do
       end
     end
 
-    context "when the :join_with option is set" do
-      let(:options) {{ level: :all, join_with: ' | ' }}
+    context 'when the :join_with option is set' do
+      let(:options) { { level: :all, join_with: ' | ' } }
 
       it 'separates the items with the specified separator' do
         expect(output.scan(' | ').size).to eq 3

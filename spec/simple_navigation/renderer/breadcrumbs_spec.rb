@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::Renderer::Breadcrumbs do
   let!(:navigation) { setup_navigation('nav_id', 'nav_class') }
 
   let(:item) { nil }
-  let(:options) {{ level: :all }}
+  let(:options) { { level: :all } }
   let(:output) { renderer.render(navigation) }
-  let(:renderer) { SimpleNavigation::Renderer::Breadcrumbs.new(options) }
+  let(:renderer) { described_class.new(options) }
 
   before { select_an_item(navigation[item]) if item }
 
@@ -43,7 +45,7 @@ RSpec.describe SimpleNavigation::Renderer::Breadcrumbs do
       end
 
       context 'and the :allow_classes_and_ids option is true' do
-        let(:options) {{ level: :all, allow_classes_and_ids: true }}
+        let(:options) { { level: :all, allow_classes_and_ids: true } }
 
         it "renders the 'a' tag with the selected class" do
           expect(output).to have_css('div a.selected')
@@ -66,7 +68,7 @@ RSpec.describe SimpleNavigation::Renderer::Breadcrumbs do
     end
 
     context 'and the :prefix option is set' do
-      let(:options) {{ prefix: 'You are here: ' }}
+      let(:options) { { prefix: 'You are here: ' } }
 
       context 'and there are no items to render' do
         let(:item) { nil }
@@ -98,7 +100,7 @@ RSpec.describe SimpleNavigation::Renderer::Breadcrumbs do
       end
 
       context 'when the :static_leaf option is true' do
-        let(:options) {{ level: :all, static_leaf: true }}
+        let(:options) { { level: :all, static_leaf: true } }
 
         it 'renders the items as links' do
           expect(output).to have_css('div a')

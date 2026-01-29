@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec::Matchers.define :have_css do |expected, times|
   match do |actual|
     selector = Nokogiri::HTML(actual).css(expected)
@@ -10,10 +12,10 @@ RSpec::Matchers.define :have_css do |expected, times|
   end
 
   failure_message do |actual|
-    "expected #{actual.to_s} to have #{times || 1} elements matching '#{expected}'"
+    "expected #{actual} to have #{times || 1} elements matching '#{expected}'"
   end
 
   failure_message_when_negated do |actual|
-    "expected #{actual.to_s} not to have #{times || 1} elements matching '#{expected}'"
+    "expected #{actual} not to have #{times || 1} elements matching '#{expected}'"
   end
 end

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'simple_navigation/config_file'
 
 RSpec.describe SimpleNavigation::ConfigFile do
-  subject(:config_file) { SimpleNavigation::ConfigFile.new(context) }
+  subject(:config_file) { described_class.new(context) }
 
   let(:context) { :default }
 

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::Adapters::Rails do
   let(:action_controller) { ActionController::Base }
-  let(:adapter) { SimpleNavigation::Adapters::Rails.new(context) }
+  let(:adapter) { described_class.new(context) }
   let(:context) { double(:context, controller: controller) }
   let(:controller) { double(:controller) }
   let(:request) { double(:request) }
@@ -17,8 +19,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
     end
 
     it 'extends the ActionController::Base with the Helpers' do
-      expect(action_controller).to receive(:include)
-                                   .with(SimpleNavigation::Helpers)
+      expect(action_controller).to receive(:include).with(SimpleNavigation::Helpers)
       simple_navigation.register
     end
 
@@ -184,7 +185,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
         before { adapter.instance_variable_set(:@template, nil) }
 
         it 'raises an exception' do
-          expect{ adapter.context_for_eval }.to raise_error(RuntimeError, 'no context set for evaluation the config file')
+          expect { adapter.context_for_eval }.to raise_error(RuntimeError, 'no context set for evaluation the config file')
         end
       end
     end
@@ -204,13 +205,13 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
       before { allow(adapter).to receive_messages(template: nil) }
 
       it 'returns false' do
-        expect(adapter.current_page?(:page)).to be_falsey
+        expect(adapter).not_to be_current_page(:page)
       end
     end
 
     context 'when the given url is nil' do
       it 'returns false' do
-        expect(adapter.current_page?(nil)).to be_falsey
+        expect(adapter).not_to be_current_page(nil)
       end
     end
   end
@@ -226,21 +227,17 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
         after { SimpleNavigation.config.consider_item_names_as_safe = false }
 
         it 'delegates the call to the template (with html_safe text)' do
-          expect(template).to receive(:link_to)
-                              .with('safe_text', 'url', options)
+          expect(template).to receive(:link_to).with('safe_text', 'url', options)
           adapter.link_to('text', 'url', options)
         end
       end
 
       context 'with considering item names as UNsafe (default)' do
-
         it 'delegates the call to the template (with html_safe text)' do
-          expect(template).to receive(:link_to)
-                              .with('text', 'url', options)
+          expect(template).to receive(:link_to).with('text', 'url', options)
           adapter.link_to('text', 'url', options)
         end
       end
-
     end
 
     context "when the adapter's template is not set" do
@@ -259,8 +256,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
       before { allow(adapter).to receive_messages(template: template, html_safe: 'safe_text') }
 
       it 'delegates the call to the template (with html_safe text)' do
-        expect(template).to receive(:content_tag)
-                            .with(:div, 'safe_text', options)
+        expect(template).to receive(:content_tag).with(:div, 'safe_text', options)
         adapter.content_tag(:div, 'text', options)
       end
     end
@@ -273,5 +269,4 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
       end
     end
   end
-
 end

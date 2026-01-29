@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 RSpec.describe SimpleNavigation::Renderer::List do
   let!(:navigation) { setup_navigation('nav_id', 'nav_class') }
 
   let(:item) { nil }
   let(:options) { { level: :all } }
   let(:output) { renderer.render(navigation) }
-  let(:renderer) { SimpleNavigation::Renderer::List.new(options) }
+  let(:renderer) { described_class.new(options) }
 
   before { select_an_item(navigation[item]) if item }
 
@@ -56,7 +58,7 @@ RSpec.describe SimpleNavigation::Renderer::List do
     end
 
     context 'when the :ordered option is true' do
-      let(:options) {{ level: :all, ordered: true }}
+      let(:options) { { level: :all, ordered: true } }
 
       it "renders an 'ol' tag for the navigation" do
         expect(output).to have_css('ol')
