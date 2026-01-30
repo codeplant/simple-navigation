@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'ostruct'
-
 module SimpleNavigation
   # This class acts as an adapter to items that are not defined using the DSL
   # in the config/navigation.rb, but directly provided inside the application.

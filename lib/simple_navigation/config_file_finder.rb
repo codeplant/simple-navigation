@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'simple_navigation/config_file'
-
 module SimpleNavigation
   # Internal: Encapsulates the configuration file finding logic.
   class ConfigFileFinder

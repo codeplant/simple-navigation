@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/string'
-
 module SimpleNavigation
   # Internal: Encapsulates the config file naming knowledge.
   class ConfigFile

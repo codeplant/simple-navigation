@@ -1,26 +1,31 @@
 # frozen_string_literal: true
 
-# cherry picking active_support stuff
+# require ruby dependencies
+require 'cgi'
+require 'forwardable'
+require 'json'
+require 'ostruct'
+require 'singleton'
+
+# require external dependencies
 require 'active_support/core_ext/array'
 require 'active_support/core_ext/hash'
+require 'active_support/core_ext/string'
 require 'active_support/core_ext/module/attribute_accessors'
+require 'zeitwerk'
 
-require 'simple_navigation/version'
-require 'simple_navigation/configuration'
-require 'simple_navigation/item_adapter'
-require 'simple_navigation/item'
-require 'simple_navigation/item_container'
-require 'simple_navigation/items_provider'
-require 'simple_navigation/renderer'
-require 'simple_navigation/adapters'
-require 'simple_navigation/config_file_finder'
-require 'simple_navigation/railtie' if defined?(Rails::Railtie)
-
-require 'forwardable'
+# load zeitwerk
+Zeitwerk::Loader.for_gem.tap do |loader|
+  loader.ignore("#{__dir__}/generators")
+  loader.ignore("#{__dir__}/simple-navigation.rb")
+  loader.setup
+end
 
 # A plugin for generating a simple navigation. See README for resources on
 # usage instructions.
 module SimpleNavigation
+  require_relative 'simple_navigation/railtie' if defined?(Rails::Railtie)
+
   mattr_accessor :adapter,
                  :adapter_class,
                  :config_files,

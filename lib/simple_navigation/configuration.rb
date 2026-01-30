@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'singleton'
-
 module SimpleNavigation
   # Responsible for evaluating and handling the config/navigation.rb file.
   class Configuration

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-
 module SimpleNavigation
   module Renderer
     # This is the base class for all renderers.

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'json'
-
 module SimpleNavigation
   module Renderer
     # Renders the navigation items as a object tree serialized as a json string,
