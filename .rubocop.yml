@@ -8,7 +8,7 @@ plugins:
 AllCops:
   NewCops: enable
   SuggestExtensions: true
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.0
   Exclude:
     - bin/*
     - gemfiles/*

@@ -41,7 +41,7 @@ module SimpleNavigation
       private
 
       def to_attributes(options)
-        options.map { |k, v| v.nil? ? nil : "#{k}='#{v}'" }.compact.join(' ')
+        options.filter_map { |k, v| v.nil? ? nil : "#{k}='#{v}'" }.join(' ')
       end
     end
   end

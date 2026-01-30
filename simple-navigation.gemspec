@@ -23,6 +23,8 @@ Gem::Specification.new do |spec|
 
   spec.rdoc_options     = ['--inline-source', '--charset=UTF-8']
 
-  spec.add_dependency 'activesupport', '>= 2.3.2'
+  spec.required_ruby_version = '>= 3.0.0'
+
+  spec.add_dependency 'activesupport', '>= 6.1.0'
   spec.add_dependency 'ostruct'
 end
