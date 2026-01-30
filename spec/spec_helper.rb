@@ -15,7 +15,6 @@ end
 # Ignore method redefinitions
 Warning.ignore(/warning: previous definition of/)
 Warning.ignore(/warning: method redefined;/)
-Warning.ignore(/warning: OpenStruct use is discouraged for performance reasons/)
 
 # Load simplecov
 require 'simplecov'

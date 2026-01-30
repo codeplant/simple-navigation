@@ -4,7 +4,6 @@
 require 'cgi/escape'
 require 'forwardable'
 require 'json'
-require 'ostruct'
 require 'singleton'
 
 # require external dependencies

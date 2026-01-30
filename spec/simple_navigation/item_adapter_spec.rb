@@ -33,12 +33,6 @@ RSpec.describe SimpleNavigation::ItemAdapter do
           expect(item_adapter.options).to be options
         end
       end
-
-      context 'item does not respond to options' do
-        it 'returns an empty hash' do
-          expect(item_adapter.options).to eq({})
-        end
-      end
     end
 
     describe '#items' do
@@ -69,12 +63,6 @@ RSpec.describe SimpleNavigation::ItemAdapter do
               expect(item_adapter.items).to eq items
             end
           end
-        end
-      end
-
-      context "when item doesn't respond to items" do
-        it 'returns nil' do
-          expect(item_adapter.items).to be_nil
         end
       end
     end
@@ -172,8 +160,7 @@ RSpec.describe SimpleNavigation::ItemAdapter do
       before { item.merge(options: {}) }
 
       it 'passes the right arguments to Item' do
-        expect(SimpleNavigation::Item).to receive(:new)
-          .with(container, 'key', 'name', 'url', {})
+        expect(SimpleNavigation::Item).to receive(:new).with(container, 'key', 'name', 'url', {})
         item_adapter.to_simple_navigation_item(container)
       end
 

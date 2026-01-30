@@ -27,6 +27,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activesupport', '>= 6.1.0'
   spec.add_dependency 'json'
-  spec.add_dependency 'ostruct'
   spec.add_dependency 'zeitwerk'
 end
