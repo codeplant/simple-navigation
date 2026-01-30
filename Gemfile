@@ -11,6 +11,7 @@ gem 'memfs', '~> 0.4.1'
 gem 'rake'
 gem 'rdoc'
 gem 'rspec'
+gem 'simplecov'
 gem 'tzinfo'
 
 # Dev tools / linter

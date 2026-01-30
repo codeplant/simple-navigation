@@ -10,6 +10,7 @@ appraise 'rails_6.1' do
   # You can add drb to your Gemfile or gemspec to silence this warning.
   install_if '-> { Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.4.0") }' do
     gem 'base64'
+    gem 'bigdecimal'
     gem 'drb'
     gem 'mutex_m'
   end
