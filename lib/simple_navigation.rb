@@ -78,8 +78,7 @@ module SimpleNavigation
       return :sinatra if defined?(Sinatra)
       return :nanoc if defined?(Nanoc3)
 
-      raise 'simple_navigation currently only works for Rails, Sinatra and ' \
-            'Padrino apps'
+      raise 'simple_navigation currently only works for Rails, Sinatra and Padrino apps'
     end
 
     # Loads the adapter for the current framework
