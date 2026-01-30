@@ -10,6 +10,7 @@ gem "rdoc"
 gem "rspec"
 gem "simplecov"
 gem "tzinfo"
+gem "warning"
 gem "guard-rspec", require: false
 gem "rubocop", require: false
 gem "rubocop-capybara", require: false

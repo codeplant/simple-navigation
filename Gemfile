@@ -13,6 +13,7 @@ gem 'rdoc'
 gem 'rspec'
 gem 'simplecov'
 gem 'tzinfo'
+gem 'warning'
 
 # Dev tools / linter
 gem 'guard-rspec',         require: false
