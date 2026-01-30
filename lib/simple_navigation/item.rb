@@ -29,7 +29,7 @@ module SimpleNavigation
     # the name will be passed to the name_generator specified
     # in the configuration.
     #
-    def name(options = {})
+    def name(options = {}) # rubocop:disable Lint/DuplicateMethods
       options = { apply_generator: true }.merge(options)
       if options[:apply_generator]
         config.name_generator.call(@name, self)

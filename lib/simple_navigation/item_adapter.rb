@@ -33,7 +33,7 @@ module SimpleNavigation
     attr_reader :item
 
     def initialize(item)
-      @item = item.is_a?(Hash) ? OpenStruct.new(item) : item
+      @item = item.is_a?(Hash) ? OpenStruct.new(item) : item # rubocop:disable Style/OpenStructUse
     end
 
     # Returns the options for this item. If the wrapped item does not implement

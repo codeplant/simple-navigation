@@ -2,7 +2,7 @@
 
 module SimpleNavigation
   # Holds the Items for a navigation 'level'.
-  class ItemContainer
+  class ItemContainer # rubocop:disable Metrics/ClassLength
     attr_accessor :auto_highlight,
                   :dom_class,
                   :dom_id,

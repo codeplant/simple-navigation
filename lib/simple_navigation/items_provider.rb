@@ -22,7 +22,7 @@ module SimpleNavigation
     end
 
     # Returns the navigation items
-    def items
+    def items # rubocop:disable Metrics/MethodLength
       if provider.is_a?(Symbol)
         SimpleNavigation.context_for_eval.send(provider)
       elsif provider.respond_to?(:items)

@@ -91,7 +91,7 @@ module SimpleNavigation
       end
 
       # Extracts the options relevant for the generated link
-      def link_options_for(item)
+      def link_options_for(item) # rubocop:disable Metrics/MethodLength
         special_options = {
           method: item.method,
           class: item.selected_class
