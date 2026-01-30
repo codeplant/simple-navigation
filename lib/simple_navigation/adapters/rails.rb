@@ -12,12 +12,8 @@ module SimpleNavigation
         # This delays the hook initialization using the on_load
         # hooks, but does not change behaviour for existing
         # rails versions.
-        if ::Rails::VERSION::MAJOR >= 6
-          ActiveSupport.on_load(:action_controller_base) do
-            SimpleNavigation::Adapters::Rails.register_controller_helpers
-          end
-        else
-          register_controller_helpers
+        ActiveSupport.on_load(:action_controller_base) do
+          SimpleNavigation::Adapters::Rails.register_controller_helpers
         end
       end
 
