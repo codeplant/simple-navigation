@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # require ruby dependencies
-require 'cgi'
+require 'cgi/escape'
 require 'forwardable'
 require 'json'
 require 'ostruct'
