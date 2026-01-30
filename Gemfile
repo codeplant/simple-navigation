@@ -7,7 +7,7 @@ gemspec
 # Dev libs
 gem 'appraisal', git: 'https://github.com/thoughtbot/appraisal.git'
 gem 'capybara'
-gem 'memfs', '~> 0.4.1'
+gem 'memfs', git: 'https://github.com/simonc/memfs.git'
 gem 'rake'
 gem 'rdoc'
 gem 'rspec'

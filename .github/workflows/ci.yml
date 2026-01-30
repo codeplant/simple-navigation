@@ -67,9 +67,8 @@ jobs:
     env:
       # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.rails }}.gemfile
-
-      # reenable me later
-      # RUBYOPT: "--enable=frozen-string-literal --debug=frozen-string-literal"
+      # Check for frozen strings
+      RUBYOPT: "--enable=frozen-string-literal --debug=frozen-string-literal"
 
     steps:
       - name: Checkout
