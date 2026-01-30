@@ -1,5 +1,14 @@
 # frozen_string_literal: true
 
+# To update files in gemfiles/ directory:
+# rm gemfiles/*
+# bin/appraisal generate
+
+# To run tests:
+# bin/appraisal rails_8.1 bundle install
+# bin/appraisal rails_8.1 rake
+# bin/appraisal rails_8.1 rspec
+
 appraise 'rails_6.1' do
   gem 'railties', '~> 6.1.0'
   gem 'rspec-rails'
