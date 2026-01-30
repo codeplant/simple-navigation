@@ -10,7 +10,7 @@ module SimpleNavigation
         end
       end
 
-      def initialize(ctx)
+      def initialize(ctx) # rubocop:disable Lint/MissingSuper
         @context = ctx
       end
 

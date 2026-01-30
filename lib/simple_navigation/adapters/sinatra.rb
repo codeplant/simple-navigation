@@ -9,7 +9,7 @@ module SimpleNavigation
         SimpleNavigation.set_env(app.root, app.environment)
       end
 
-      def initialize(context)
+      def initialize(context) # rubocop:disable Lint/MissingSuper
         @context = context
         @request = context.request
       end

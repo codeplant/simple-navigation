@@ -28,7 +28,7 @@ module SimpleNavigation
         end
       end
 
-      def initialize(context)
+      def initialize(context) # rubocop:disable Lint/MissingSuper
         @controller = extract_controller_from context
         @template = template_from @controller
         @request = @template.request if @template
