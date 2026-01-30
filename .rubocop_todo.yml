@@ -1,0 +1,39 @@
+---
+
+Layout/LineLength:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Enabled: false
+
+#########
+# RSPEC #
+#########
+
+RSpec/SubjectStub:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
+
+############
+# CAPYBARA #
+############
+
+Capybara/NegationMatcher:
+  Enabled: false
