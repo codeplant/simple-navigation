@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleNavigation
   module Adapters
     # This is the base class for all adapters.

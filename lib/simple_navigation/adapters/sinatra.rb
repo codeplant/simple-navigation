@@ -1,4 +1,4 @@
-require 'cgi'
+# frozen_string_literal: true
 
 module SimpleNavigation
   module Adapters
@@ -7,13 +7,13 @@ module SimpleNavigation
         SimpleNavigation.set_env(app.root, app.environment)
       end
 
-      def initialize(context)
+      def initialize(context) # rubocop:disable Lint/MissingSuper
         @context = context
         @request = context.request
       end
 
       def context_for_eval
-        context || fail('no context set for evaluation the config file')
+        context || raise('no context set for evaluation the config file')
       end
 
       def request_uri
@@ -32,9 +32,7 @@ module SimpleNavigation
                 request_uri.split('?').first
               end
 
-        if url_string =~ %r(^\w+://)
-          uri = "#{request.scheme}://#{request.host_with_port}#{uri}"
-        end
+        uri = "#{request.scheme}://#{request.host_with_port}#{uri}" if %r{^\w+://}.match?(url_string)
 
         url_string == CGI.unescape(uri)
       end

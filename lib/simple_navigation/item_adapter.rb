@@ -1,5 +1,4 @@
-require 'forwardable'
-require 'ostruct'
+# frozen_string_literal: true
 
 module SimpleNavigation
   # This class acts as an adapter to items that are not defined using the DSL
@@ -30,20 +29,32 @@ module SimpleNavigation
 
     attr_reader :item
 
+    class Item
+      attr_reader :key, :name, :url, :options, :items
+
+      def initialize(item)
+        @key     = item[:key]
+        @name    = item[:name]
+        @url     = item[:url]
+        @options = item[:options] || {}
+        @items   = item[:items] || []
+      end
+    end
+
     def initialize(item)
-      @item = item.is_a?(Hash) ? OpenStruct.new(item) : item
+      @item = item.is_a?(Hash) ? Item.new(item) : item
     end
 
     # Returns the options for this item. If the wrapped item does not implement
     # an options method, an empty hash is returned.
     def options
-      item.respond_to?(:options) ? item.options : {}
+      item.options
     end
 
     # Returns the items (subnavigation) for this item if it responds to :items
     # and the items-collection is not empty. Returns nil otherwise.
     def items
-      item.items if item.respond_to?(:items) && item.items && item.items.any?
+      item.items if item.items&.any?
     end
 
     # Converts this Item into a SimpleNavigation::Item

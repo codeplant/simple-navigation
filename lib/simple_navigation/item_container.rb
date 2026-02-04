@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module SimpleNavigation
   # Holds the Items for a navigation 'level'.
-  class ItemContainer
+  class ItemContainer # rubocop:disable Metrics/ClassLength
     attr_accessor :auto_highlight,
                   :dom_class,
                   :dom_id,
@@ -11,7 +13,7 @@ module SimpleNavigation
 
     attr_writer :dom_attributes
 
-    def initialize(level = 1) #:nodoc:
+    def initialize(level = 1) # :nodoc:
       @level = level
       @items ||= []
       @renderer = SimpleNavigation.config.renderer
@@ -24,7 +26,7 @@ module SimpleNavigation
       dom_id_and_class = {
         id: dom_id,
         class: dom_class
-      }.reject { |_, v| v.nil? }
+      }.compact
 
       @dom_attributes.merge(dom_id_and_class)
     end
@@ -63,6 +65,7 @@ module SimpleNavigation
     # The <tt>block</tt> - if specified - will hold the item's sub_navigation.
     def item(key, name, url = nil, options = {}, &block)
       return unless should_add_item?(options)
+
       item = Item.new(self, key, name, url, options, &block)
       add_item item, options
     end
@@ -71,6 +74,7 @@ module SimpleNavigation
       new_items.each do |item|
         item_adapter = ItemAdapter.new(item)
         next unless should_add_item?(item_adapter.options)
+
         add_item item_adapter.to_simple_navigation_item(self), item_adapter.options
       end
     end
@@ -91,10 +95,11 @@ module SimpleNavigation
 
       items.each do |item|
         next unless item.sub_navigation
+
         level = item.sub_navigation.level_for_item(navi_key)
         return level if level
       end
-      return nil
+      nil
     end
 
     # Renders the items in this ItemContainer using the configured renderer.
@@ -152,7 +157,8 @@ module SimpleNavigation
     end
 
     def modify_dom_attributes(options)
-      return unless container_options = options[:container]
+      return unless (container_options = options[:container])
+
       self.dom_attributes = container_options.fetch(:attributes) { dom_attributes }
       self.dom_class = container_options.fetch(:class) { dom_class }
       self.dom_id = container_options.fetch(:id) { dom_id }
@@ -178,13 +184,13 @@ module SimpleNavigation
 
     def should_add_item?(options)
       [options[:if]].flatten.compact.all? { |m| evaluate_method(m) } &&
-      [options[:unless]].flatten.compact.none? { |m| evaluate_method(m) }
+        [options[:unless]].flatten.compact.none? { |m| evaluate_method(m) }
     end
 
     def evaluate_method(method)
       case method
       when Proc, Method then method.call
-      else fail(ArgumentError, ':if or :unless must be procs or lambdas')
+      else raise(ArgumentError, ':if or :unless must be procs or lambdas')
       end
     end
   end

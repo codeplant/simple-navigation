@@ -1,4 +1,4 @@
-require 'active_support/core_ext/string'
+# frozen_string_literal: true
 
 module SimpleNavigation
   # Internal: Encapsulates the config file naming knowledge.

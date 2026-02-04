@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleNavigation
   module Renderer
     # Renders the 'chain' of selected navigation items as simple text items,
@@ -13,7 +15,7 @@ module SimpleNavigation
       def list(item_container)
         item_container.items.keep_if(&:selected?).map do |item|
           [item.name(apply_generator: false)] +
-          (include_sub_navigation?(item) ? list(item.sub_navigation) : [])
+            (include_sub_navigation?(item) ? list(item.sub_navigation) : [])
         end
       end
     end

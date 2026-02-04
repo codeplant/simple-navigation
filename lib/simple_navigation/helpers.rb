@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleNavigation
   # View helpers to render the navigation.
   #
@@ -30,14 +32,12 @@ module SimpleNavigation
       SimpleNavigation.load_config context
       SimpleNavigation::Configuration.eval_config context
 
-      if block_given? || options[:items]
-        SimpleNavigation.config.items(options[:items], &block)
-      end
+      SimpleNavigation.config.items(options[:items], &block) if block_given? || options[:items]
 
-      unless SimpleNavigation.primary_navigation
-        fail 'no primary navigation defined, either use a navigation config ' \
-             'file or pass items directly to render_navigation'
-      end
+      return if SimpleNavigation.primary_navigation
+
+      raise 'no primary navigation defined, either use a navigation config ' \
+            'file or pass items directly to render_navigation'
     end
 
     def self.apply_defaults(options)
@@ -85,7 +85,7 @@ module SimpleNavigation
     #
     def render_navigation(options = {}, &block)
       container = active_navigation_item_container(options, &block)
-      container && container.render(options)
+      container&.render(options)
     end
 
     # Returns the name of the currently active navigation item belonging to the
@@ -138,9 +138,7 @@ module SimpleNavigation
     # by default) if no active item can be found for the specified
     # options
     def active_navigation_item(options = {}, value_for_nil = nil)
-      if options[:level].nil? || options[:level] == :all
-        options[:level] = :leaves
-      end
+      options[:level] = :leaves if options[:level].nil? || options[:level] == :all
       container = active_navigation_item_container(options)
       if container && (item = container.selected_item)
         block_given? ? yield(item) : item

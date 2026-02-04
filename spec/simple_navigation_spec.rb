@@ -1,4 +1,6 @@
-describe SimpleNavigation do
+# frozen_string_literal: true
+
+RSpec.describe SimpleNavigation do
   before { subject.config_file_path = 'path_to_config' }
 
   describe 'config_file_path=' do
@@ -53,7 +55,7 @@ describe SimpleNavigation do
     end
   end
 
-  describe '.load_config', memfs: true do
+  describe '.load_config', :memfs do
     let(:paths) { ['/path/one', '/path/two'] }
 
     before do
@@ -104,7 +106,7 @@ describe SimpleNavigation do
 
     context "when the config file for the context doesn't exists" do
       it 'raises an exception' do
-        expect{ subject.load_config }.to raise_error(RuntimeError, /Config file 'navigation.rb' not found in path\(s\)/)
+        expect { subject.load_config }.to raise_error(RuntimeError, /Config file 'navigation.rb' not found in path\(s\)/)
       end
     end
   end
@@ -150,7 +152,7 @@ describe SimpleNavigation do
 
     context 'when level is something else' do
       it 'raises an exception' do
-        expect{
+        expect {
           subject.active_item_container_for('something else')
         }.to raise_error(ArgumentError, 'Invalid navigation level: something else')
       end

@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 module SimpleNavigation
   module Adapters
     class Nanoc < Base
       class << self
         def register(root)
           SimpleNavigation.set_env(root, 'development')
-          Nanoc3::Context.send(:include, SimpleNavigation::Helpers)
+          Nanoc3::Context.include SimpleNavigation::Helpers
         end
       end
 
-      def initialize(ctx)
+      def initialize(ctx) # rubocop:disable Lint/MissingSuper
         @context = ctx
       end
 
@@ -39,7 +41,7 @@ module SimpleNavigation
       private
 
       def to_attributes(options)
-        options.map { |k, v| v.nil? ? nil : "#{k}='#{v}'" }.compact.join(' ')
+        options.filter_map { |k, v| v.nil? ? nil : "#{k}='#{v}'" }.join(' ')
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NavigationConfigGenerator < Rails::Generator::Base
   def manifest
     record do |m|

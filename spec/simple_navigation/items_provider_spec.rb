@@ -1,43 +1,43 @@
-module SimpleNavigation
-  describe ItemsProvider do
-    let(:items_provider) { ItemsProvider.new(provider) }
+# frozen_string_literal: true
 
-    describe '#items' do
-      let(:items) { double(:items) }
+RSpec.describe SimpleNavigation::ItemsProvider do
+  let(:items_provider) { described_class.new(provider) }
 
-      context 'when provider is a symbol' do
-        let(:context) { double(:context, provider_method: items) }
-        let(:provider) { :provider_method }
+  describe '#items' do
+    let(:items) { double(:items) }
 
-        before { allow(SimpleNavigation).to receive_messages(context_for_eval: context) }
+    context 'when provider is a symbol' do
+      let(:context) { double(:context, provider_method: items) }
+      let(:provider) { :provider_method }
 
-        it 'retrieves the items from the evaluation context' do
-          expect(items_provider.items).to eq items
-        end
+      before { allow(SimpleNavigation).to receive_messages(context_for_eval: context) }
+
+      it 'retrieves the items from the evaluation context' do
+        expect(items_provider.items).to eq items
       end
+    end
 
-      context 'when provider responds to :items' do
-        let(:provider) { double(:provider, items: items) }
+    context 'when provider responds to :items' do
+      let(:provider) { double(:provider, items: items) }
 
-        it 'retrieves the items from the provider object' do
-          expect(items_provider.items).to eq items
-        end
+      it 'retrieves the items from the provider object' do
+        expect(items_provider.items).to eq items
       end
+    end
 
-      context 'provider is a collection' do
-        let(:provider) { [] }
+    context 'provider is a collection' do
+      let(:provider) { [] }
 
-        it 'retrieves the items by returning the provider' do
-          expect(items_provider.items).to eq provider
-        end
+      it 'retrieves the items by returning the provider' do
+        expect(items_provider.items).to eq provider
       end
+    end
 
-      context 'when provider is something else' do
-        let(:provider) { double(:provider) }
+    context 'when provider is something else' do
+      let(:provider) { double(:provider) }
 
-        it 'raises an exception' do
-          expect{ items_provider.items }.to raise_error(RuntimeError, /items_provider either must be a symbol .*, an object .* or an enumerable/)
-        end
+      it 'raises an exception' do
+        expect { items_provider.items }.to raise_error(RuntimeError, /items_provider either must be a symbol .*, an object .* or an enumerable/)
       end
     end
   end

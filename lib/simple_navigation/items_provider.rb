@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleNavigation
   # Acts as a proxy to navigation items that are passed into the
   # SimpleNavigation::Configuration#items method.
@@ -20,7 +22,7 @@ module SimpleNavigation
     end
 
     # Returns the navigation items
-    def items
+    def items # rubocop:disable Metrics/MethodLength
       if provider.is_a?(Symbol)
         SimpleNavigation.context_for_eval.send(provider)
       elsif provider.respond_to?(:items)
@@ -28,9 +30,9 @@ module SimpleNavigation
       elsif provider.respond_to?(:each)
         provider
       else
-        fail('items_provider either must be a symbol specifying the '         \
-             'helper-method to call, an object with an items-method defined ' \
-             'or an enumerable representing the items')
+        raise('items_provider either must be a symbol specifying the ' \
+              'helper-method to call, an object with an items-method defined ' \
+              'or an enumerable representing the items')
       end
     end
   end

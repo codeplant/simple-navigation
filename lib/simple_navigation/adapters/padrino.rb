@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module SimpleNavigation
   module Adapters
     class Padrino < Sinatra
-      def self.register(app)
+      def self.register(_app)
         SimpleNavigation.set_env(::Padrino.root, ::Padrino.env)
         ::Padrino::Application.send(:helpers, SimpleNavigation::Helpers)
       end

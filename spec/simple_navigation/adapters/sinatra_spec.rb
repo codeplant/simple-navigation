@@ -1,5 +1,7 @@
-describe SimpleNavigation::Adapters::Sinatra do
-  let(:adapter) { SimpleNavigation::Adapters::Sinatra.new(context) }
+# frozen_string_literal: true
+
+RSpec.describe SimpleNavigation::Adapters::Sinatra do
+  let(:adapter) { described_class.new(context) }
   let(:context) { double(:context) }
   let(:request) { double(:request, fullpath: '/full?param=true', path: '/full') }
 
@@ -9,7 +11,7 @@ describe SimpleNavigation::Adapters::Sinatra do
     context "when adapter's context is not set" do
       it 'raises an exception' do
         allow(adapter).to receive_messages(context: nil)
-        expect{ adapter.context_for_eval }.to raise_error(RuntimeError, 'no context set for evaluation the config file')
+        expect { adapter.context_for_eval }.to raise_error(RuntimeError, 'no context set for evaluation the config file')
       end
     end
 
@@ -57,8 +59,7 @@ describe SimpleNavigation::Adapters::Sinatra do
 
     context 'when URL is encoded' do
       before do
-        allow(request).to receive_messages(fullpath: '/full%20with%20spaces?param=true',
-                     path: '/full%20with%20spaces')
+        allow(request).to receive_messages(fullpath: '/full%20with%20spaces?param=true', path: '/full%20with%20spaces')
       end
 
       it_behaves_like 'detecting current page', '/full%20with%20spaces?param=true', true

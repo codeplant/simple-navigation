@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleNavigation
   module Adapters
     class Rails < Base
@@ -10,23 +12,19 @@ module SimpleNavigation
         # This delays the hook initialization using the on_load
         # hooks, but does not change behaviour for existing
         # rails versions.
-        if ::Rails::VERSION::MAJOR >= 6
-          ActiveSupport.on_load(:action_controller_base) do
-            SimpleNavigation::Adapters::Rails.register_controller_helpers
-          end
-        else
-          register_controller_helpers
+        ActiveSupport.on_load(:action_controller_base) do
+          SimpleNavigation::Adapters::Rails.register_controller_helpers
         end
       end
 
       def self.register_controller_helpers
-        ActionController::Base.send(:include, SimpleNavigation::Helpers)
+        ActionController::Base.include SimpleNavigation::Helpers
         SimpleNavigation::Helpers.instance_methods.each do |m|
           ActionController::Base.send(:helper_method, m.to_sym)
         end
       end
 
-      def initialize(context)
+      def initialize(context) # rubocop:disable Lint/MissingSuper
         @controller = extract_controller_from context
         @template = template_from @controller
         @request = @template.request if @template
@@ -47,21 +45,21 @@ module SimpleNavigation
       end
 
       def context_for_eval
-        template   ||
-        controller ||
-        fail('no context set for evaluation the config file')
+        template ||
+          controller ||
+          raise('no context set for evaluation the config file')
       end
 
       def current_page?(url)
-        template && template.current_page?(url)
+        template&.current_page?(url)
       end
 
       def link_to(name, url, options = {})
-        template && template.link_to(link_title(name), url, options)
+        template&.link_to(link_title(name), url, options)
       end
 
       def content_tag(type, content, options = {})
-        template && template.content_tag(type, html_safe(content), options)
+        template&.content_tag(type, html_safe(content), options)
       end
 
       protected

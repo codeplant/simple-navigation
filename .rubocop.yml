@@ -1,0 +1,49 @@
+---
+plugins:
+  - rubocop-capybara
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
+inherit_from:
+  - .rubocop_todo.yml
+
+AllCops:
+  NewCops: enable
+  SuggestExtensions: true
+  TargetRubyVersion: 3.0
+  Exclude:
+    - bin/*
+    - gemfiles/*
+
+Gemspec/RequireMFA:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Naming/FileName:
+  Exclude:
+    - lib/simple-navigation.rb
+
+###########
+# METRICS #
+###########
+
+Metrics/ClassLength:
+  Exclude:
+    - spec/**/*
+
+Metrics/MethodLength:
+  Exclude:
+    - spec/**/*
+
+#########
+# RSPEC #
+#########
+
+RSpec/NestedGroups:
+  Max: 6
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 8

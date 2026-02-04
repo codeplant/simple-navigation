@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NavigationConfigGenerator < Rails::Generators::Base
   def self.source_root
     @source_root ||= begin
