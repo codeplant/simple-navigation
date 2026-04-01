@@ -151,5 +151,3 @@ else
     end
   end
 end
-
-class ModifiedHash < Hash; end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+class ModifiedHash < Hash; end
+
 RSpec.describe SimpleNavigation::ItemAdapter do
   let(:item_adapter) { described_class.new(item) }
 
