@@ -152,10 +152,32 @@ RSpec.describe SimpleNavigation::Item do
   end
 
   describe '#link_html_options' do
-    let(:options) { { link_html: :test } }
+    let(:options) { { link_html: { class: "test" } } }
+
+    before { allow(item).to receive_messages(selected?: false, selected_by_condition?: false, selected_by_subnav?: false) }
 
     it "returns the item's link_html option" do
-      expect(item.link_html_options).to eq :test
+      expect(item.link_html_options).to eq({ class: "test" })
+    end
+
+    it "doesn't add an `aria-current` attribute" do
+      expect(item.link_html_options).to_not have_key(:"aria-current")
+    end
+
+    context "when the item is selected by condition but not by subnav (i.e. a selected leaf)" do
+      before { allow(item).to receive_messages(selected?: true, selected_by_condition?: true, selected_by_subnav?: false) }
+
+      it "adds an `aria-current` attribute" do
+        expect(item.link_html_options[:"aria-current"]).to eq "page"
+      end
+    end
+
+    context "when the item is selected by subnav and not by condition" do
+      before { allow(item).to receive_messages(selected?: true, selected_by_condition?: false, selected_by_subnav?: true) }
+
+      it "doesn't add an `aria-current` attribute" do
+        expect(item.link_html_options).to_not have_key(:"aria-current")
+      end
     end
   end
 

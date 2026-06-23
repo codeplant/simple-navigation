@@ -3,12 +3,9 @@
 RSpec.describe SimpleNavigation::Renderer::List do
   let!(:navigation) { setup_navigation('nav_id', 'nav_class') }
 
-  let(:item) { nil }
   let(:options) { { level: :all } }
   let(:output) { renderer.render(navigation) }
   let(:renderer) { described_class.new(options) }
-
-  before { select_an_item(navigation[item]) if item }
 
   describe '#render' do
     it "renders an 'ul' tag for the navigation" do
@@ -46,7 +43,10 @@ RSpec.describe SimpleNavigation::Renderer::List do
     end
 
     context 'when an item is selected' do
-      let(:item) { :invoices }
+      before do
+        allow(navigation[:invoices]).to \
+          receive_messages(selected?: true, selected_by_condition?: true)
+      end
 
       it "renders the item's 'li' tag with its id and selected classes" do
         expect(output).to have_css('li#invoices.selected')
@@ -54,6 +54,10 @@ RSpec.describe SimpleNavigation::Renderer::List do
 
       it "renders the item's 'a' tag with the selected classes" do
         expect(output).to have_css('li#invoices a.selected')
+      end
+
+      it "renders the item's 'a' tag with with an 'aria-current' attribute" do
+        expect(output).to have_css('li#invoices a[aria-current=page]')
       end
     end
 
@@ -87,6 +91,14 @@ RSpec.describe SimpleNavigation::Renderer::List do
 
       it "renders the selected nested item's link as selected" do
         expect(output).to have_css('li#unpaid.selected')
+      end
+
+      it "renders the selected nested item's 'a' tag with with an 'aria-current' attribute" do
+        expect(output).to have_css('li#unpaid a[aria-current=page]')
+      end
+
+      it "does not 'aria-current' to the parent item's link" do
+        expect(output).to_not have_css('li#invoices > a[aria-current=page]')
       end
     end
   end
