@@ -22,7 +22,8 @@ require 'simplecov_json_formatter'
 
 # Start SimpleCov
 SimpleCov.start do
-  formatter SimpleCov::Formatter::MultiFormatter.new([SimpleCov::Formatter::HTMLFormatter, SimpleCov::Formatter::JSONFormatter])
+  formatter SimpleCov::Formatter::MultiFormatter.new([SimpleCov::Formatter::HTMLFormatter,
+                                                      SimpleCov::Formatter::JSONFormatter])
   add_filter 'spec/'
 end
 
@@ -131,6 +132,21 @@ RSpec::Matchers.define :have_css do |expected, times|
 
   failure_message_when_negated do |actual|
     "expected #{actual} not to have #{times || 1} elements matching '#{expected}'"
+  end
+end
+
+RSpec::Matchers.define :have_no_css do |expected|
+  match do |actual|
+    selector = Nokogiri::HTML(actual).css(expected)
+    expect(selector.size).to eq 0
+  end
+
+  failure_message do |actual|
+    "expected #{actual} to have no elements matching '#{expected}'"
+  end
+
+  failure_message_when_negated do |actual|
+    "expected #{actual} to have elements matching '#{expected}'"
   end
 end
 
