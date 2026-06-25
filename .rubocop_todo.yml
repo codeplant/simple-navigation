@@ -10,7 +10,7 @@
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: have_no, not_to
-Capybara/NegationMatcher:
+Capybara/RSpec/NegationMatcher:
   Exclude:
     - 'spec/simple_navigation/renderer/breadcrumbs_spec.rb'
     - 'spec/simple_navigation/renderer/links_spec.rb'
