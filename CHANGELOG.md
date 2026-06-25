@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.5.0
+
+* Add `aria-current=page` attribute to selected link. Credits to oneiros.
+* Fix most of the rubocop todos.
+* Increase coverage.
+* Update some dependencies.
+
 ## 4.4.1
 
 * Removes the link to the online demo from the README. Credits to tosbourn.
