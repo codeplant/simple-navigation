@@ -220,9 +220,9 @@ RSpec.describe SimpleNavigation::ItemContainer do
       it 'yields a new ItemContainer' do
         allow_any_instance_of(SimpleNavigation::Item).to receive_messages(sub_navigation: sub_container) # rubocop:disable RSpec/AnyInstance
 
-        expect { |blk|
+        expect do |blk|
           item_container.item('key', 'name', 'url', options, &blk)
-        }.to yield_with_args(sub_container)
+        end.to yield_with_args(sub_container)
       end
 
       it 'creates a new Item with the given params and block' do
@@ -314,9 +314,9 @@ RSpec.describe SimpleNavigation::ItemContainer do
         end
 
         it 'does not raise an exception' do
-          expect {
+          expect do
             item_container.item('key', 'name', 'url', options)
-          }.not_to raise_error
+          end.not_to raise_error
         end
       end
 
@@ -433,9 +433,9 @@ RSpec.describe SimpleNavigation::ItemContainer do
 
         context 'and it is not a proc or a method' do
           it 'raises an error' do
-            expect {
+            expect do
               item_container.item('key', 'name', 'url', { if: 'text' })
-            }.to raise_error(ArgumentError, ':if or :unless must be procs or lambdas')
+            end.to raise_error(ArgumentError, ':if or :unless must be procs or lambdas')
           end
         end
       end

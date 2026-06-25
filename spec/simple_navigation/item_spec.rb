@@ -37,9 +37,9 @@ RSpec.describe SimpleNavigation::Item do
         it 'calls the block' do
           allow(SimpleNavigation::ItemContainer).to receive_messages(new: subnav_container)
 
-          expect { |blk|
+          expect do |blk|
             described_class.new(*item_args, &blk)
-          }.to yield_with_args(subnav_container)
+          end.to yield_with_args(subnav_container)
         end
       end
 
@@ -152,31 +152,37 @@ RSpec.describe SimpleNavigation::Item do
   end
 
   describe '#link_html_options' do
-    let(:options) { { link_html: { class: "test" } } }
+    let(:options) { { link_html: { class: 'test' } } }
 
-    before { allow(item).to receive_messages(selected?: false, selected_by_condition?: false, selected_by_subnav?: false) }
+    before do
+      allow(item).to receive_messages(selected?: false, selected_by_condition?: false, selected_by_subnav?: false)
+    end
 
     it "returns the item's link_html option" do
-      expect(item.link_html_options).to eq({ class: "test" })
+      expect(item.link_html_options).to eq({ class: 'test' })
     end
 
     it "doesn't add an `aria-current` attribute" do
-      expect(item.link_html_options).to_not have_key(:"aria-current")
+      expect(item.link_html_options).not_to have_key(:'aria-current')
     end
 
-    context "when the item is selected by condition but not by subnav (i.e. a selected leaf)" do
-      before { allow(item).to receive_messages(selected?: true, selected_by_condition?: true, selected_by_subnav?: false) }
+    context 'when the item is selected by condition but not by subnav (i.e. a selected leaf)' do
+      before do
+        allow(item).to receive_messages(selected?: true, selected_by_condition?: true, selected_by_subnav?: false)
+      end
 
-      it "adds an `aria-current` attribute" do
-        expect(item.link_html_options[:"aria-current"]).to eq "page"
+      it 'adds an `aria-current` attribute' do
+        expect(item.link_html_options[:'aria-current']).to eq 'page'
       end
     end
 
-    context "when the item is selected by subnav and not by condition" do
-      before { allow(item).to receive_messages(selected?: true, selected_by_condition?: false, selected_by_subnav?: true) }
+    context 'when the item is selected by subnav and not by condition' do
+      before do
+        allow(item).to receive_messages(selected?: true, selected_by_condition?: false, selected_by_subnav?: true)
+      end
 
       it "doesn't add an `aria-current` attribute" do
-        expect(item.link_html_options).to_not have_key(:"aria-current")
+        expect(item.link_html_options).not_to have_key(:'aria-current')
       end
     end
   end
@@ -242,7 +248,10 @@ RSpec.describe SimpleNavigation::Item do
       end
 
       context 'and auto highlighting is on' do
-        let(:config) { double(:config, ignore_query_params_on_auto_highlight: true, ignore_anchors_on_auto_highlight: true, auto_highlight: true) }
+        let(:config) do
+          double(:config, ignore_query_params_on_auto_highlight: true, ignore_anchors_on_auto_highlight: true,
+                          auto_highlight: true)
+        end
 
         context "and the current url matches the item's url" do
           before { allow(adapter).to receive_messages(current_page?: true) }
@@ -266,7 +275,8 @@ RSpec.describe SimpleNavigation::Item do
 
         context 'and highlights_on_subpath is on' do
           let(:config) do
-            double(:config, auto_highlight: true, highlight_on_subpath: true, ignore_query_params_on_auto_highlight: true, ignore_anchors_on_auto_highlight: true)
+            double(:config, auto_highlight: true, highlight_on_subpath: true,
+                            ignore_query_params_on_auto_highlight: true, ignore_anchors_on_auto_highlight: true)
           end
 
           context 'but item has no url' do

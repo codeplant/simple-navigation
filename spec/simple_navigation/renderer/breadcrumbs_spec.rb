@@ -25,7 +25,7 @@ RSpec.describe SimpleNavigation::Renderer::Breadcrumbs do
 
     context 'when no item is selected' do
       it "doesn't render any 'a' tag in the 'div' tag" do
-        expect(output).not_to have_css('div a')
+        expect(output).to have_no_css('div a')
       end
     end
 
@@ -37,11 +37,11 @@ RSpec.describe SimpleNavigation::Renderer::Breadcrumbs do
       end
 
       it "remders the 'a' tag without any html id" do
-        expect(output).not_to have_css('div a[id]')
+        expect(output).to have_no_css('div a[id]')
       end
 
       it "renders the 'a' tag without any html class" do
-        expect(output).not_to have_css('div a[class]')
+        expect(output).to have_no_css('div a[class]')
       end
 
       context 'and the :allow_classes_and_ids option is true' do
@@ -53,7 +53,7 @@ RSpec.describe SimpleNavigation::Renderer::Breadcrumbs do
 
         context "and the item hasn't any id explicitly set" do
           it "renders the 'a' tag without any html id" do
-            expect(output).not_to have_css('div a[id]')
+            expect(output).to have_no_css('div a[id]')
           end
         end
 

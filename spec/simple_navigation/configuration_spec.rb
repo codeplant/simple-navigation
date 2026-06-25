@@ -90,7 +90,11 @@ RSpec.describe SimpleNavigation::Configuration do
         let(:provider) { double(:provider) }
 
         it 'raises an exception' do
-          expect { config.items(provider) {} }.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both') # rubocop:disable Lint/EmptyBlock
+          # rubocop:disable Lint/EmptyBlock
+          expect do
+            config.items(provider) do
+            end
+          end.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both')
         end
       end
 
@@ -140,7 +144,9 @@ RSpec.describe SimpleNavigation::Configuration do
 
       context 'when items_provider is not specified' do
         it 'raises an exception' do
-          expect { config.items }.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both')
+          expect do
+            config.items
+          end.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both')
         end
       end
     end

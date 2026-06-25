@@ -93,7 +93,7 @@ module SimpleNavigation
     def link_html_options
       @link_html_options ||= begin
         link_options = options[:link_html] || {}
-        link_options[:"aria-current"] = "page" if !selected_by_subnav? && selected_by_condition?
+        link_options[:'aria-current'] = 'page' if !selected_by_subnav? && selected_by_condition?
         link_options
       end
     end

@@ -74,7 +74,9 @@ module SimpleNavigation
     # See SimpleNavigation::ItemAdapter for more details.
     #
     def items(items_provider = nil, &block)
-      raise('please specify either items_provider or block, but not both') if (items_provider && block) || (items_provider.nil? && block.nil?)
+      if (items_provider && block) || (items_provider.nil? && block.nil?)
+        raise('please specify either items_provider or block, but not both')
+      end
 
       self.primary_navigation = ItemContainer.new
 

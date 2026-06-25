@@ -24,7 +24,9 @@ RSpec.describe SimpleNavigation::ConfigFileFinder do
 
       context 'and no navigation.rb file is found in the paths' do
         it 'raises an exception' do
-          expect { finder.find(context) }.to raise_error(RuntimeError, /Config file 'navigation.rb' not found in path\(s\)/)
+          expect do
+            finder.find(context)
+          end.to raise_error(RuntimeError, /Config file 'navigation.rb' not found in path\(s\)/)
         end
       end
     end
@@ -42,7 +44,9 @@ RSpec.describe SimpleNavigation::ConfigFileFinder do
 
       context 'and no other_navigation.rb file is found in the paths' do
         it 'raise an exception' do
-          expect { finder.find(context) }.to raise_error(RuntimeError, /Config file 'other_navigation.rb' not found in path\(s\)/)
+          expect do
+            finder.find(context)
+          end.to raise_error(RuntimeError, /Config file 'other_navigation.rb' not found in path\(s\)/)
         end
       end
     end

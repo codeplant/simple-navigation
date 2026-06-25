@@ -34,11 +34,11 @@ RSpec.describe SimpleNavigation::Renderer::List do
 
     context 'when no item is selected' do
       it "renders each item as 'li' tag without any selected class" do
-        expect(output).not_to have_css('ul li.selected')
+        expect(output).to have_no_css('ul li.selected')
       end
 
       it "renders each item as 'a' tag without any selected class" do
-        expect(output).not_to have_css('ul li a.selected')
+        expect(output).to have_no_css('ul li a.selected')
       end
     end
 
@@ -98,7 +98,7 @@ RSpec.describe SimpleNavigation::Renderer::List do
       end
 
       it "does not 'aria-current' to the parent item's link" do
-        expect(output).to_not have_css('li#invoices > a[aria-current=page]')
+        expect(output).to have_no_css('li#invoices > a[aria-current=page]')
       end
     end
   end

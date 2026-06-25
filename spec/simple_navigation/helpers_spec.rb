@@ -368,18 +368,18 @@ RSpec.describe SimpleNavigation::Helpers do
 
         context "and the active_item_container isn't set" do
           it "doesn't raise an exception" do
-            expect {
+            expect do
               controller.render_navigation(level: 2)
-            }.not_to raise_error
+            end.not_to raise_error
           end
         end
       end
 
       context "and its value isn't a valid level" do
         it 'raises an exception' do
-          expect {
+          expect do
             controller.render_navigation(level: :invalid)
-          }.to raise_error(ArgumentError, 'Invalid navigation level: invalid')
+          end.to raise_error(ArgumentError, 'Invalid navigation level: invalid')
         end
       end
     end
@@ -395,9 +395,9 @@ RSpec.describe SimpleNavigation::Helpers do
 
     context 'when a block is given' do
       it 'calls the block passing it an item container' do
-        expect { |blk|
+        expect do |blk|
           controller.render_navigation(&blk)
-        }.to yield_with_args(SimpleNavigation::ItemContainer)
+        end.to yield_with_args(SimpleNavigation::ItemContainer)
       end
     end
 
@@ -405,7 +405,10 @@ RSpec.describe SimpleNavigation::Helpers do
       before { allow(SimpleNavigation).to receive_messages(primary_navigation: nil) }
 
       it 'raises an exception' do
-        expect { controller.render_navigation }.to raise_error(RuntimeError, 'no primary navigation defined, either use a navigation config file or pass items directly to render_navigation')
+        expect do
+          controller.render_navigation
+        end.to raise_error(RuntimeError,
+                           'no primary navigation defined, either use a navigation config file or pass items directly to render_navigation')
       end
     end
 

@@ -37,7 +37,10 @@ RSpec.describe SimpleNavigation::ItemsProvider do
       let(:provider) { double(:provider) }
 
       it 'raises an exception' do
-        expect { items_provider.items }.to raise_error(RuntimeError, /items_provider either must be a symbol .*, an object .* or an enumerable/)
+        expect do
+          items_provider.items
+        end.to raise_error(RuntimeError,
+                           /items_provider either must be a symbol .*, an object .* or an enumerable/)
       end
     end
   end

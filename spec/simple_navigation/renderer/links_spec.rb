@@ -45,7 +45,7 @@ RSpec.describe SimpleNavigation::Renderer::Links do
 
     context 'when no item is selected' do
       it "renders items without the 'selected' class" do
-        expect(output).not_to have_css('a.selected')
+        expect(output).to have_no_css('a.selected')
       end
     end
 
@@ -78,7 +78,7 @@ RSpec.describe SimpleNavigation::Renderer::Links do
       end
 
       it "doesn't render the nested item's link" do
-        expect(output).not_to have_css('a#unpaid')
+        expect(output).to have_no_css('a#unpaid')
       end
     end
   end
