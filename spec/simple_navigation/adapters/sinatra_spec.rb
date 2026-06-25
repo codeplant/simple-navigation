@@ -7,6 +7,19 @@ RSpec.describe SimpleNavigation::Adapters::Sinatra do
 
   before { allow(context).to receive_messages(request: request) }
 
+  describe '.register' do
+    let(:sinatra_app) { double(:app, root: '/sinatra/root', environment: 'test') }
+
+    before do
+      allow(SimpleNavigation).to receive(:set_env)
+    end
+
+    it 'calls SimpleNavigation.set_env with app root and environment' do
+      expect(SimpleNavigation).to receive(:set_env).with('/sinatra/root', 'test')
+      described_class.register(sinatra_app)
+    end
+  end
+
   describe '#context_for_eval' do
     context "when adapter's context is not set" do
       it 'raises an exception' do

@@ -2,6 +2,9 @@
 
 module SimpleNavigation
   module Adapters
+    # @deprecated This adapter is for Nanoc3 (circa 2011-2012) and is no longer actively maintained.
+    #   Nanoc3 is obsolete and has been replaced by Nanoc 4+. This adapter is kept for
+    #   backward compatibility but should not be used for new projects.
     class Nanoc < Base
       class << self
         def register(root)

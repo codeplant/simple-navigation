@@ -35,7 +35,8 @@ SimpleNavigation::Configuration.run do |navigation|
   # navigation.ignore_query_params_on_auto_highlight = true
   # navigation.ignore_anchors_on_auto_highlight = true
 
-  # If this option is set to true, all item names will be considered as safe (passed through html_safe). Defaults to false.
+  # If this option is set to true, all item names will be considered as safe
+  # (passed through html_safe). Defaults to false.
   # navigation.consider_item_names_as_safe = false
 
   # Define the primary navigation
@@ -43,8 +44,10 @@ SimpleNavigation::Configuration.run do |navigation|
     # Add an item to the primary navigation. The following params apply:
     # key - a symbol which uniquely defines your navigation item in the scope of the primary_navigation
     # name - will be displayed in the rendered navigation. This can also be a call to your I18n-framework.
-    # url - the address that the generated item links to. You can also use url_helpers (named routes, restful routes helper, url_for etc.)
-    # options - can be used to specify attributes that will be included in the rendered navigation item (e.g. id, class etc.)
+    # url - the address that the generated item links to. You can also use url_helpers
+    #       (named routes, restful routes helper, url_for etc.)
+    # options - can be used to specify attributes that will be included in the rendered
+    #           navigation item (e.g. id, class etc.)
     #           some special options that can be set:
     #           :html - Specifies html attributes that will be included in the rendered navigation item
     #           :if - Specifies a proc to call to determine if the item should
@@ -58,19 +61,19 @@ SimpleNavigation::Configuration.run do |navigation|
     #                            when the item should be highlighted, you can set a regexp which is matched
     #                            against the current URI.  You may also use a proc, or the symbol <tt>:subpath</tt>.
     #
-    primary.item :key_1, 'name', url, options
+    primary.item :key1, 'name', url, options
 
     # Add an item which has a sub navigation (same params, but with block)
-    primary.item :key_2, 'name', url, options do |sub_nav|
+    primary.item :key2, 'name', url, options do |sub_nav|
       # Add an item to the sub navigation (same params again)
-      sub_nav.item :key_2_1, 'name', url, options
+      sub_nav.item :key21, 'name', url, options
     end
 
     # You can also specify a condition-proc that needs to be fullfilled to display an item.
     # Conditions are part of the options. They are evaluated in the context of the views,
     # thus you can use all the methods and vars you have available in the views.
-    primary.item :key_3, 'Admin', url, html: { class: 'special' }, if: -> { current_user.admin? }
-    primary.item :key_4, 'Account', url, unless: -> { logged_in? }
+    primary.item :key3, 'Admin', url, html: { class: 'special' }, if: -> { current_user.admin? }
+    primary.item :key4, 'Account', url, unless: -> { logged_in? }
 
     # you can also specify html attributes to attach to this particular level
     # works for all levels of the menu

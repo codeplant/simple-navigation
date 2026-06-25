@@ -14,7 +14,7 @@ RSpec.describe SimpleNavigation::ConfigFileFinder do
     context 'when the context is :default' do
       let(:context) { :default }
 
-      context 'and a navigation.rb file is found in one of the paths' do
+      context 'when a navigation.rb file is found in one of the paths' do
         before { FileUtils.touch('/path/one/navigation.rb') }
 
         it 'returns its full path' do
@@ -22,7 +22,7 @@ RSpec.describe SimpleNavigation::ConfigFileFinder do
         end
       end
 
-      context 'and no navigation.rb file is found in the paths' do
+      context 'when no navigation.rb file is found in the paths' do
         it 'raises an exception' do
           expect do
             finder.find(context)
@@ -34,7 +34,7 @@ RSpec.describe SimpleNavigation::ConfigFileFinder do
     context 'when the context is :other' do
       let(:context) { :other }
 
-      context 'and a other_navigation.rb file is found in one of the paths' do
+      context 'when a other_navigation.rb file is found in one of the paths' do
         before { FileUtils.touch('/path/two/other_navigation.rb') }
 
         it 'returns its full path' do
@@ -42,7 +42,7 @@ RSpec.describe SimpleNavigation::ConfigFileFinder do
         end
       end
 
-      context 'and no other_navigation.rb file is found in the paths' do
+      context 'when no other_navigation.rb file is found in the paths' do
         it 'raise an exception' do
           expect do
             finder.find(context)

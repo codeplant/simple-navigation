@@ -25,7 +25,7 @@ RSpec.describe SimpleNavigation::ItemsProvider do
       end
     end
 
-    context 'provider is a collection' do
+    context 'when provider is a collection' do
       let(:provider) { [] }
 
       it 'retrieves the items by returning the provider' do

@@ -73,11 +73,13 @@ module SimpleNavigation
     # Returns the current framework in which the plugin is running.
     def framework
       return :rails if defined?(Rails)
+      # :nocov:
       return :padrino if defined?(Padrino)
       return :sinatra if defined?(Sinatra)
       return :nanoc if defined?(Nanoc3)
 
       raise 'simple_navigation currently only works for Rails, Sinatra and Padrino apps'
+      # :nocov:
     end
 
     # Loads the adapter for the current framework

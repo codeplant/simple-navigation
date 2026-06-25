@@ -86,7 +86,7 @@ RSpec.describe SimpleNavigation::Configuration do
     before { allow(SimpleNavigation::ItemContainer).to receive_messages(new: container) }
 
     context 'when a block is given' do
-      context 'and items_provider is specified' do
+      context 'when items_provider is specified' do
         let(:provider) { double(:provider) }
 
         it 'raises an exception' do
@@ -95,6 +95,7 @@ RSpec.describe SimpleNavigation::Configuration do
             config.items(provider) do
             end
           end.to raise_error(RuntimeError, 'please specify either items_provider or block, but not both')
+          # rubocop:enable Lint/EmptyBlock
         end
       end
 
@@ -116,7 +117,7 @@ RSpec.describe SimpleNavigation::Configuration do
     end
 
     context 'when no block is given' do
-      context 'and items_provider is specified' do
+      context 'when items_provider is specified' do
         let(:external_provider) { double(:external_provider) }
         let(:items) { double(:items) }
         let(:items_provider) { double(:items_provider, items: items) }

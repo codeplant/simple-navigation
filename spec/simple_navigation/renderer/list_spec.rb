@@ -101,5 +101,15 @@ RSpec.describe SimpleNavigation::Renderer::List do
         expect(output).to have_no_css('li#invoices > a[aria-current=page]')
       end
     end
+
+    context 'when skip_if_empty is true and container is empty' do
+      let(:empty_navigation) { SimpleNavigation::ItemContainer.new(1) }
+      let(:options) { { skip_if_empty: true } }
+      let(:output) { renderer.render(empty_navigation) }
+
+      it 'returns an empty string' do
+        expect(output).to eq ''
+      end
+    end
   end
 end

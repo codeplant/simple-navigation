@@ -44,7 +44,7 @@ RSpec.describe SimpleNavigation::Item do
       end
 
       context 'when no block is given' do
-        context 'and items are given' do
+        context 'when items are given' do
           let(:items) { [] }
           let(:options) { { items: items } }
 
@@ -55,7 +55,7 @@ RSpec.describe SimpleNavigation::Item do
           end
         end
 
-        context 'and no items are given' do
+        context 'when no items are given' do
           it "doesn't create a new ItemContainer" do
             item = described_class.new(*item_args)
             expect(item.sub_navigation).to be_nil
@@ -94,13 +94,13 @@ RSpec.describe SimpleNavigation::Item do
     end
 
     context 'when a url is given' do
-      context 'and it is a string' do
+      context 'when it is a string' do
         it "sets the item's url accordingly" do
           expect(item.url).to eq 'url'
         end
       end
 
-      context 'and it is a proc' do
+      context 'when it is a proc' do
         let(:url) { proc { 'my_url' } }
 
         it "sets the item's url accordingly" do
@@ -108,7 +108,7 @@ RSpec.describe SimpleNavigation::Item do
         end
       end
 
-      context 'and it is nil' do
+      context 'when it is nil' do
         let(:url) { nil }
 
         it "sets the item's url accordingly" do
@@ -202,13 +202,13 @@ RSpec.describe SimpleNavigation::Item do
     end
 
     context 'when no option is given' do
-      context 'and the name_generator uses only the name' do
+      context 'when the name_generator uses only the name' do
         it 'uses the default name_generator' do
           expect(item.name).to eq '<span>name</span>'
         end
       end
 
-      context 'and the name_generator uses only the item itself' do
+      context 'when the name_generator uses only the item itself' do
         before do
           allow(SimpleNavigation.config).to \
             receive_messages(name_generator: proc { |_name, item| "<span>#{item.key}</span>" })
@@ -239,7 +239,7 @@ RSpec.describe SimpleNavigation::Item do
     context 'when the item has no :highlights_on option' do
       before { allow(SimpleNavigation).to receive_messages(config: config) }
 
-      context 'and auto highlighting is off' do
+      context 'when auto highlighting is off' do
         let(:config) { double(:config, auto_highlight: false) }
 
         it 'returns false' do
@@ -247,13 +247,13 @@ RSpec.describe SimpleNavigation::Item do
         end
       end
 
-      context 'and auto highlighting is on' do
+      context 'when auto highlighting is on' do
         let(:config) do
           double(:config, ignore_query_params_on_auto_highlight: true, ignore_anchors_on_auto_highlight: true,
                           auto_highlight: true)
         end
 
-        context "and the current url matches the item's url" do
+        context "when the current url matches the item's url" do
           before { allow(adapter).to receive_messages(current_page?: true) }
 
           it 'returns true' do
@@ -261,7 +261,7 @@ RSpec.describe SimpleNavigation::Item do
           end
         end
 
-        context "and the current url does not match the item's url" do
+        context "when the current url does not match the item's url" do
           let(:config) do
             double(:config, auto_highlight: false, highlight_on_subpath: false)
           end
@@ -273,13 +273,13 @@ RSpec.describe SimpleNavigation::Item do
           end
         end
 
-        context 'and highlights_on_subpath is on' do
+        context 'when highlights_on_subpath is on' do
           let(:config) do
             double(:config, auto_highlight: true, highlight_on_subpath: true,
                             ignore_query_params_on_auto_highlight: true, ignore_anchors_on_auto_highlight: true)
           end
 
-          context 'but item has no url' do
+          context 'when item has no url' do
             let(:url) { nil }
 
             it 'returns false' do
@@ -287,7 +287,7 @@ RSpec.describe SimpleNavigation::Item do
             end
           end
 
-          context "and the current url is a sub path of the item's url" do
+          context "when the current url is a sub path of the item's url" do
             before do
               allow(adapter).to \
                 receive_messages(current_page?: false, request_uri: 'url/test')
@@ -298,7 +298,7 @@ RSpec.describe SimpleNavigation::Item do
             end
           end
 
-          context "and the current url is not a sub path of the item's url" do
+          context "when the current url is not a sub path of the item's url" do
             before do
               allow(adapter).to \
                 receive_messages(current_page?: false, request_uri: 'other/test')
@@ -313,10 +313,10 @@ RSpec.describe SimpleNavigation::Item do
     end
 
     context 'when the item has a :highlights_on option' do
-      context 'and it is a regular expression' do
+      context 'when it is a regular expression' do
         before { allow(adapter).to receive_messages(request_uri: '/test') }
 
-        context 'and the current url matches the expression' do
+        context 'when the current url matches the expression' do
           let(:options) { { highlights_on: /test/ } }
 
           it 'returns true' do
@@ -324,7 +324,7 @@ RSpec.describe SimpleNavigation::Item do
           end
         end
 
-        context 'and the current url does not match the expression' do
+        context 'when the current url does not match the expression' do
           let(:options) { { highlights_on: /other/ } }
 
           it 'returns false' do
@@ -333,8 +333,8 @@ RSpec.describe SimpleNavigation::Item do
         end
       end
 
-      context 'and it is a callable object' do
-        context 'and the call returns true' do
+      context 'when it is a callable object' do
+        context 'when the call returns true' do
           let(:options) { { highlights_on: -> { true } } }
 
           it 'returns true' do
@@ -342,7 +342,7 @@ RSpec.describe SimpleNavigation::Item do
           end
         end
 
-        context 'and the call returns false' do
+        context 'when the call returns false' do
           let(:options) { { highlights_on: -> { false } } }
 
           it 'returns false' do
@@ -351,10 +351,10 @@ RSpec.describe SimpleNavigation::Item do
         end
       end
 
-      context 'and it is the :subpath symbol' do
+      context 'when it is the :subpath symbol' do
         let(:options) { { highlights_on: :subpath } }
 
-        context "and the current url is a sub path of the item's url" do
+        context "when the current url is a sub path of the item's url" do
           before do
             allow(adapter).to receive_messages(request_uri: 'url/test')
           end
@@ -364,7 +364,7 @@ RSpec.describe SimpleNavigation::Item do
           end
         end
 
-        context "and the current url is not a sub path of the item's url" do
+        context "when the current url is not a sub path of the item's url" do
           before do
             allow(adapter).to receive_messages(request_uri: 'other/test')
           end
@@ -375,7 +375,7 @@ RSpec.describe SimpleNavigation::Item do
         end
       end
 
-      context 'and it is non usable' do
+      context 'when it is non usable' do
         let(:options) { { highlights_on: :hello } }
 
         it 'raises an exception' do
@@ -393,7 +393,7 @@ RSpec.describe SimpleNavigation::Item do
         expect(item.selected_class).to eq 'selected'
       end
 
-      context 'and selected_class is defined in the context' do
+      context 'when selected_class is defined in the context' do
         before { allow(item_container).to receive_messages(selected_class: 'defined') }
 
         it "returns the context's selected_class" do
@@ -417,7 +417,7 @@ RSpec.describe SimpleNavigation::Item do
     context 'when the :class option is given' do
       let(:options) { { html: { class: 'my_class' } } }
 
-      context 'and the item is selected' do
+      context 'when the item is selected' do
         before { allow(item).to receive_messages(selected?: true, selected_by_condition?: true) }
 
         it "adds the specified class to the item's html classes" do
@@ -429,7 +429,7 @@ RSpec.describe SimpleNavigation::Item do
         end
       end
 
-      context "and the item isn't selected" do
+      context "when the item isn't selected" do
         before { allow(item).to receive_messages(selected?: false, selected_by_condition?: false) }
 
         it "sets the specified class as the item's html classes" do
@@ -439,7 +439,7 @@ RSpec.describe SimpleNavigation::Item do
     end
 
     context "when the :class option isn't given" do
-      context 'and the item is selected' do
+      context 'when the item is selected' do
         before { allow(item).to receive_messages(selected?: true, selected_by_condition?: true) }
 
         it 'sets the default html classes of a selected item' do
@@ -447,7 +447,7 @@ RSpec.describe SimpleNavigation::Item do
         end
       end
 
-      context "and the item isn't selected" do
+      context "when the item isn't selected" do
         before { allow(item).to receive_messages(selected?: false, selected_by_condition?: false) }
 
         it "doesn't set any html class on the item" do
@@ -470,13 +470,13 @@ RSpec.describe SimpleNavigation::Item do
         allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
       end
 
-      context 'and :autogenerate_item_ids is true' do
+      context 'when :autogenerate_item_ids is true' do
         let(:generate_ids) { true }
 
         it_behaves_like 'generating id', 'my_id'
       end
 
-      context 'and :autogenerate_item_ids is false' do
+      context 'when :autogenerate_item_ids is false' do
         let(:generate_ids) { false }
 
         it_behaves_like 'generating id', 'my_id'
@@ -489,13 +489,13 @@ RSpec.describe SimpleNavigation::Item do
         allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
       end
 
-      context 'and :autogenerate_item_ids is true' do
+      context 'when :autogenerate_item_ids is true' do
         let(:generate_ids) { true }
 
         it_behaves_like 'generating id', 'my_key'
       end
 
-      context 'and :autogenerate_item_ids is false' do
+      context 'when :autogenerate_item_ids is false' do
         let(:generate_ids) { false }
 
         it "doesn't set any html id on the item" do

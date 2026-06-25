@@ -39,7 +39,7 @@ RSpec.describe SimpleNavigation::ItemAdapter do
 
     describe '#items' do
       context 'when item responds to items' do
-        context 'and items is nil' do
+        context 'when items is nil' do
           before { allow(item).to receive_messages(items: nil) }
 
           it 'returns nil' do
@@ -48,7 +48,7 @@ RSpec.describe SimpleNavigation::ItemAdapter do
         end
 
         context 'when items is not nil' do
-          context 'and items is empty' do
+          context 'when items is empty' do
             before { allow(item).to receive_messages(items: []) }
 
             it 'returns nil' do
@@ -56,7 +56,7 @@ RSpec.describe SimpleNavigation::ItemAdapter do
             end
           end
 
-          context 'and items is not empty' do
+          context 'when items is not empty' do
             let(:items) { [true] }
 
             before { allow(item).to receive_messages(items: items) }
@@ -124,7 +124,7 @@ RSpec.describe SimpleNavigation::ItemAdapter do
 
     describe '#items' do
       context 'when item responds to items' do
-        context 'and items is nil' do
+        context 'when items is nil' do
           before { item[:items] = nil }
 
           it 'returns nil' do
@@ -133,13 +133,13 @@ RSpec.describe SimpleNavigation::ItemAdapter do
         end
 
         context 'when items is not nil' do
-          context 'and items is empty' do
+          context 'when items is empty' do
             it 'returns nil' do
               expect(item_adapter.items).to be_nil
             end
           end
 
-          context 'and items is not empty' do
+          context 'when items is not empty' do
             before { item[:items] = %w[not empty] }
 
             it 'returns the items' do

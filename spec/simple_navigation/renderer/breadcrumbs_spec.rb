@@ -44,20 +44,20 @@ RSpec.describe SimpleNavigation::Renderer::Breadcrumbs do
         expect(output).to have_no_css('div a[class]')
       end
 
-      context 'and the :allow_classes_and_ids option is true' do
+      context 'when the :allow_classes_and_ids option is true' do
         let(:options) { { level: :all, allow_classes_and_ids: true } }
 
         it "renders the 'a' tag with the selected class" do
           expect(output).to have_css('div a.selected')
         end
 
-        context "and the item hasn't any id explicitly set" do
+        context "when the item hasn't any id explicitly set" do
           it "renders the 'a' tag without any html id" do
             expect(output).to have_no_css('div a[id]')
           end
         end
 
-        context 'and the item has an explicitly set id' do
+        context 'when the item has an explicitly set id' do
           let(:item) { :users }
 
           it "renders the 'a' tag with an html id" do
@@ -67,10 +67,10 @@ RSpec.describe SimpleNavigation::Renderer::Breadcrumbs do
       end
     end
 
-    context 'and the :prefix option is set' do
+    context 'when the :prefix option is set' do
       let(:options) { { prefix: 'You are here: ' } }
 
-      context 'and there are no items to render' do
+      context 'when there are no items to render' do
         let(:item) { nil }
 
         it "doesn't render the prefix before the breadcrumbs" do
@@ -78,7 +78,7 @@ RSpec.describe SimpleNavigation::Renderer::Breadcrumbs do
         end
       end
 
-      context 'and there are items to render' do
+      context 'when there are items to render' do
         let(:item) { :invoices }
 
         it 'renders the prefix before the breadcrumbs' do

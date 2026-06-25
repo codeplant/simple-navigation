@@ -37,13 +37,13 @@ RSpec.describe SimpleNavigation::ItemContainer do
     context 'when the dom_attributes do not contain any id or class' do
       let(:dom_attributes) { { test: 'test' } }
 
-      context "and the container hasn't any dom_id" do
+      context "when the container hasn't any dom_id" do
         it "returns the contaier's dom_attributes without any id" do
           expect(item_container.dom_attributes).not_to include(:id)
         end
       end
 
-      context 'and the container has a dom_id' do
+      context 'when the container has a dom_id' do
         before { item_container.dom_id = 'test_id' }
 
         it "returns the contaier's dom_attributes including the #dom_id" do
@@ -51,13 +51,13 @@ RSpec.describe SimpleNavigation::ItemContainer do
         end
       end
 
-      context "and the container hasn't any dom_class" do
+      context "when the container hasn't any dom_class" do
         it "returns the contaier's dom_attributes without any class" do
           expect(item_container.dom_attributes).not_to include(:class)
         end
       end
 
-      context 'and the container has a dom_class' do
+      context 'when the container has a dom_class' do
         before { item_container.dom_class = 'test_class' }
 
         it "returns the contaier's dom_attributes including the #dom_class" do
@@ -100,11 +100,11 @@ RSpec.describe SimpleNavigation::ItemContainer do
   end
 
   describe '#selected?' do
-    let(:item_1) { double(:item, selected?: false) }
-    let(:item_2) { double(:item, selected?: false) }
+    let(:first_item) { double(:item, selected?: false) }
+    let(:second_item) { double(:item, selected?: false) }
 
     before do
-      item_container.instance_variable_set(:@items, [item_1, item_2])
+      item_container.instance_variable_set(:@items, [first_item, second_item])
     end
 
     context 'when no item is selected' do
@@ -115,34 +115,34 @@ RSpec.describe SimpleNavigation::ItemContainer do
 
     context 'when an item is selected' do
       it 'returns true' do
-        allow(item_1).to receive_messages(selected?: true)
+        allow(first_item).to receive_messages(selected?: true)
         expect(item_container).to be_selected
       end
     end
   end
 
   describe '#selected_item' do
-    let(:item_1) { double(:item, selected?: false) }
-    let(:item_2) { double(:item, selected?: false) }
+    let(:first_item) { double(:item, selected?: false) }
+    let(:second_item) { double(:item, selected?: false) }
 
     before do
       allow(SimpleNavigation).to receive_messages(current_navigation_for: :nav)
       allow(item_container).to receive_messages(:[] => nil)
-      item_container.instance_variable_set(:@items, [item_1, item_2])
+      item_container.instance_variable_set(:@items, [first_item, second_item])
     end
 
     context "when navigation isn't explicitely set" do
-      context 'and no item is selected' do
+      context 'when no item is selected' do
         it 'returns nil' do
           expect(item_container.selected_item).to be_nil
         end
       end
 
-      context 'and an item selected' do
-        before { allow(item_1).to receive_messages(selected?: true) }
+      context 'when an item is selected' do
+        before { allow(first_item).to receive_messages(selected?: true) }
 
         it 'returns the selected item' do
-          expect(item_container.selected_item).to be item_1
+          expect(item_container.selected_item).to be first_item
         end
       end
     end
@@ -156,7 +156,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
     end
 
     context "when the desired level is different than the container's" do
-      context 'and no subnavigation is selected' do
+      context 'when no subnavigation is selected' do
         before { allow(item_container).to receive_messages(selected_sub_navigation?: false) }
 
         it 'returns nil' do
@@ -164,7 +164,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         end
       end
 
-      context 'and a subnavigation is selected' do
+      context 'when a subnavigation is selected' do
         let(:sub_navigation) { double(:sub_navigation) }
         let(:selected_item) { double(:selected_item) }
 
@@ -269,19 +269,19 @@ RSpec.describe SimpleNavigation::ItemContainer do
       end
 
       context 'when item is specified with only options' do
-        context 'and options do not contain any condition' do
+        context 'when options do not contain any condition' do
           it_behaves_like 'adding the item to the list' do
             let(:args) { ['key', 'name', { option: true }] }
           end
         end
 
-        context 'and options contains a negative condition' do
+        context 'when options contains a negative condition' do
           it_behaves_like 'not adding the item to the list' do
             let(:args) { ['key', 'name', nil, { if: -> { false }, option: true }] }
           end
         end
 
-        context 'and options contains a positive condition' do
+        context 'when options contains a positive condition' do
           it_behaves_like 'adding the item to the list' do
             let(:args) { ['key', 'name', nil, { if: -> { true }, option: true }] }
           end
@@ -289,19 +289,19 @@ RSpec.describe SimpleNavigation::ItemContainer do
       end
 
       context 'when item is specified with a url and options' do
-        context 'and options do not contain any condition' do
+        context 'when options do not contain any condition' do
           it_behaves_like 'adding the item to the list' do
             let(:args) { ['key', 'name', 'url', { option: true }] }
           end
         end
 
-        context 'and options contains a negative condition' do
+        context 'when options contains a negative condition' do
           it_behaves_like 'not adding the item to the list' do
             let(:args) { ['key', 'name', 'url', { if: -> { false }, option: true }] }
           end
         end
 
-        context 'and options contains a positive condition' do
+        context 'when options contains a positive condition' do
           it_behaves_like 'adding the item to the list' do
             let(:args) { ['key', 'name', 'url', { if: -> { true }, option: true }] }
           end
@@ -329,7 +329,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         context 'when the container :id option is specified' do
           let(:options) { { container: { id: 'c_id' } } }
 
-          context 'and the item should be added' do
+          context 'when the item should be added' do
             let(:add_item) { true }
 
             it 'changes its dom_id' do
@@ -337,7 +337,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
             end
           end
 
-          context "and the item shouldn't be added" do
+          context "when the item shouldn't be added" do
             let(:add_item) { false }
 
             it "doesn't change its dom_id" do
@@ -349,7 +349,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         context 'when the container :class option is specified' do
           let(:options) { { container: { class: 'c_class' } } }
 
-          context 'and the item should be added' do
+          context 'when the item should be added' do
             let(:add_item) { true }
 
             it 'changes its dom_class' do
@@ -357,7 +357,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
             end
           end
 
-          context "and the item shouldn't be added" do
+          context "when the item shouldn't be added" do
             let(:add_item) { false }
 
             it "doesn't change its dom_class" do
@@ -369,7 +369,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         context 'when the container :attributes option is specified' do
           let(:options) { { container: { attributes: { option: true } } } }
 
-          context 'and the item should be added' do
+          context 'when the item should be added' do
             let(:add_item) { true }
 
             it 'changes its dom_attributes' do
@@ -377,7 +377,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
             end
           end
 
-          context "and the item shouldn't be added" do
+          context "when the item shouldn't be added" do
             let(:add_item) { false }
 
             it "doesn't change its dom_attributes" do
@@ -389,7 +389,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         context 'when the container :selected_class option is specified' do
           let(:options) { { container: { selected_class: 'sel_class' } } }
 
-          context 'and the item should be added' do
+          context 'when the item should be added' do
             let(:add_item) { true }
 
             it 'changes its selected_class' do
@@ -397,7 +397,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
             end
           end
 
-          context "and the item shouldn't be added" do
+          context "when the item shouldn't be added" do
             let(:add_item) { false }
 
             it "doesn't change its selected_class" do
@@ -413,7 +413,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         let(:options) { { if: proc { condition } } }
         let(:condition) { nil }
 
-        context 'and it evals to true' do
+        context 'when it evals to true' do
           let(:condition) { true }
 
           it 'creates a new Item' do
@@ -422,7 +422,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
           end
         end
 
-        context 'and it evals to false' do
+        context 'when it evals to false' do
           let(:condition) { false }
 
           it "doesn't create a new Item" do
@@ -431,7 +431,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
           end
         end
 
-        context 'and it is not a proc or a method' do
+        context 'when it is not a proc or a method' do
           it 'raises an error' do
             expect do
               item_container.item('key', 'name', 'url', { if: 'text' })
@@ -444,7 +444,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         let(:options) { { unless: proc { condition } } }
         let(:condition) { nil }
 
-        context 'and it evals to false' do
+        context 'when it evals to false' do
           let(:condition) { false }
 
           it 'creates a new Navigation-Item' do
@@ -453,7 +453,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
           end
         end
 
-        context 'and it evals to true' do
+        context 'when it evals to true' do
           let(:condition) { true }
 
           it "doesn't create a new Navigation-Item" do
@@ -489,7 +489,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
     let(:renderer_class) { double(:renderer_class, new: renderer_instance) }
 
     context 'when renderer is specified as an option' do
-      context 'and is specified as a class' do
+      context 'when it is specified as a class' do
         it 'instantiates the passed renderer_class with the options' do
           expect(renderer_class).to receive(:new)
             .with({ renderer: renderer_class })
@@ -502,7 +502,7 @@ RSpec.describe SimpleNavigation::ItemContainer do
         end
       end
 
-      context 'and is specified as a symbol' do
+      context 'when it is specified as a symbol' do
         before do
           SimpleNavigation.registered_renderers = {
             my_renderer: renderer_class

@@ -79,7 +79,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
     end
 
     context "when the controller's template is stored as view_context (Rails3)" do
-      context 'and the template is set' do
+      context 'when the template is set' do
         before { allow(controller).to receive_messages(view_context: template) }
 
         it "sets the adapter's template accordingly" do
@@ -87,7 +87,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
         end
       end
 
-      context 'and the template is not set' do
+      context 'when the template is not set' do
         before { allow(controller).to receive_messages(view_context: nil) }
 
         it "sets the adapter's template to nil" do
@@ -101,7 +101,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
     context "when the adapter's request is set" do
       before { allow(adapter).to receive_messages(request: request) }
 
-      context 'and request.fullpath is defined' do
+      context 'when request.fullpath is defined' do
         let(:request) { double(:request, fullpath: '/fullpath') }
 
         it "sets the adapter's request_uri to the request.fullpath" do
@@ -109,7 +109,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
         end
       end
 
-      context 'and request.fullpath is not defined' do
+      context 'when request.fullpath is not defined' do
         let(:request) { double(:request, request_uri: '/request_uri') }
 
         before { allow(adapter).to receive_messages(request: request) }
@@ -153,7 +153,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
     context "when the adapter's controller is set" do
       before { adapter.instance_variable_set(:@controller, controller) }
 
-      context "and the adapter's template is set" do
+      context "when the adapter's template is set" do
         before { adapter.instance_variable_set(:@template, template) }
 
         it "sets the adapter's context_for_eval to the template" do
@@ -161,7 +161,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
         end
       end
 
-      context "and the adapter's template is not set" do
+      context "when the adapter's template is not set" do
         before { adapter.instance_variable_set(:@template, nil) }
 
         it "sets the adapter's context_for_eval to the controller" do
@@ -173,7 +173,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
     context "when the adapter's controller is not set" do
       before { adapter.instance_variable_set(:@controller, nil) }
 
-      context "and the adapter's template is set" do
+      context "when the adapter's template is set" do
         before { adapter.instance_variable_set(:@template, template) }
 
         it "sets the adapter's context_for_eval to the template" do
@@ -181,7 +181,7 @@ RSpec.describe SimpleNavigation::Adapters::Rails do
         end
       end
 
-      context "and the adapter's template is not set" do
+      context "when the adapter's template is not set" do
         before { adapter.instance_variable_set(:@template, nil) }
 
         it 'raises an exception' do
