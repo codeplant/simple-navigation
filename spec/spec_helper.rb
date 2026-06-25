@@ -82,8 +82,8 @@ module SimpleNavigationTest
     container.items.each do |item|
       allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
 
-      item.sub_navigation&.items&.each do |item|
-        allow(item).to receive_messages(selected?: false, selected_by_condition?: false)
+      item.sub_navigation&.items&.each do |sub_item|
+        allow(sub_item).to receive_messages(selected?: false, selected_by_condition?: false)
       end
     end
   end
