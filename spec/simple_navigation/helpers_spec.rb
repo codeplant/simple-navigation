@@ -44,7 +44,7 @@ RSpec.describe SimpleNavigation::Helpers do
     end
 
     context 'when an item is selected' do
-      context "and it's a primary item" do
+      context "when it's a primary item" do
         let(:item) { :invoices }
 
         it 'returns an empty string' do
@@ -67,7 +67,7 @@ RSpec.describe SimpleNavigation::Helpers do
         end
       end
 
-      context "and it's a sub navigation item" do
+      context "when it's a sub navigation item" do
         before do
           select_an_item(invoices_item)
           select_an_item(unpaid_item)
@@ -118,7 +118,7 @@ RSpec.describe SimpleNavigation::Helpers do
     end
 
     context 'when an item is selected' do
-      context "and it's a primary item" do
+      context "when it's a primary item" do
         let(:item) { :invoices }
 
         it 'returns nil for no parameters' do
@@ -141,7 +141,7 @@ RSpec.describe SimpleNavigation::Helpers do
         end
       end
 
-      context "and it's a sub navigation item" do
+      context "when it's a sub navigation item" do
         before do
           select_an_item(invoices_item)
           select_an_item(unpaid_item)
@@ -192,7 +192,7 @@ RSpec.describe SimpleNavigation::Helpers do
     end
 
     context 'when an item is selected' do
-      context "and it's a primary item" do
+      context "when it's a primary item" do
         let(:item) { :invoices }
 
         it 'returns nil for no parameters' do
@@ -215,7 +215,7 @@ RSpec.describe SimpleNavigation::Helpers do
         end
       end
 
-      context "and it's a sub navigation item" do
+      context "when it's a sub navigation item" do
         before do
           select_an_item(invoices_item)
           select_an_item(unpaid_item)
@@ -271,7 +271,7 @@ RSpec.describe SimpleNavigation::Helpers do
     end
 
     context 'when an item is selected' do
-      context "and it's a primary item" do
+      context "when it's a primary item" do
         let(:item) { :invoices }
 
         it_behaves_like 'returning items container'
@@ -283,7 +283,7 @@ RSpec.describe SimpleNavigation::Helpers do
         end
       end
 
-      context "and it's a sub navigation item" do
+      context "when it's a sub navigation item" do
         before do
           select_an_item(invoices_item)
           select_an_item(unpaid_item)
@@ -339,15 +339,15 @@ RSpec.describe SimpleNavigation::Helpers do
     end
 
     context 'when the :level option is set' do
-      context 'and its value is 1' do
+      context 'when its value is 1' do
         it 'calls render on the primary navigation' do
           expect(navigation).to receive(:render).with({ level: 1 })
           controller.render_navigation(level: 1)
         end
       end
 
-      context 'and its value is 2' do
-        context 'and the active_item_container is set' do
+      context 'when its value is 2' do
+        context 'when the active_item_container is set' do
           let(:item_container) { double(:container).as_null_object }
 
           before do
@@ -366,7 +366,7 @@ RSpec.describe SimpleNavigation::Helpers do
           end
         end
 
-        context "and the active_item_container isn't set" do
+        context "when the active_item_container isn't set" do
           it "doesn't raise an exception" do
             expect do
               controller.render_navigation(level: 2)
@@ -375,7 +375,7 @@ RSpec.describe SimpleNavigation::Helpers do
         end
       end
 
-      context "and its value isn't a valid level" do
+      context "when its value isn't a valid level" do
         it 'raises an exception' do
           expect do
             controller.render_navigation(level: :invalid)
@@ -405,10 +405,9 @@ RSpec.describe SimpleNavigation::Helpers do
       before { allow(SimpleNavigation).to receive_messages(primary_navigation: nil) }
 
       it 'raises an exception' do
-        expect do
-          controller.render_navigation
-        end.to raise_error(RuntimeError,
-                           'no primary navigation defined, either use a navigation config file or pass items directly to render_navigation')
+        message = 'no primary navigation defined, either use a navigation config file or ' \
+                  'pass items directly to render_navigation'
+        expect { controller.render_navigation }.to raise_error(RuntimeError, message)
       end
     end
 

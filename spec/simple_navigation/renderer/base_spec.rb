@@ -38,7 +38,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
 
   describe '#expand_all?' do
     context 'when :options is set' do
-      context 'and the :expand_all option is true' do
+      context 'when the :expand_all option is true' do
         let(:options) { { expand_all: true } }
 
         it 'returns true' do
@@ -46,7 +46,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
         end
       end
 
-      context 'and the :expand_all option is false' do
+      context 'when the :expand_all option is false' do
         let(:options) { { expand_all: false } }
 
         it 'returns false' do
@@ -66,7 +66,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
 
   describe '#skip_if_empty?' do
     context 'when :options is set' do
-      context 'and the :skip_if_empty option is true' do
+      context 'when the :skip_if_empty option is true' do
         let(:options) { { skip_if_empty: true } }
 
         it 'returns true' do
@@ -74,7 +74,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
         end
       end
 
-      context 'and the :skip_if_empty option is false' do
+      context 'when the :skip_if_empty option is false' do
         let(:options) { { skip_if_empty: false } }
 
         it 'returns true' do
@@ -93,7 +93,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
   end
 
   describe '#level' do
-    context 'and the :level option is set' do
+    context 'when the :level option is set' do
       let(:options) { { level: 1 } }
 
       it 'returns the specified level' do
@@ -101,7 +101,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
       end
     end
 
-    context "and the :level option isn't set" do
+    context "when the :level option isn't set" do
       let(:options) { {} }
 
       it 'returns :all' do
@@ -126,7 +126,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
     context 'when the item has sub navigation' do
       let(:sub_navigation) { double(:sub_navigation) }
 
-      context 'and the renderer has an unknown level' do
+      context 'when the renderer has an unknown level' do
         before { allow(base).to receive_messages(level: 'unknown') }
 
         it 'returns false' do
@@ -134,7 +134,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
         end
       end
 
-      context 'and the renderer has a level set to :all' do
+      context 'when the renderer has a level set to :all' do
         before { allow(base).to receive_messages(level: :all) }
 
         it 'returns false' do
@@ -153,7 +153,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
       context "when the renderer's level is a Range" do
         before { allow(base).to receive_messages(level: 2..3) }
 
-        context "and sub navigation's level is greater than range.max" do
+        context "when sub navigation's level is greater than range.max" do
           before { allow(sub_navigation).to receive_messages(level: 4) }
 
           it 'returns false' do
@@ -161,7 +161,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
           end
         end
 
-        context "and sub navigation's level is equal to range.max" do
+        context "when sub navigation's level is equal to range.max" do
           before { allow(sub_navigation).to receive_messages(level: 3) }
 
           it 'returns true' do
@@ -169,7 +169,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
           end
         end
 
-        context "and sub navigation's level is equal to range.min" do
+        context "when sub navigation's level is equal to range.min" do
           before { allow(sub_navigation).to receive_messages(level: 2) }
 
           it 'returns true' do
@@ -186,7 +186,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
     context 'when consider_sub_navigation? is true' do
       before { allow(base).to receive_messages(consider_sub_navigation?: true) }
 
-      context 'and expand_sub_navigation? is true' do
+      context 'when expand_sub_navigation? is true' do
         before { allow(base).to receive_messages(expand_sub_navigation?: true) }
 
         it 'returns true' do
@@ -194,7 +194,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
         end
       end
 
-      context 'and expand_sub_navigation? is false' do
+      context 'when expand_sub_navigation? is false' do
         before { allow(base).to receive_messages(expand_sub_navigation?: false) }
 
         it 'returns false' do
@@ -203,10 +203,10 @@ RSpec.describe SimpleNavigation::Renderer::Base do
       end
     end
 
-    context 'consider_sub_navigation? is false' do
+    context 'when consider_sub_navigation? is false' do
       before { allow(base).to receive_messages(consider_sub_navigation?: false) }
 
-      context 'and expand_sub_navigation? is true' do
+      context 'when expand_sub_navigation? is true' do
         before { allow(base).to receive_messages(expand_sub_navigation?: true) }
 
         it 'returns false' do
@@ -214,7 +214,7 @@ RSpec.describe SimpleNavigation::Renderer::Base do
         end
       end
 
-      context 'and expand_sub_navigation? is false' do
+      context 'when expand_sub_navigation? is false' do
         before { allow(base).to receive_messages(expand_sub_navigation?: false) }
 
         it 'returns false' do

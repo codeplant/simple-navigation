@@ -37,7 +37,7 @@ RSpec.describe SimpleNavigation::Renderer::Text do
         expect(output).to eq 'Invoices Unpaid'
       end
 
-      context 'and the :join_with option is set' do
+      context 'when the :join_with option is set' do
         let(:options) { { level: :all, join_with: ' | ' } }
 
         it 'separates the items with the specified separator' do

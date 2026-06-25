@@ -6,67 +6,11 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Max, AllowHeredoc, AllowURI, AllowQualifiedName, URISchemes, AllowRBSInlineAnnotation, AllowCopDirectives, AllowedPatterns, SplitStrings.
-# URISchemes: http, https
-Layout/LineLength:
-  Exclude:
-    - 'generators/navigation_config/templates/config/navigation.rb'
-    - 'spec/simple_navigation/helpers_spec.rb'
-
-# Offense count: 1
-# Configuration parameters: MaxRangeSize.
-Lint/MissingCopEnableDirective:
-  Exclude:
-    - 'spec/simple_navigation/configuration_spec.rb'
-
-# Offense count: 11
-# Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers, AllowedPatterns.
-# SupportedStyles: snake_case, normalcase, non_integer
-# AllowedIdentifiers: TLS1_1, TLS1_2, capture3, iso8601, rfc1123_date, rfc822, rfc2822, rfc3339, x86_64
-Naming/VariableNumber:
-  Exclude:
-    - 'generators/navigation_config/templates/config/navigation.rb'
-    - 'spec/fake_app/config/navigation.rb'
-    - 'spec/simple_navigation/item_container_spec.rb'
-
-# Offense count: 122
-# Configuration parameters: Prefixes, AllowedPatterns.
-# Prefixes: when, with, without
-RSpec/ContextWording:
-  Exclude:
-    - 'spec/simple_navigation/adapters/rails_spec.rb'
-    - 'spec/simple_navigation/config_file_finder_spec.rb'
-    - 'spec/simple_navigation/configuration_spec.rb'
-    - 'spec/simple_navigation/helpers_spec.rb'
-    - 'spec/simple_navigation/item_adapter_spec.rb'
-    - 'spec/simple_navigation/item_container_spec.rb'
-    - 'spec/simple_navigation/item_spec.rb'
-    - 'spec/simple_navigation/items_provider_spec.rb'
-    - 'spec/simple_navigation/renderer/base_spec.rb'
-    - 'spec/simple_navigation/renderer/breadcrumbs_spec.rb'
-    - 'spec/simple_navigation/renderer/text_spec.rb'
-    - 'spec/simple_navigation_spec.rb'
-
-# Offense count: 4
-# Configuration parameters: Max, AllowedIdentifiers, AllowedPatterns.
-RSpec/IndexedLet:
-  Exclude:
-    - 'spec/simple_navigation/item_container_spec.rb'
-
 # Offense count: 46
 # Configuration parameters: .
 # SupportedStyles: have_received, receive
 RSpec/MessageSpies:
   EnforcedStyle: receive
-
-# Offense count: 38
-# Configuration parameters: EnforcedStyle, IgnoreSharedExamples.
-# SupportedStyles: always, named_only
-RSpec/NamedSubject:
-  Exclude:
-    - 'spec/simple_navigation_spec.rb'
 
 # Offense count: 24
 RSpec/SubjectStub:
@@ -75,10 +19,11 @@ RSpec/SubjectStub:
     - 'spec/simple_navigation/renderer/base_spec.rb'
     - 'spec/simple_navigation_spec.rb'
 
-# Offense count: 65
+# Offense count: 69
 # Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
 RSpec/VerifiedDoubles:
   Exclude:
+    - 'spec/simple_navigation/adapters/nanoc_spec.rb'
     - 'spec/simple_navigation/adapters/padrino_spec.rb'
     - 'spec/simple_navigation/adapters/rails_spec.rb'
     - 'spec/simple_navigation/adapters/sinatra_spec.rb'
